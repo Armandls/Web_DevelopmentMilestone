@@ -47,7 +47,7 @@ const togglePasswordVisibility = () => {
 
           <!-- Sign Up -->
           <div class="flex justify-center text-center text-white mt-4">
-            <span class="pr-1">Already have an account?</span>
+            <span class="pr-1">Dont have an account?</span>
             <RouterLink to="/signup" class="font-bold">Sign Up</RouterLink>
           </div>
         </div>
