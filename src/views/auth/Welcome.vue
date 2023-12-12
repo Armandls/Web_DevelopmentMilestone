@@ -14,7 +14,7 @@ import { RouterLink } from 'vue-router';
       Battle for the Now.
     </div>
     <!-- Creación del botón de Create Account -->
-    <RouterLink class="mt-6 cursor-pointer" to="/signin" style="background-color: #F707FC; padding: 12px 20px; border-radius: 17px; border: 2px #FFF500 solid; justify-content: center; align-items: center; display: inline-flex">
+    <RouterLink class="mt-6 cursor-pointer" to="/signup" style="background-color: #F707FC; padding: 12px 20px; border-radius: 17px; border: 2px #FFF500 solid; justify-content: center; align-items: center; display: inline-flex">
       <div style="text-align: center; color: #FFF500; font-size: 24px; font-family: Poppins,'Script MT Bold',ui-rounded; font-weight: 700; line-height: 30px; word-wrap: break-word">Create free account</div>
     </RouterLink>
 

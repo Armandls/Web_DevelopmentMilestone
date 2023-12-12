@@ -20,13 +20,13 @@ import { ref, computed } from 'vue';
 const props = defineProps(['searchQuery']);
 
 const items = ref([
-  { imageSrc: '/src/assets/avatar.png', username: 'Oriolshhh', winRate: 90, xp: 7 },
-  { imageSrc: '/src/assets/avatar.png', username: 'Oriolshhh', winRate: 78, xp: 6},
-  { imageSrc: '/src/assets/avatar.png', username: 'Oriolshhh', winRate: 67, xp: 34},
-  { imageSrc: '/src/assets/avatar.png', username: 'Oriolshhh', winRate: 56, xp: 89},
-  { imageSrc: '/src/assets/avatar.png', username: 'Oriolshhh', winRate: 45, xp: 78},
-  { imageSrc: '/src/assets/avatar.png', username: 'Oriolshhh', winRate: 23, xp: 9},
-  { imageSrc: '/src/assets/avatar.png', username: 'Oriolshhh', winRate: 11, xp: 13}
+  { imageSrc: '/src/assets/welcome_page/avatar.png', username: 'Oriolshhh', winRate: 90, xp: 7 },
+  { imageSrc: '/src/assets/welcome_page/avatar.png', username: 'Oriolshhh', winRate: 78, xp: 6},
+  { imageSrc: '/src/assets/welcome_page/avatar.png', username: 'Oriolshhh', winRate: 67, xp: 34},
+  { imageSrc: '/src/assets/welcome_page/avatar.png', username: 'Oriolshhh', winRate: 56, xp: 89},
+  { imageSrc: '/src/assets/welcome_page/avatar.png', username: 'Oriolshhh', winRate: 45, xp: 78},
+  { imageSrc: '/src/assets/welcome_page/avatar.png', username: 'Oriolshhh', winRate: 23, xp: 9},
+  { imageSrc: '/src/assets/welcome_page/avatar.png', username: 'Oriolshhh', winRate: 11, xp: 13}
 ]);
 
 const filteredItems = computed(() => {

@@ -14,38 +14,34 @@ const togglePasswordVisibility = () => {
 };
 
 const signUp = () => {
-  console.log("player_ID:", playerID.value);
-  console.log("password:", password.value);
-
-  fetch('http://balandrau.salle.url.edu/players', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        player_ID: playerID.value,
-        password: password.value,
-        img: ""
-      })
+  fetch('https://balandrau.salle.url.edu/i3/players', { //Link de la API
+    method: 'POST', //Metode de la API per aquella petició
+    headers: { //Headers de la API per aquella petició
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ //Variables que s'envien a la API per aquella petició
+      player_ID: playerID.value,
+      password: password.value,
+      img: "src/assets/welcome_page/avatar.png"
     })
-      .then(response => {response.json()})
-      .then(response => {
-        if (response.ok) {
-          return response.json();
+  })
+      .then(response => { //Amb el que ens respongui la API:
+        if (response.status === 201) { //En aquest cas ens retornava només 201 en cas d'exit i un json en cas d'error, per tant primer comparem directament amb 201
+          console.log('Player created successfully');
+          router.push('/home'); //Anem a la pàgina de home
         } else {
-          // Si el estado de la respuesta no es 200-299, se maneja como un error
-          return response.json().then(errorData => {
-            throw new Error('Error creating the player: ' + errorData.message);
-          });
+          return response.json(); //Si no és 201, retornem el json que ens ha enviat la API
         }
       })
-      .then(data => {
-        console.log('Player created', data);
-        router.push('/home');
+      .then(data => { //Amb el json que ens ha enviat la API:
+        if (data) { //Si hi ha un json, és que hi ha hagut un error
+          console.error('Error creating player', data);
+          errorMessage.value = data.message ? 'Error creating the player! ' + data.message : 'Error creating the player!';
+        }
       })
-      .catch(error => {
-        console.error('Error creating player', error);
-        errorMessage.value = 'Error creating the player! ';
+      .catch(error => { //Si hi ha un error no controlat (normalment de connexió), el mostrem per consola i mostrem un missatge d'error
+        console.error('Unhandled error', error);
+        errorMessage.value = 'Unexpected error occurred';
       });
 };
 </script>
