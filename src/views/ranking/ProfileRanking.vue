@@ -7,7 +7,7 @@ import { RouterLink } from 'vue-router';
     <div class="pt-8 bg-transparent">
       <div class="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-4xl mx-auto rounded-lg shadow-xl overflow-hidden flex items-center p-3 sm:p-3 md:p-4 lg:p-4 xl:p-4">
         <!-- Foto de perfil -->
-        <img class="h-16 sm:h-20 md:h-24 lg:h-24 xl:h-24 w-16 sm:w-20 md:w-24 lg:w-24 xl:w-24" src="/src/assets/welcome_page/avatar.png" alt="Foto de perfil">
+        <img class="h-16 sm:h-20 md:h-24 lg:h-24 xl:h-24 w-16 sm:w-20 md:w-24 lg:w-24 xl:w-24" src="/src/assets/avatars/avatar1.png" alt="Foto de perfil">
 
         <!-- Nom jugador -->
         <div class="ml-4 flex-grow">

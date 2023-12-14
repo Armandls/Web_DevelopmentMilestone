@@ -5,13 +5,13 @@ import PlayerSearch from "../../ components/PlayerSearch.vue";
 import PlayerList from "../../ components/PlayerList.vue";
 
 const items = ref([
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 90, xp: 7 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 78, xp: 6},
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 67, xp: 34},
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 56, xp: 89},
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 45, xp: 78},
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 23, xp: 9},
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 11, xp: 13}
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 90, xp: 7 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 78, xp: 6},
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 67, xp: 34},
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 56, xp: 89},
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 45, xp: 78},
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 23, xp: 9},
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 11, xp: 13}
 ]);
 
 const searchQuery = ref('');

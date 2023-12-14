@@ -3,13 +3,13 @@
   import ReturnToShop from "../../ components/ReturnToShop.vue";
 
   const items = ref([
-    { imageSrc: '/welcome_page/avatar.png/', username: 'Ola de Caos', Cost: 50 },
-    { imageSrc: '/welcome_page/avatar.png/', username: 'Explosión Arcana', Cost: 70 },
-    { imageSrc: '/welcome_page/avatar.png/', username: 'Golpe Relámpago', Cost: 20 },
-    { imageSrc: '/welcome_page/avatar.png/', username: 'Vórtice Abrasador', Cost: 40 },
-    { imageSrc: '/welcome_page/avatar.png/', username: 'Flecha del Crepúsculo', Cost: 100 },
-    { imageSrc: '/welcome_page/avatar.png/', username: 'Maldición Mortal', Cost: 25 },
-    { imageSrc: '/welcome_page/avatar.png/', username: 'Avalancha Glacial', Cost: 90 }
+    { imageSrc: '/welcome_page/avatar1.png/', username: 'Ola de Caos', Cost: 50 },
+    { imageSrc: '/welcome_page/avatar1.png/', username: 'Explosión Arcana', Cost: 70 },
+    { imageSrc: '/welcome_page/avatar1.png/', username: 'Golpe Relámpago', Cost: 20 },
+    { imageSrc: '/welcome_page/avatar1.png/', username: 'Vórtice Abrasador', Cost: 40 },
+    { imageSrc: '/welcome_page/avatar1.png/', username: 'Flecha del Crepúsculo', Cost: 100 },
+    { imageSrc: '/welcome_page/avatar1.png/', username: 'Maldición Mortal', Cost: 25 },
+    { imageSrc: '/welcome_page/avatar1.png/', username: 'Avalancha Glacial', Cost: 90 }
   ]);
 </script>
 

@@ -3,14 +3,14 @@ import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 const items = ref([
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Armand', winRate: 60 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 60 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 60 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Armand', winRate: 60 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 60 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 60 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 60 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Oriolshhh', winRate: 60 }
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Armand', winRate: 60 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 60 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 60 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Armand', winRate: 60 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 60 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 60 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 60 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 60 }
 ]);
 
 </script>

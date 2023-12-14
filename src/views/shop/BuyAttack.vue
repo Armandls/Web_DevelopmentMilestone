@@ -4,13 +4,13 @@ import ReturnToShop from "../../ components/ReturnToShop.vue";
 import { ref, watch } from 'vue';
 
 const items = ref([
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Ráfaga de Energía', cost: 50 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Martillo Celestial', cost: 70 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Vorágine Venenosa', cost: 20 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Cuchillada Fantasmal', cost: 40 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Explosión de las Sombras', cost: 100 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Vórtice Abrasador', cost: 25 },
-  { imageSrc: '/welcome_page/avatar.png/', username: 'Golpe Relámpago', cost: 90 }
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Ráfaga de Energía', cost: 50 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Martillo Celestial', cost: 70 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Vorágine Venenosa', cost: 20 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Cuchillada Fantasmal', cost: 40 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Explosión de las Sombras', cost: 100 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Vórtice Abrasador', cost: 25 },
+  { imageSrc: '/welcome_page/avatar1.png/', username: 'Golpe Relámpago', cost: 90 }
 ].map(item => ({ ...item, isSelected: false })));
 const showDropdown = ref(false);
 const selectedItems = ref([]);

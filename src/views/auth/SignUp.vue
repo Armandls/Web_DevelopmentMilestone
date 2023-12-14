@@ -13,6 +13,24 @@ const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
 
+const avatars = [
+  'src/assets/welcome_page/avatar1.png',
+  'src/assets/welcome_page/avatar2.png',
+  'src/assets/welcome_page/avatar3.png',
+  'src/assets/welcome_page/avatar4.png',
+  'src/assets/welcome_page/avatar5.png',
+  'src/assets/welcome_page/avatar6.png',
+  'src/assets/welcome_page/avatar7.png',
+  'src/assets/welcome_page/avatar8.png',
+  'src/assets/welcome_page/avatar9.png',
+  'src/assets/welcome_page/avatar10.png',
+];
+
+const getRandomAvatar = () => {
+  const randomIndex = Math.floor(Math.random() * avatars.length);
+  return avatars[randomIndex];
+};
+
 const signUp = () => {
   fetch('https://balandrau.salle.url.edu/i3/players', { //Link de la API
     method: 'POST', //Metode de la API per aquella petició
@@ -22,7 +40,7 @@ const signUp = () => {
     body: JSON.stringify({ //Variables que s'envien a la API per aquella petició
       player_ID: playerID.value,
       password: password.value,
-      img: "src/assets/welcome_page/avatar.png"
+      img: getRandomAvatar() //Fem servir la funció que hem creat per a obtenir un avatar aleatori
     })
   })
       .then(response => { //Amb el que ens respongui la API:
@@ -88,10 +106,11 @@ const signUp = () => {
             <RouterLink to="/signin" class="font-bold">Sign In</RouterLink>
           </div>
         </div>
-      </div>
-      <div class="flex justify-center items-center w-full">
-        <div v-if="errorMessage" class="bg-red-400 text-white text-lg p-3 rounded-lg shadow-md mt-4 border border-red-500 animate-fade-in-down">
-          {{ errorMessage }}
+
+        <div class="flex justify-center items-center w-full">
+          <div v-if="errorMessage" class="bg-red-400 text-white text-lg p-3 rounded-lg shadow-md mt-4 border border-red-500 animate-fade-in-down">
+            {{ errorMessage }}
+          </div>
         </div>
       </div>
     </div>
