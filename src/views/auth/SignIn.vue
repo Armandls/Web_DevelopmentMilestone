@@ -2,6 +2,7 @@
 import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
 import router from "../../router/index.js";
+import { inject } from 'vue';
 
 const showPassword = ref(false);
 const playerID = ref('');
@@ -13,22 +14,24 @@ const togglePasswordVisibility = () => {
 };
 
 const avatars = [
-  'src/assets/welcome_page/avatar1.png',
-  'src/assets/welcome_page/avatar2.png',
-  'src/assets/welcome_page/avatar3.png',
-  'src/assets/welcome_page/avatar4.png',
-  'src/assets/welcome_page/avatar5.png',
-  'src/assets/welcome_page/avatar6.png',
-  'src/assets/welcome_page/avatar7.png',
-  'src/assets/welcome_page/avatar8.png',
-  'src/assets/welcome_page/avatar9.png',
-  'src/assets/welcome_page/avatar10.png',
+  'src/assets/avatars/avatar1.png',
+  'src/assets/avatars/avatar2.png',
+  'src/assets/avatars/avatar3.png',
+  'src/assets/avatars/avatar4.png',
+  'src/assets/avatars/avatar5.png',
+  'src/assets/avatars/avatar6.png',
+  'src/assets/avatars/avatar7.png',
+  'src/assets/avatars/avatar8.png',
+  'src/assets/avatars/avatar9.png',
+  'src/assets/avatars/avatar10.png',
 ];
 
 const getRandomAvatar = () => {
   const randomIndex = Math.floor(Math.random() * avatars.length);
   return avatars[randomIndex];
 };
+
+const setPlayerData = inject('setPlayerData'); // Agafem la funció per a actualitzar les dades del jugador
 
 const signIn = () => {
   fetch('https://balandrau.salle.url.edu/i3/players/join', { // Enllaç de l'API
@@ -42,6 +45,8 @@ const signIn = () => {
     })
   })
       .then(response => {
+        //console.log(this.$root);
+        console.log(response);
         if (response.status === 200) { // Si la resposta és exitosa
           return response.json(); // Retornem el JSON de la resposta
         } else {
@@ -53,15 +58,17 @@ const signIn = () => {
         if (!avatars.includes(img)) {
           img = getRandomAvatar(); //Assignem un avatar aleatori si no està en la llista
         }
-        localStorage.setItem('playerData', JSON.stringify({ //Guardem les dades del jugador a localStorage
+        const playerData = {
           player_ID: data.player_ID,
           img: img,
           xp: data.xp,
           level: data.level,
           coins: data.coins,
           token: data.token
-        }));
-        this.$root.setPlayerData(data); //Guardem a app.vue
+        };
+
+        localStorage.setItem('playerData', JSON.stringify(playerData)); //Guardem les dades de l'usuari al localStorage
+        setPlayerData(playerData); //Guardem les dades de l'usuari al app.vue
         router.push('/home'); //Anem a la pàgina de home
       })
       .catch(error => { // Agafem el error llançat anteriorment

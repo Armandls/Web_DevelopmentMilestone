@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {computed, inject, ref} from 'vue';
 import NavigationBar from "../../ components/NavigationBar.vue";
 
 const games = ref([
@@ -13,31 +13,38 @@ const games = ref([
   { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
 ]);
 
-</script>
+const playerData = inject('playerData'); //Agafem les dades del jugador desde App.vue
 
+//Computed per a que quan canviïn les dades del jugador, es canviïn automàticament les dades que es mostren
+const playerName = computed(() => playerData.value ? playerData.value.player_ID : 'Nom Desconegut');
+const playerLevel = computed(() => playerData.value ? playerData.value.level : 'N/A');
+const playerXP = computed(() => playerData.value ? playerData.value.xp : 'N/A');
+const playerCoins = computed(() => playerData.value ? playerData.value.coins : 'N/A');
+const playerAvatar = computed(() => playerData.value ? playerData.value.img : '/src/assets/avatars/avatar1.png');
+</script>
 
 <template>
   <div class="flex flex-col h-screen w-full bg-cover bg-no-repeat bg-center justify-center pt-0 pb-24 md:pb-0 px-4" style="background-image: url('/src/assets/welcome_page/background.png')">
     <div class="pt-8 bg-transparent">
       <div class="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-4xl mx-auto rounded-lg shadow-xl overflow-hidden flex items-center p-3 sm:p-3 md:p-4 lg:p-4 xl:p-4">
         <!-- Foto de perfil -->
-        <img class="h-16 sm:h-20 md:h-24 lg:h-24 xl:h-24 w-16 sm:w-20 md:w-24 lg:w-24 xl:w-24" src="/src/assets/avatars/avatar1.png" alt="Foto de perfil">
+        <img class="h-16 sm:h-20 md:h-24 lg:h-24 xl:h-24 w-16 sm:w-20 md:w-24 lg:w-24 xl:w-24" :src="playerAvatar" alt="Foto de perfil">
 
         <!-- Nom jugador -->
         <div class="ml-4 flex-grow">
           <div class="p-1 sm:p-1.5 md:p-2 lg:p-2 xl:p-2 border border-blue-400 rounded w-full bg-blue-400">
-            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">Oriolshhh</div>
+            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">{{ playerName }}</div>
           </div>
 
           <!-- Nivell i xp -->
           <div class="p-1 sm:p-1.5 md:p-2 lg:p-2 xl:p-2 border border-yellow-200 rounded mt-1 sm:mt-1.5 md:mt-2 lg:mt-2 xl:mt-2 bg-yellow-200">
-            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">LVL: 20 - XP:256</div>
+            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">LVL: {{ playerLevel }} - XP: {{ playerXP }}</div>
           </div>
         </div>
 
-        <!-- WR -->
-        <div class="ml-4 sm:ml-5 md:ml-6 lg:ml-6 xl:ml-6 p-3 sm:p-3.5 md:p-4 lg:p-4 xl:p-4 border border-red-400 rounded text-right bg-red-400">
-          <span class="text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800 font-bold">WR 60%</span>
+        <!-- Monedes -->
+        <div class="ml-4 sm:ml-5 md:ml-6 lg:ml-6 xl:ml-6 p-3 sm:p-3.5 md:p-4 lg:p-4 xl:p-4 border border-green-400 rounded text-right bg-green-400">
+          <span class="text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800 font-bold">Coins: {{ playerCoins }}</span>
         </div>
       </div>
     </div>

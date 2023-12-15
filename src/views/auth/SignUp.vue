@@ -14,16 +14,16 @@ const togglePasswordVisibility = () => {
 };
 
 const avatars = [
-  'src/assets/welcome_page/avatar1.png',
-  'src/assets/welcome_page/avatar2.png',
-  'src/assets/welcome_page/avatar3.png',
-  'src/assets/welcome_page/avatar4.png',
-  'src/assets/welcome_page/avatar5.png',
-  'src/assets/welcome_page/avatar6.png',
-  'src/assets/welcome_page/avatar7.png',
-  'src/assets/welcome_page/avatar8.png',
-  'src/assets/welcome_page/avatar9.png',
-  'src/assets/welcome_page/avatar10.png',
+  'src/assets/avatars/avatar1.png',
+  'src/assets/avatars/avatar2.png',
+  'src/assets/avatars/avatar3.png',
+  'src/assets/avatars/avatar4.png',
+  'src/assets/avatars/avatar5.png',
+  'src/assets/avatars/avatar6.png',
+  'src/assets/avatars/avatar7.png',
+  'src/assets/avatars/avatar8.png',
+  'src/assets/avatars/avatar9.png',
+  'src/assets/avatars/avatar10.png',
 ];
 
 const getRandomAvatar = () => {

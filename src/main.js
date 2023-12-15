@@ -9,3 +9,4 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 library.add(faHome, faUser, faShoppingCart, faList, faTrophy);
 
 createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(router).mount('#app')
+
