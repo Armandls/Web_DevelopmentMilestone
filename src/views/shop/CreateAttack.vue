@@ -1,6 +1,6 @@
 <script>
-
-import {defineComponent} from "vue";
+import router from "../../router/index.js";
+import {defineComponent, inject, ref} from "vue";
 import {RouterLink} from "vue-router";
 import Shop from "./Shop.vue";
 import ReturnToShop from "../../ components/ReturnToShop.vue";
@@ -8,6 +8,67 @@ import ReturnToShop from "../../ components/ReturnToShop.vue";
 export default defineComponent({
   components: {ReturnToShop, Shop, RouterLink}
 })
+</script>
+
+<script setup>
+const authToken = inject('authToken');
+const errorMessage = ref('');
+const successMessage = ref('');
+
+const attacks = [
+  'src/assets/attacks/1.png',
+  'src/assets/attacks/2.png',
+  'src/assets/attacks/3.png',
+  'src/assets/attacks/4.png',
+  'src/assets/attacks/5.png',
+  'src/assets/attacks/6.png',
+  'src/assets/attacks/7.png',
+  'src/assets/attacks/8.png',
+  'src/assets/attacks/9.png',
+  'src/assets/attacks/10.png'
+];
+
+const getRandomAttackImage = () => {
+  const randomIndex = Math.floor(Math.random() * attacks.length);
+  return attacks[randomIndex];
+};
+
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
+const createAttack = () => {
+  const attackName = document.getElementById("name").value;
+  const positionX = document.getElementById("positionX").value;
+  const positionY = document.getElementById("positionY").value;
+  const positions = `(${positionX},${positionY})`; // Formato (x,y)
+
+  console.log(attackName + " " + positions);
+  console.log(`Bearer ${authToken.value}`)
+
+  fetch('https://balandrau.salle.url.edu/i3/shop/attacks', {
+    method: 'POST',
+    headers: { 'Bearer': `${authToken.value}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ attack_ID: attackName, positions: positions, img: getRandomAttackImage()})})
+      .then(response => {
+        if (response.status === 201) {
+          errorMessage.value = '';
+          successMessage.value = 'Attack created successfully!';
+          sleep(800).then(() => {
+            router.push('/shop');
+          });
+          return;
+        }
+        return response.json().then(json => {
+          throw new Error(`Error: ${response.status} - ${json.message}`);
+        });
+      })
+      .catch(error => {
+        console.error('Error creating attack:', error.message);
+        errorMessage.value = 'Error creating the attack!';
+        successMessage.value = '';
+      });
+};
 </script>
 
 <template>
@@ -28,17 +89,16 @@ export default defineComponent({
 
     <!-- Imagen del cuadro -->
     <div class="flex items-center justify-center h-1/2 sm:h-1/3 md:h-1/3 lg:h-1/4 xl:h-1/5">
-      <div class="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 h-full transition-transform duration-300 transform translate-y-0 sm:translate-y-1/4 md:translate-y-1/4 lg:translate-y-1/2 xl:translate-y-3/4 mi-contenedor">
+      <div class="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 h-full transition-transform duration-300 transform translate-y-0 sm:translate-y-1/4 md:translate-y-1/4 lg:translate-y-1/2 xl:translate-y-6 mi-contenedor">
         <div class="flex items-center justify-center p-8 h-full">
           <div class="h-[350px] xl:h-[400px] lg:h-[400px] md:h-[400px] sm:h-[350px] w-full xl:w-[700px] lg:w-[700px] md:w-[700px] sm:w-[700px] max-w-7xl bg-white bg-opacity-0 shadow-xl rounded" style="background-image: url('/src/assets/welcome_page/neon.png'); background-size: cover; background-position: center;">
 
             <!-- Contenedor para los campos -->
             <div class="p-8">
-              <h2 class="text-xs h:text-xs sm:text-sm md:text-ml lg:text-xl xl:text-2xl font-bold text-white uppercase">To create an attack you need to add a
-                name and a direction of attack, THE DMG
+              <h2 class="text-xs h:text-xs sm:text-sm md:text-ml lg:text-xl xl:text-2xl font-bold text-white uppercase">THE DMG
                 WILL BE GENERATED RANDOMLY</h2>
 
-              <div class="space-y-10">
+              <div class="space-y-10 mt-6">
                 <!-- Name -->
                 <div>
                   <label for="name" class="block text-sm font-bold text-white uppercase">Name</label>
@@ -46,14 +106,35 @@ export default defineComponent({
                 </div>
 
                 <!-- Direction -->
-                <div>
-                  <label for="direction" class="block text-sm font-bold text-white uppercase">Direction of Attack</label>
-                  <input type="text" id="direction" name="direction" class="w-full p-2 mt-1 bg-white text-black rounded">
+                <div class="flex flex-row justify-between">
+                  <!-- Position X -->
+                  <div class="flex-1 mr-2">
+                    <label for="positionX" class="block text-sm font-bold text-white uppercase">Position X (positive integer)</label>
+                    <input type="number" id="positionX" name="positionX" min="0" class="w-full p-2 mt-1 bg-white text-black rounded">
+                  </div>
+
+                  <!-- Position Y -->
+                  <div class="flex-1 ml-2">
+                    <label for="positionY" class="block text-sm font-bold text-white uppercase">Position Y (integer)</label>
+                    <input type="number" id="positionY" name="positionY" class="w-full p-2 mt-1 bg-white text-black rounded">
+                  </div>
                 </div>
 
-                <!-- Create Attack -->
-                <div class="text-right">
-                  <RouterLink to="/shop" class="bg-purple-600 hover:bg-yellow-300 text-white font-bold py-3 px-6 rounded-lg text-lg sm:text-base md:text-lg lg:text-xl xl:text-2xl uppercase">Create</RouterLink>
+                <!-- Botón Create Attack -->
+                <div class="text-right mb-4"> <!-- Agregar un margen abajo si es necesario -->
+                  <button @click="createAttack" class="bg-purple-600 hover:bg-yellow-300 p-3 text-white font-bold px-6 rounded-lg text-lg sm:text-base md:text-lg lg:text-xl xl:text-2xl uppercase">
+                    Create
+                  </button>
+                </div>
+
+                <!-- Mensaje de Éxito -->
+                <div v-if="successMessage" class="bg-green-400 text-white text-lg p-3 rounded-lg shadow-md border border-green-500 animate-fade-in-down">
+                  {{ successMessage }}
+                </div>
+
+                <!-- Mensaje de Error -->
+                <div v-if="errorMessage" class="bg-red-400 text-white text-lg p-3 rounded-lg shadow-md border border-red-500 animate-fade-in-down">
+                  {{ errorMessage }}
                 </div>
               </div>
             </div>
