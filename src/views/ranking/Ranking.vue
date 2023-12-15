@@ -4,20 +4,22 @@ import NavigationBar   from "../../ components/NavigationBar.vue";
 import PlayerSearch from "../../ components/PlayerSearch.vue";
 import PlayerList from "../../ components/PlayerList.vue";
 
+//TODO: ORDENAR PLAYERS SEGONS NIVELL I EXPERIÈNCIA I POSAR MEDALLA ALS 3 PRIMERS
+
 //Agafem el token de l'usuari que s'ha loggejat, per a poder fer la peticio GET a la API
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
 
 const avatars = [
-  'src/assets/welcome_page/avatar1.png',
-  'src/assets/welcome_page/avatar2.png',
-  'src/assets/welcome_page/avatar3.png',
-  'src/assets/welcome_page/avatar4.png',
-  'src/assets/welcome_page/avatar5.png',
-  'src/assets/welcome_page/avatar6.png',
-  'src/assets/welcome_page/avatar7.png',
-  'src/assets/welcome_page/avatar8.png',
-  'src/assets/welcome_page/avatar9.png',
-  'src/assets/welcome_page/avatar10.png',
+  'src/assets/avatars/avatar1.png',
+  'src/assets/avatars/avatar2.png',
+  'src/assets/avatars/avatar3.png',
+  'src/assets/avatars/avatar4.png',
+  'src/assets/avatars/avatar5.png',
+  'src/assets/avatars/avatar6.png',
+  'src/assets/avatars/avatar7.png',
+  'src/assets/avatars/avatar8.png',
+  'src/assets/avatars/avatar9.png',
+  'src/assets/avatars/avatar10.png',
 ];
 
 const getRandomAvatar = () => {
@@ -30,7 +32,7 @@ const fetchPlayers = () => {
   fetch('https://balandrau.salle.url.edu/i3/players', {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${authToken.value}`,
+      'Bearer': `${authToken.value}`,
       'Content-Type': 'application/json'
     }
   })
@@ -53,7 +55,6 @@ const fetchPlayers = () => {
       })
       .catch(error => {
         console.error('Error fetching players:', error.message);
-        // Potser mostrar un missatge d'error a l'usuari
       });
 };
 

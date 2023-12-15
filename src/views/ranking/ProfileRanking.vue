@@ -1,29 +1,124 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+import {useRoute} from 'vue-router';
+import {inject, onMounted, ref} from "vue";
+
+const token = inject('authToken'); //Agafem el token del jugador desde App.vue
+const route = useRoute();
+
+const username = ref('');
+const imageSrc = ref('');
+const lvl = ref('');
+const xp = ref('');
+
+onMounted(() => {
+  const currentPlayer = JSON.parse(localStorage.getItem('currentPlayer'));
+  if (currentPlayer) {
+    username.value = currentPlayer.username;
+    imageSrc.value = currentPlayer.imageSrc;
+    lvl.value = currentPlayer.lvl;
+    xp.value = currentPlayer.xp;
+  }
+});
+
+const games = ref([]);
+
+function loadGames() {
+  fetch(`https://balandrau.salle.url.edu/i3/players/${username}/games/finished`, {
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response)
+          return response.json();
+        } else {
+          console.error("Response error:", response);
+          throw response;
+        }
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          games.value = data.map(game => ({
+            gameID: game.game_ID,
+            size: game.size,
+            creationDate: game.creation_date,
+            HPMax: game.HP_max,
+            playersGames: game.players_games.map(playerGame => ({
+              gameID: playerGame.game_ID,
+              playerID: playerGame.player_ID,
+              winner: playerGame.winner,
+              xpWin: playerGame.xp_win,
+              coinsWin: playerGame.coins_win
+            }))
+          }));
+        } else {
+          console.error("Expected an array, but got:", data);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching game data:", error);
+      });
+}
+
+let winrate = ref(0);
+function loadPlayerStatistics() {
+  fetch(`https://balandrau.salle.url.edu/i3/players/${username}/statistics`, {
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        console.log(response);
+        if (response.status === 200) {
+          console.log(response)
+          return response.json();
+        } else {
+          console.error("Response error:", response);
+          throw response;
+        }
+      })
+      .then(statistics => {
+        if (statistics.length > 0) {
+          const stats = statistics[0];
+          winrate.value = stats.games_played > 0 ? (stats.games_won / stats.games_played) * 100 : 'N/A';
+        } else {
+          winrate.value = 'N/A';
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching player statistics:", error);
+      });
+}
+
+onMounted(loadGames);
+onMounted(loadPlayerStatistics);
 </script>
 
 <template>
   <div class="flex flex-col h-screen w-full bg-cover bg-no-repeat bg-center justify-center pt-0 pb-24 md:pb-0 px-4" style="background-image: url('/src/assets/welcome_page/background.png')">
-    <div class="pt-8 bg-transparent">
+    <div class="bg-transparent">
       <div class="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-4xl mx-auto rounded-lg shadow-xl overflow-hidden flex items-center p-3 sm:p-3 md:p-4 lg:p-4 xl:p-4">
         <!-- Foto de perfil -->
-        <img class="h-16 sm:h-20 md:h-24 lg:h-24 xl:h-24 w-16 sm:w-20 md:w-24 lg:w-24 xl:w-24" src="/src/assets/avatars/avatar1.png" alt="Foto de perfil">
+        <img class="h-16 sm:h-20 md:h-24 lg:h-24 xl:h-24 w-16 sm:w-20 md:w-24 lg:w-24 xl:w-24" :src="imageSrc" alt="Foto de perfil">
 
         <!-- Nom jugador -->
         <div class="ml-4 flex-grow">
           <div class="p-1 sm:p-1.5 md:p-2 lg:p-2 xl:p-2 border border-blue-400 rounded w-full bg-blue-400">
-            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">Oriolshhh</div>
+            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">{{ username }}</div>
           </div>
 
           <!-- Nivell i xp -->
           <div class="p-1 sm:p-1.5 md:p-2 lg:p-2 xl:p-2 border border-yellow-200 rounded mt-1 sm:mt-1.5 md:mt-2 lg:mt-2 xl:mt-2 bg-yellow-200">
-            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">LVL: 20 - XP:256</div>
+            <div class="font-bold text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800">LVL: {{ lvl }} - XP:{{ xp }}</div>
           </div>
         </div>
 
         <!-- WR -->
         <div class="ml-4 sm:ml-5 md:ml-6 lg:ml-6 xl:ml-6 p-3 sm:p-3.5 md:p-4 lg:p-4 xl:p-4 border border-red-400 rounded text-right bg-red-400">
-          <span class="text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800 font-bold">WR 60%</span>
+          <span class="text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800 font-bold">WR: {{ winrate }}%</span>
         </div>
       </div>
     </div>
@@ -34,7 +129,7 @@ import { RouterLink } from 'vue-router';
     </div>
 
     <!-- Llista de partides jugades -->
-    <div class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-10 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-5">
+    <div v-if="games.length > 0" class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-0 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-5">
       <div v-for="(game, index) in games" :key="game.id" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
 
         <!-- Index -->
@@ -57,6 +152,10 @@ import { RouterLink } from 'vue-router';
       </div>
     </div>
 
+    <div v-else class="text-center text-xl font-bold text-white mt-10 mb-96">
+      NO GAMES AVAILABLE
+    </div>
+
     <!-- Boto de tornar enrere -->
     <div class="fixed top-0 left-0 pt-4">
       <router-link to="/ranking" class="flex items-center pr-3.5 pl-4 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-none uppercase sm:w-auto">
@@ -65,27 +164,11 @@ import { RouterLink } from 'vue-router';
       </router-link>
     </div>
 
+
+
   </div>
 </template>
 
 <style scoped>
 </style>
 
-<script>
-export default {
-  data() {
-    return {
-      games: [
-        { player1: 'Oriolshhh', player2: 'Carlos', winner: 'Oriolshhh', score: '3-1' },
-        { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
-        { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
-        { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
-        { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
-        { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
-        { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
-        { player1: 'Armand', player2: 'Oriolshhh', winner: 'Armand', score: '2-0' },
-      ]
-    };
-  }
-};
-</script>

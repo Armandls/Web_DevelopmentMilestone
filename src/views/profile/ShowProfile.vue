@@ -16,7 +16,7 @@ const games = ref([]);
 function loadGames() {
   fetch(`https://balandrau.salle.url.edu/i3/players/${playerData.value.player_ID}/games/finished`, {
     headers: {
-      'Authorization': `Bearer ${token.value}`,
+      'Bearer': `${token.value}`,
       'Content-Type': 'application/json'
     }
   })
@@ -57,7 +57,8 @@ let winrate = ref(0);
 function loadPlayerStatistics() {
   fetch('https://balandrau.salle.url.edu/i3/players/statistics', {
     headers: {
-      'Authorization': `Bearer ${token.value}`,
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
     }
   })
       .then(response => {
