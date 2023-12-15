@@ -58,6 +58,7 @@ const signIn = () => {
         if (!avatars.includes(img)) {
           img = getRandomAvatar(); //Assignem un avatar aleatori si no està en la llista
         }
+        console.log('Player info: ', data);
         const playerData = {
           player_ID: data.player_ID,
           img: img,
@@ -116,7 +117,7 @@ const signIn = () => {
 
           <!-- Sign Up -->
           <div class="flex justify-center text-center text-white mt-4">
-            <span class="pr-1">Dont have an account?</span>
+            <span class="pr-1">Don't have an account?</span>
             <RouterLink to="/signup" class="font-bold">Sign Up</RouterLink>
           </div>
         </div>
