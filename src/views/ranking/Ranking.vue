@@ -1,24 +1,77 @@
 <script setup>
-import { ref } from 'vue';
+import {computed, inject, onMounted, ref} from 'vue';
 import NavigationBar   from "../../ components/NavigationBar.vue";
 import PlayerSearch from "../../ components/PlayerSearch.vue";
 import PlayerList from "../../ components/PlayerList.vue";
 
-const items = ref([
-  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 90, xp: 7 },
-  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 78, xp: 6},
-  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 67, xp: 34},
-  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 56, xp: 89},
-  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 45, xp: 78},
-  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 23, xp: 9},
-  { imageSrc: '/welcome_page/avatar1.png/', username: 'Oriolshhh', winRate: 11, xp: 13}
-]);
+//Agafem el token de l'usuari que s'ha loggejat, per a poder fer la peticio GET a la API
+const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
+
+const avatars = [
+  'src/assets/welcome_page/avatar1.png',
+  'src/assets/welcome_page/avatar2.png',
+  'src/assets/welcome_page/avatar3.png',
+  'src/assets/welcome_page/avatar4.png',
+  'src/assets/welcome_page/avatar5.png',
+  'src/assets/welcome_page/avatar6.png',
+  'src/assets/welcome_page/avatar7.png',
+  'src/assets/welcome_page/avatar8.png',
+  'src/assets/welcome_page/avatar9.png',
+  'src/assets/welcome_page/avatar10.png',
+];
+
+const getRandomAvatar = () => {
+  const randomIndex = Math.floor(Math.random() * avatars.length);
+  return avatars[randomIndex];
+};
+
+const items = ref([]);
+const fetchPlayers = () => {
+  fetch('https://balandrau.salle.url.edu/i3/players', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${authToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        console.log("TOKEN" + authToken.value);
+        console.log(response);
+        if (response.status === 200) {
+          console.log(response)
+          return response.json();
+        }
+        throw new Error(`Error: ${response.status}`);
+      })
+      .then(players => {
+        items.value = players.map(player => ({
+          imageSrc: avatars.includes(player.img) ? player.img : getRandomAvatar(),
+          username: player.player_ID,
+          level: player.level,
+          xp: player.xp
+        }));
+      })
+      .catch(error => {
+        console.error('Error fetching players:', error.message);
+        // Potser mostrar un missatge d'error a l'usuari
+      });
+};
 
 const searchQuery = ref('');
-
 const handleSearch = (query) => {
   searchQuery.value = query;
 };
+
+const filteredItems = computed(() => {
+  if (!searchQuery.value) {
+    return items.value;
+  }
+  return items.value.filter(item =>
+      item.username.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
+onMounted(fetchPlayers);
 </script>
 
 <template>
@@ -35,7 +88,7 @@ const handleSearch = (query) => {
     </article>
 
     <!-- Container pels personatges -->
-    <PlayerList :searchQuery="searchQuery" />
+    <PlayerList :items="filteredItems" />
 
     <!-- Navigation Bar -->
     <NavigationBar/>

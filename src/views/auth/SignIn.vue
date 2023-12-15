@@ -53,7 +53,7 @@ const signIn = () => {
           throw response; // Si no és 200, llancem l'error
         }
       })
-      .then(data => {
+      .then(data => { // Amb el JSON de la resposta
         let img = data.img; // Comprovem si la imatge està en la llista d'avatars
         if (!avatars.includes(img)) {
           img = getRandomAvatar(); //Assignem un avatar aleatori si no està en la llista
@@ -66,7 +66,6 @@ const signIn = () => {
           coins: data.coins,
           token: data.token
         };
-
         localStorage.setItem('playerData', JSON.stringify(playerData)); //Guardem les dades de l'usuari al localStorage
         setPlayerData(playerData); //Guardem les dades de l'usuari al app.vue
         router.push('/home'); //Anem a la pàgina de home

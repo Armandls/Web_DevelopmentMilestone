@@ -7,6 +7,7 @@ const authToken = ref(null);
 //Funció per actualitzar les dades del jugador que s'ha loggejat
 const setPlayerData = (data) => {
   playerData.value = data;
+  console.log("token: " + data.token);
   authToken.value = data ? data.token : null;
 };
 
