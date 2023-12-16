@@ -1,9 +1,8 @@
 <script setup>
-import {useRoute} from 'vue-router';
+import {RouterLink} from 'vue-router';
 import {inject, onMounted, ref} from "vue";
 
 const token = inject('authToken'); //Agafem el token del jugador desde App.vue
-const route = useRoute();
 
 const username = ref('');
 const imageSrc = ref('');
@@ -20,16 +19,17 @@ onMounted(() => {
   }
 });
 
-const games = ref([]);
+const items = ref([]);
 
 function loadGames() {
-  fetch(`https://balandrau.salle.url.edu/i3/players/${username}/games/finished`, {
+  fetch(`https://balandrau.salle.url.edu/i3/players/${username.value}/games/finished`, {
     headers: {
       'Bearer': `${token.value}`,
       'Content-Type': 'application/json'
     }
   })
       .then(response => {
+        console.log(response);
         if (response.status === 200) {
           console.log(response)
           return response.json();
@@ -40,18 +40,25 @@ function loadGames() {
       })
       .then(data => {
         if (Array.isArray(data)) {
-          games.value = data.map(game => ({
+          items.value = data.map(game => ({
             gameID: game.game_ID,
             size: game.size,
             creationDate: game.creation_date,
             HPMax: game.HP_max,
-            playersGames: game.players_games.map(playerGame => ({
-              gameID: playerGame.game_ID,
-              playerID: playerGame.player_ID,
-              winner: playerGame.winner,
-              xpWin: playerGame.xp_win,
-              coinsWin: playerGame.coins_win
-            }))
+            playerGame1: game.players_games.length > 0 ? {
+              gameID: game.players_games[0].game_ID,
+              playerID: game.players_games[0].player_ID,
+              winner: game.players_games[0].winner,
+              xpWin: game.players_games[0].xp_win,
+              coinsWin: game.players_games[0].coins_win
+            } : null,
+            playerGame2: game.players_games.length > 1 ? {
+              gameID: game.players_games[1].game_ID,
+              playerID: game.players_games[1].player_ID,
+              winner: game.players_games[1].winner,
+              xpWin: game.players_games[1].xp_win,
+              coinsWin: game.players_games[1].coins_win
+            } : null
           }));
         } else {
           console.error("Expected an array, but got:", data);
@@ -64,7 +71,7 @@ function loadGames() {
 
 let winrate = ref(0);
 function loadPlayerStatistics() {
-  fetch(`https://balandrau.salle.url.edu/i3/players/${username}/statistics`, {
+  fetch(`https://balandrau.salle.url.edu/i3/players/${username.value}/statistics`, {
     headers: {
       'Bearer': `${token.value}`,
       'Content-Type': 'application/json'
@@ -81,12 +88,9 @@ function loadPlayerStatistics() {
         }
       })
       .then(statistics => {
-        if (statistics.length > 0) {
-          const stats = statistics[0];
-          winrate.value = stats.games_played > 0 ? (stats.games_won / stats.games_played) * 100 : 'N/A';
-        } else {
-          winrate.value = 'N/A';
-        }
+        const stats = statistics;
+        winrate.value = stats.games_played > 0 ? (stats.games_won / stats.games_played) * 100 : 'N/A';
+        winrate.value = stats.games_played > 0 ? winrate.value + '%' : winrate.value;
       })
       .catch(error => {
         console.error("Error fetching player statistics:", error);
@@ -100,7 +104,7 @@ onMounted(loadPlayerStatistics);
 <template>
   <div class="flex flex-col h-screen w-full bg-cover bg-no-repeat bg-center justify-center pt-0 pb-24 md:pb-0 px-4" style="background-image: url('/src/assets/welcome_page/background.png')">
     <div class="bg-transparent">
-      <div class="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-4xl mx-auto rounded-lg shadow-xl overflow-hidden flex items-center p-3 sm:p-3 md:p-4 lg:p-4 xl:p-4">
+      <div class="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-4xl xl:max-w-4xl mx-auto rounded-lg shadow-xl overflow-hidden flex items-center p-3 sm:p-3 md:p-4 lg:p-4 xl:p-4 mt-10">
         <!-- Foto de perfil -->
         <img class="h-16 sm:h-20 md:h-24 lg:h-24 xl:h-24 w-16 sm:w-20 md:w-24 lg:w-24 xl:w-24" :src="imageSrc" alt="Foto de perfil">
 
@@ -117,8 +121,8 @@ onMounted(loadPlayerStatistics);
         </div>
 
         <!-- WR -->
-        <div class="ml-4 sm:ml-5 md:ml-6 lg:ml-6 xl:ml-6 p-3 sm:p-3.5 md:p-4 lg:p-4 xl:p-4 border border-red-400 rounded text-right bg-red-400">
-          <span class="text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800 font-bold">WR: {{ winrate }}%</span>
+        <div class="ml-4 sm:ml-5 md:ml-6 lg:ml-6 xl:ml-6 p-3 sm:p-3.5 md:p-4 lg:p-4 xl:p-4 border border-green-400 rounded text-right bg-green-500">
+          <span class="text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800 font-bold">WR: {{ winrate }}</span>
         </div>
       </div>
     </div>
@@ -129,26 +133,23 @@ onMounted(loadPlayerStatistics);
     </div>
 
     <!-- Llista de partides jugades -->
-    <div v-if="games.length > 0" class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-0 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-5">
-      <div v-for="(game, index) in games" :key="game.id" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
+    <div v-if="items.length > 0" class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-20 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-5 mb-24">
+      <div v-for="item in items" :key="item.gameId" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
+        <div class="flex items-center">
+          <!-- Imatge del joc -->
+          <img class="rounded w-[48px] h-[48px] mr-4 ml-4 border-2 border-black" src="/src/assets/game/gameStats.png" alt="Game Finished">
 
-        <!-- Index -->
-        <div class="text-2xl sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold mr-4 ml-4">
-          {{ index + 1 }}
+          <div class="flex items-center">
+            <!-- Nom del player -->
+            <div class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-2 bg-blue-300 rounded p-1.5">
+              {{ item.playerGame1.playerID }} VS {{ item.playerGame2.playerID }}
+            </div>
+          </div>
         </div>
 
-        <!-- Noms -->
-        <div class="flex-grow text-lg sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
-          <span :class="{'font-bold': game.winner === game.player1}">{{ game.player1 }}</span>
-          <span> vs </span>
-          <span :class="{'font-bold': game.winner === game.player2}">{{ game.player2 }}</span>
-        </div>
-
-        <!-- Resultat -->
-        <div class="p-2 bg-yellow-300 rounded mr-2 text-md sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold mt-2 mb-2">
-          {{ game.score }}
-        </div>
-
+        <router-link :to="'/gamestats/' + item.gameId" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
+          <font-awesome-icon icon="chart-bar" class="mr-2" /> GAME STATS
+        </router-link>
       </div>
     </div>
 
