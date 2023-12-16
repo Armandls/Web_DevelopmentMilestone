@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {inject, ref} from 'vue';
 import router from "../../router/index.js";
 import NavigationBar from "../../ components/NavigationBar.vue";
 
@@ -14,9 +14,30 @@ const cancelDelete = () => {
   showModal.value = false;
 };
 
+const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
+
+function deletePlayer() {
+  fetch('https://balandrau.salle.url.edu/i3/players', {
+    method: 'DELETE',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        console.log(response);
+        if (response.status === 204) {
+          return
+        }
+        throw new Error(`Error: ${response.status}`);
+      })
+      .catch(error => {
+        console.error('Error deleting players:', error.message);
+      });
+}
 const deleteUserAccount = () => {
-  // En un futuro implementar la lógica necesaria a ejecutar al presionar el botón de eliminar cuenta
   confirmDeletion.value = true;
+  deletePlayer(); //Eliminem l'usuari
   router.push('/');
 };
 </script>

@@ -64,12 +64,23 @@ const handleSearch = (query) => {
 };
 
 const filteredItems = computed(() => {
-  if (!searchQuery.value) {
-    return items.value;
+  const sorted = [...items.value].sort((a, b) => {
+    if (a.level > b.level) return -1;
+    if (a.level < b.level) return 1;
+
+    if (a.xp > b.xp) return -1;
+    if (a.xp < b.xp) return 1;
+
+    return 0;
+  });
+
+  if (searchQuery.value) {
+    return sorted.filter(item =>
+        item.username.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
   }
-  return items.value.filter(item =>
-      item.username.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+
+  return sorted;
 });
 
 onMounted(fetchPlayers);
@@ -80,10 +91,10 @@ onMounted(fetchPlayers);
     <!-- Cercador de jugadors -->
     <PlayerSearch @search="handleSearch" />
 
-    <article class="flex justify-center md:justify-start items-start pt-4 md:pt-20 w-full">
-      <aside class="ml-2 md:ml-64 lg:ml-[200px] xl:ml-[350px] 2xl:ml-[350px]">
+    <article class="flex justify-center items-start pt-4 md:pt-20 w-full">
+      <aside>
         <div class="flex flex-col md:flex-row items-center bg-fuchsia-300 w-full p-4 rounded">
-          <h2 class="text-black text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] uppercase">TOP PLAYERS</h2>
+          <h2 class="text-black text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] uppercase">LEADERBOARD</h2>
         </div>
       </aside>
     </article>

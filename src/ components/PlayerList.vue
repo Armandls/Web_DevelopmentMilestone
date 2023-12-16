@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-6 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-10 mb-20">
     <!-- Bucle per a cada jugador en la llista filtrada -->
-    <div v-for="(item, index) in items" :key="item.id" @click="handlePlayerClick(item)" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black cursor-pointer">
+    <div v-for="(item, index) in items" :key="item.id" @click="handlePlayerClick(item)" :class="containerClass(index)" class="flex items-center justify-between w-full h-[88px] my-2 rounded-[10px] border-4 border-black cursor-pointer">
       <div class="flex items-center">
         <!-- Espai reservat per al número amb amplada fixa -->
         <span class="text-black text-xl md:text-xl lg:text-xl xl:text-3xl font-bold font-['Sigmar One'] uppercase mr-8 ml-3 w-[30px] text-right">{{ index + 1 }}</span>
@@ -19,6 +19,13 @@
 <script setup>
 import { defineProps } from 'vue';
 import router from "../router/index.js";
+
+const containerClass = (index) => {
+  if (index === 0) return 'bg-gold-metallic';    // Or metàl·lic per al primer jugador
+  if (index === 1) return 'bg-silver-metallic';  // Plata metàl·lica per al segon jugador
+  if (index === 2) return 'bg-bronze-metallic';  // Bronze per al tercer jugador
+  return 'bg-yellow-100'; // Retornar classe buida o una classe per defecte per a la resta
+};
 
 // Definició de les props que aquest component espera rebre
 const props = defineProps({
