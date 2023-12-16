@@ -37,14 +37,35 @@ const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
+function checkForErrors(attackName, positionX, positionY) {
+  errorMessage.value = '';
+  successMessage.value = '';
+
+  if (attackName.length > 20 || attackName.length < 1) {
+    errorMessage.value = 'Error: The name must be between 1 and 20 characters.';
+    return;
+  }
+
+  if (positionX < 0 || positionX > 9 || positionX === '') {
+    errorMessage.value = 'Error: Position X must be an integer between 0 and 9.';
+    return;
+  }
+
+  if (positionY < -9 || positionY > 9 || positionY === '') {
+    errorMessage.value = 'Error: Position Y must be an integer between -9 and 9.';
+    return;
+  }
+
+  errorMessage.value = 'Error: The name already exists.';
+}
+
 const createAttack = () => {
   const attackName = document.getElementById("name").value;
   const positionX = document.getElementById("positionX").value;
   const positionY = document.getElementById("positionY").value;
   const positions = `(${positionX},${positionY})`; // Formato (x,y)
 
-  console.log(attackName + " " + positions);
-  console.log(`Bearer ${authToken.value}`)
+  checkForErrors(attackName, positionX, positionY);
 
   fetch('https://balandrau.salle.url.edu/i3/shop/attacks', {
     method: 'POST',
@@ -65,7 +86,6 @@ const createAttack = () => {
       })
       .catch(error => {
         console.error('Error creating attack:', error.message);
-        errorMessage.value = 'Error creating the attack!';
         successMessage.value = '';
       });
 };
