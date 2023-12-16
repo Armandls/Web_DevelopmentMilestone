@@ -57,9 +57,21 @@ const signUp = () => {
           errorMessage.value = data.message ? 'Error creating the player! ' + data.message : 'Error creating the player!';
         }
       })
-      .catch(error => { //Si hi ha un error no controlat (normalment de connexió), el mostrem per consola i mostrem un missatge d'error
-        console.error('Unhandled error', error);
-        errorMessage.value = 'Unexpected error occurred';
+      .catch(error => {
+        if (error instanceof Response) {
+          // Si el error es una respuesta HTTP, se intenta parsear como JSON
+          error.json().then(errorData => {
+            errorMessage.value = errorData.message ? 'Error signing up! ' + errorData.message : 'Error signing up!';
+          }).catch(jsonError => {
+            // Error en caso de que el JSON sea inválido
+            console.error('Error parsing JSON:', jsonError);
+            errorMessage.value = 'Error signing up! Response not in JSON format.';
+          });
+        } else {
+          // El error es de otro tipo (no relacionado con la respuesta HTTP) -> Global Protect
+          console.error('Network error or other issue:', error);
+          errorMessage.value = 'Network error! Please check Global Protect connection.';
+        }
       });
 };
 </script>

@@ -71,10 +71,21 @@ const signIn = () => {
         setPlayerData(playerData); //Guardem les dades de l'usuari al app.vue
         router.push('/home'); //Anem a la pàgina de home
       })
-      .catch(error => { // Agafem el error llançat anteriorment
-        error.json().then(errorData => {
-          errorMessage.value = errorData.message ? 'Error signing in! ' + errorData.message : 'Error signing in!';
-        });
+      .catch(error => {
+        if (error instanceof Response) {
+          // Si el error es una respuesta HTTP, se intenta parsear como JSON
+          error.json().then(errorData => {
+            errorMessage.value = errorData.message ? 'Error signing in! ' + errorData.message : 'Error signing in!';
+          }).catch(jsonError => {
+            // Error en caso de que el JSON sea inválido
+            console.error('Error parsing JSON:', jsonError);
+            errorMessage.value = 'Error signing in! Response not in JSON format.';
+          });
+        } else {
+          // El error es de otro tipo (no relacionado con la respuesta HTTP) -> Global Protect
+          console.error('Network error or other issue:', error);
+          errorMessage.value = 'Network error! Please check Global Protect connection.';
+        }
       });
 };
 </script>
