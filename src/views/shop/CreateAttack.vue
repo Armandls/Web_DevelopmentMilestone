@@ -101,7 +101,6 @@ const createAttack = () => {
     <!-- Imagen monedas -->
     <img src="/src/assets/shop/Monedas.png" alt=" " class="mi-imagen">
 
-
     <!--Imagen chico tamaño pequeño-->
     <div class="img-container">
       <img src="/src/assets/shop/imagen_createattack.png" alt=" " class="absolute top-50 left-0 m-4 w-50 h-50 object-cover">
