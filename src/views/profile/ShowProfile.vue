@@ -144,7 +144,7 @@ onMounted(loadGames);
       </div>
     </div>
 
-    <div v-else class="text-center text-xl font-bold text-white mt-10">
+    <div v-else class="text-center text-3xl font-bold text-white mt-10">
       NO GAMES AVAILABLE
     </div>
 
