@@ -73,12 +73,9 @@ function loadPlayerStatistics() {
         }
       })
       .then(statistics => {
-        if (statistics.length > 0) {
-          const stats = statistics[0];
-          winrate.value = stats.games_played > 0 ? (stats.games_won / stats.games_played) * 100 : 'N/A';
-        } else {
-          winrate.value = 'N/A';
-        }
+        const stats = statistics;
+        winrate.value = stats.games_played > 0 ? (stats.games_won / stats.games_played) * 100 : 'N/A';
+        winrate.value = stats.games_played > 0 ? winrate.value + '%' : winrate.value;
       })
       .catch(error => {
         console.error("Error fetching player statistics:", error);

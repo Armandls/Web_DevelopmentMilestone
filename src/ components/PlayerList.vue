@@ -6,31 +6,51 @@
         <!-- Espai reservat per al número amb amplada fixa -->
         <span class="text-black text-xl md:text-xl lg:text-xl xl:text-3xl font-bold font-['Sigmar One'] uppercase mr-8 ml-3 w-[30px] text-right">{{ index + 1 }}</span>
         <!-- Foto amb borde negre -->
-        <img class="w-[58px] h-[58px] border-4 border-black" :src="item.imageSrc" />
-        <span class="text-black text-sm md:text-lg lg:text-xl xl:text-3xl font-bold font-['Sigmar One'] ml-5">{{ item.username }} - Level: {{ item.level }}</span>
-        <aside class="flex flex-col items-center justify-center bg-transparent p-3 ml-2 rounded-2xl mb-2.5">
-          <p class="text-black font-bold text-xl rounded">{{ item.xp }} EXP</p>
-        </aside>
+        <img class="w-[58px] h-[58px] border-4 border-black mr-4 mt-1.5 mb-1.5" :src="item.imageSrc" />
+
+        <!-- Recuadres per a nom, nivell i experiència -->
+        <div class="flex">
+          <!-- Nom del jugador en un recuadre -->
+          <div class="rounded p-2 mr-2"> <!--Per afegir el recuadre bg-yellow-100 (per exemple) -->
+            <span class="text-black text-2xl font-bold">{{ item.username }}</span>
+          </div>
+
+          <!-- Nivell en un recuadre -->
+          <div class=" rounded p-2 mr-2">
+            <span class="text-black text-2xl font-bold">{{ item.level }} LVL</span>
+          </div>
+
+          <!-- Experiència en un recuadre -->
+          <div class=" rounded p-2">
+            <span class="text-black text-2xl font-bold">{{ item.xp }} XP</span>
+          </div>
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import {defineProps} from 'vue';
 import router from "../router/index.js";
 
+const props = defineProps({
+  items: Array,//LLista ja filtrada
+  isSearching: Boolean //Indica si s'està filtrant o no
+});
+
 const containerClass = (index) => {
-  if (index === 0) return 'bg-gold-metallic';    // Or metàl·lic per al primer jugador
-  if (index === 1) return 'bg-silver-metallic';  // Plata metàl·lica per al segon jugador
-  if (index === 2) return 'bg-bronze-metallic';  // Bronze per al tercer jugador
-  return 'bg-yellow-100'; // Retornar classe buida o una classe per defecte per a la resta
+  if (props.isSearching) {
+    return 'bg-yellow-100';
+  }
+
+
+  if (index === 0) return 'bg-gold-metallic';
+  if (index === 1) return 'bg-silver-metallic';
+  if (index === 2) return 'bg-bronze-metallic';
+  return 'bg-yellow-100'; // Estil per defecte quan no hi ha cerca
 };
 
-// Definició de les props que aquest component espera rebre
-const props = defineProps({
-  items: Array // Aquesta seria la llista de jugadors ja filtrada
-});
 
 const handlePlayerClick = (item) => {
   localStorage.setItem('currentPlayer', JSON.stringify({

@@ -4,8 +4,6 @@ import NavigationBar   from "../../ components/NavigationBar.vue";
 import PlayerSearch from "../../ components/PlayerSearch.vue";
 import PlayerList from "../../ components/PlayerList.vue";
 
-//TODO: ORDENAR PLAYERS SEGONS NIVELL I EXPERIÈNCIA I POSAR MEDALLA ALS 3 PRIMERS
-
 //Agafem el token de l'usuari que s'ha loggejat, per a poder fer la peticio GET a la API
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
 
@@ -59,6 +57,8 @@ const fetchPlayers = () => {
 };
 
 const searchQuery = ref('');
+const isSearching = computed(() => searchQuery.value.length > 0);
+
 const handleSearch = (query) => {
   searchQuery.value = query;
 };
@@ -94,14 +94,13 @@ onMounted(fetchPlayers);
     <article class="flex justify-center items-start pt-4 md:pt-20 w-full">
       <aside>
         <div class="flex flex-col md:flex-row items-center bg-fuchsia-300 w-full p-4 rounded">
-          <h2 class="text-black text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] uppercase">LEADERBOARD</h2>
+          <h2 class="text-black text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold font-['Sigmar One'] uppercase">LEADERBOARD</h2>
         </div>
       </aside>
     </article>
 
     <!-- Container pels personatges -->
-    <PlayerList :items="filteredItems" />
-
+    <PlayerList :items="filteredItems" :isSearching="isSearching" />
     <!-- Navigation Bar -->
     <NavigationBar/>
   </header>

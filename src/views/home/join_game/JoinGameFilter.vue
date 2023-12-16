@@ -1,5 +1,24 @@
 <script setup>
 import { RouterLink } from 'vue-router';
+import router from "../../../router/index.js";
+import {ref} from "vue";
+
+const startDate = ref('');
+const endDate = ref('');
+const available = ref(false);
+const finishedGames = ref(false);
+
+function applyFilters() {
+  router.push({
+    name: 'joingame', // Canvia aquest nom pel nom de la ruta del teu component de jocs
+    query: {
+      startDate: startDate.value,
+      endDate: endDate.value,
+      available: available.value,
+      finishedGames: finishedGames.value
+    }
+  });
+}
 </script>
 
 <template>
@@ -21,30 +40,30 @@ import { RouterLink } from 'vue-router';
       <form class="flex flex-col sm:flex-row justify-between mb-6 gap-4">
         <section class="w-full">
           <label for="startDate" class="block text-lg font-semibold text-white mb-2">Start Date</label>
-          <input id="startDate" type="date" class="border-2 border-gray-300 rounded-lg p-3 w-full text-lg">
+          <input id="startDate" type="date" v-model="startDate" class="border-2 border-gray-300 rounded-lg p-3 w-full text-lg">
         </section>
         <section class="w-full">
           <label for="endDate" class="block text-lg font-semibold text-white mb-2">End Date</label>
-          <input id="endDate" type="date" class="border-2 border-gray-300 rounded-lg p-3 w-full text-lg">
+          <input id="endDate" type="date" v-model="endDate" class="border-2 border-gray-300 rounded-lg p-3 w-full text-lg">
         </section>
       </form>
 
       <aside class="mb-6">
         <label class="inline-flex items-center">
-          <input type="checkbox" class="form-checkbox h-6 w-6 text-blue-600 rounded">
+          <input type="checkbox" v-model="available" class="form-checkbox h-6 w-6 text-blue-600 rounded">
           <span class="ml-3 text-2xl font-bold text-white">AVAILABLE</span>
         </label>
       </aside>
 
       <aside class="mb-6">
         <label class="inline-flex items-center">
-          <input type="checkbox" class="form-checkbox h-6 w-6 text-blue-600 rounded">
+          <input type="checkbox" v-model="finishedGames" class="form-checkbox h-6 w-6 text-blue-600 rounded">
           <span class="ml-3 text-2xl font-bold text-white">FINISHED GAMES</span>
         </label>
       </aside>
 
       <footer class="text-right">
-        <RouterLink to="/joingame" class="bg-purple-600 hover:bg-purple-800 text-white font-bold py-3 px-6 rounded-lg text-lg">APPLY AND SEARCH</RouterLink>
+        <button @click="applyFilters" class="bg-purple-600 hover:bg-purple-800 text-white font-bold py-3 px-6 rounded-lg text-lg">APPLY AND SEARCH</button>
       </footer>
     </section>
   </main>
