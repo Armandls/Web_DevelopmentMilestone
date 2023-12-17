@@ -201,8 +201,8 @@ const buyAttack = (attackID) => {
             <div class="attack-positions-container text-black text-sm md:text-s lg:text-l xl:text-xl mt-2 font-bold font-['Sigmar One'] ml-5">{{ item.positions }}</div>
           </div>
           <div class="flex-col">
-            <div class="attack-price-container text-black text-sm md:text-s lg:text-l xl:text-xl font-bold font-['Sigmar One'] uppercase ml-5">Power</div>
-            <div class="attack-price-container text-black text-sm md:text-s lg:text-l xl:text-xl mt-2 font-bold font-['Sigmar One'] ml-5">{{ item.power }}</div>
+            <div class="attack-power-container text-black text-sm md:text-s lg:text-l xl:text-xl font-bold font-['Sigmar One'] uppercase ml-5">Power</div>
+            <div class="attack-power-container text-black text-sm md:text-s lg:text-l xl:text-xl mt-2 font-bold font-['Sigmar One'] ml-5">{{ item.power }}</div>
           </div>
           <div class="flex-col">
             <div class="attack-price-container text-black text-sm md:text-s lg:text-l xl:text-xl font-bold font-['Sigmar One'] uppercase ml-5">Price</div>
@@ -210,8 +210,8 @@ const buyAttack = (attackID) => {
           </div>
         </div>
         <div v-if="!item.isAbovePlayerLevel" class="flex items-center">
-          <input type="checkbox" v-model="item.isSelected" class="h-6 w-6 mr-4">
-          <label class="mr-4 text-black text-2xl font-bold">BUY</label>
+          <input type="checkbox" v-model="item.isSelected" class="h-6 w-6 mr-2">
+          <label class="mr-8 text-black text-2xl font-bold">BUY</label>
         </div>
       </div>
     </div>
@@ -257,6 +257,14 @@ const buyAttack = (attackID) => {
   justify-content: center;
   display: flex;
   width: 130px; /* Ajustar para el padding */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attack-power-container {
+  justify-content: center;
+  display: flex;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
