@@ -4,7 +4,6 @@ import router from "../../../router/index.js";
 import {ref} from "vue";
 
 const startDate = ref('');
-const endDate = ref('');
 const available = ref(false);
 const finishedGames = ref(false);
 
@@ -13,7 +12,6 @@ function applyFilters() {
     name: 'joingame', // Canvia aquest nom pel nom de la ruta del teu component de jocs
     query: {
       startDate: startDate.value,
-      endDate: endDate.value,
       available: available.value,
       finishedGames: finishedGames.value
     }
@@ -41,10 +39,6 @@ function applyFilters() {
         <section class="w-full">
           <label for="startDate" class="block text-lg font-semibold text-white mb-2">Start Date</label>
           <input id="startDate" type="date" v-model="startDate" class="border-2 border-gray-300 rounded-lg p-3 w-full text-lg">
-        </section>
-        <section class="w-full">
-          <label for="endDate" class="block text-lg font-semibold text-white mb-2">End Date</label>
-          <input id="endDate" type="date" v-model="endDate" class="border-2 border-gray-300 rounded-lg p-3 w-full text-lg">
         </section>
       </form>
 

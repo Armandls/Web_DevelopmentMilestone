@@ -8,8 +8,24 @@ import router from "../../../router/index.js";
 
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
 
+function getMonthNumber(month) {
+  const months = {
+    Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06',
+    Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12'
+  };
+  return months[month];
+}
+
+function formatDate(dateStr) {
+  const parts = dateStr.split(' ');
+  const year = parts[3];
+  const month = getMonthNumber(parts[1]);
+  const day = parts[2].length === 1 ? `0${parts[2]}` : parts[2]; // Afegir zero si el dia és d'un sol dígit
+  return `${year}-${month}-${day}`;
+}
+
 const items = ref([]);
-function loadGames() {
+function loadGames(query = {}) {
   fetch('https://balandrau.salle.url.edu/i3/arenas', {
     method: 'GET',
     headers: {
@@ -24,7 +40,32 @@ function loadGames() {
         throw new Error(`Error: ${response.status}`);
       })
       .then(games => {
-        items.value = games.map(game => ({
+        //Filtrem en base a la query que ens passen a través de la URL
+        let filteredGames = games;
+        console.log(filteredGames);
+        console.log(query);
+        if (query.startDate) {
+          console.log(query.startDate);
+          filteredGames = filteredGames.filter(game => {
+            console.log(game.creation_date);
+            if (game.creation_date) {
+              const formattedGameDate = formatDate(game.creation_date);
+              console.log(formattedGameDate);
+              return formattedGameDate === query.startDate;
+            }
+            return false;
+          });
+        }
+
+        if (query.available === 'true') { //Si es pot jugar
+          filteredGames = filteredGames.filter(game => !game.finished);
+        }
+
+        if (query.finishedGames === 'true') { //Si ja s'ha acabat
+          filteredGames = filteredGames.filter(game => game.finished);
+        }
+
+        items.value = filteredGames.map(game => ({ //Mapejem els games ja filtrats per a poder treballar amb ells
           gameId: game.game_ID,
           size: game.size,
           creationDate: game.creation_date, // Aquest camp pot requerir un format específic
@@ -40,25 +81,27 @@ function loadGames() {
       });
 }
 
-const route = useRoute();
+const route = useRoute(); //Retornem la ruta actual
 
 function applyFiltersFromRoute() {
-  const query = route.query;
+  const query = route.query; //Agafem els paràmetres de la URL
   if (Object.keys(query).length > 0) {
-    // Aplica els filtres
+    //Apliquem els filtres
     loadGames(query);
   } else {
-    // Carrega tots els jocs si no hi ha filtres
+    //Carreguem tots els jocs
     loadGames();
   }
 }
 
 function clearFilters() {
-  router.push({ name: 'Games' }); // Neteja els filtres redirigint sense paràmetres de consulta
+  router.push({ name: 'joingame' }); //per netejar els filtres simplements treiem els parametres de la ruta
 }
 
 onMounted(applyFiltersFromRoute);
 
+//Obserem constantmernt la ruta per si hi ha canvis, route es una font de dades reactiva
+//Cada vegada que hi hagi canvis a la ruta, aplicarem els filtres
 watch(route, applyFiltersFromRoute);
 </script>
 
@@ -66,12 +109,15 @@ watch(route, applyFiltersFromRoute);
   <div class="flex flex-col h-screen w-full bg-cover bg-no-repeat bg-center justify-center pt-0 pb-24 md:pb-0 px-4" style="background-image: url('/src/assets/welcome_page/background.png')">
     <!-- Available games i boto de filtrar -->
     <div class="flex justify-center md:justify-start items-start pt-10 md:pt-24 w-full">
-      <div class="ml-5 md:ml-64 lg:ml-[200px] xl:ml-[350px] 2xl:ml-[500px]"> <!-- Augment significatiu del marge esquerre per a pantalles grans -->
+      <div class="ml-5 md:ml-32 lg:ml-[150px] xl:ml-[300px] 2xl:ml-[450px]">
         <div class="flex flex-col md:flex-row items-center">
           <div class="text-white text-4xl md:text-[50px] font-bold font-['Sigmar One'] uppercase">AVAILABLE GAMES</div>
           <RouterLink to="/joingamefilter" class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded mt-4 md:mt-0 md:ml-10">
             <font-awesome-icon icon="filter" class="mr-2" /> FILTER
           </RouterLink>
+          <button @click="clearFilters" class="bg-red-400 hover:bg-red-600 text-white font-bold ml-4 py-2 px-4 rounded mt-2 md:mt-0">
+            <font-awesome-icon icon="times" class="mr-2" /> CLEAR FILTERS
+          </button>
         </div>
       </div>
     </div>
