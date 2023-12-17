@@ -114,7 +114,7 @@ const createAttack = () => {
 
             <!-- Contenedor para los campos -->
             <div class="p-8">
-              <h2 class="text-xs h:text-xs sm:text-sm md:text-ml lg:text-xl xl:text-2xl font-bold text-white uppercase">THE DMG
+              <h2 class="text-xs h:text-xs sm:text-sm md:text-ml lg:text-xl xl:text-2xl font-bold text-white uppercase">THE DAMAGE
                 WILL BE GENERATED RANDOMLY</h2>
 
               <div class="space-y-10 mt-6">

@@ -4,7 +4,6 @@ import ReturnToShop from "../../ components/ReturnToShop.vue";
 
 const authToken = inject('authToken');
 const playerData = inject('playerData');
-const playerLevel = playerData.value.level;
 const items = ref([]);
 const showDropdown = ref(false);
 const selectedItems = ref([]);
@@ -49,7 +48,7 @@ const fetchAttacks = () => {
           level_needed: attack.level_needed,
           imageSrc: getRandomAttackImage(), // Asignar una imagen aleatoria
           isSelected: false,
-          isAbovePlayerLevel: attack.level_needed > playerLevel
+          isAbovePlayerLevel: attack.level_needed > playerData.value.level
         }));
       })
       .catch(error => {
@@ -78,10 +77,9 @@ function getAttackStyles(attack) {
       'border-color': '#000000'
     }
   }
-  //Yellow
   return {
-    'background-color': '#fef9c3',
-    'border-color': '#752ae8'
+    'background-color': '#752ae8',
+    'border-color': '#03fcf0'
   };
 }
 
@@ -153,7 +151,7 @@ const buyAttack = (attackID) => {
       </button>
 
       <!-- Menú Desplegable -->
-      <div v-if="showDropdown" class="absolute right-0 mt-2 w-60 bg-yellow-100 shadow-xl rounded-lg overflow-y-auto max-h-60 z-50">
+      <div v-if="showDropdown" class="absolute right-0 mt-2 w-60 bg-yellow-100 shadow-xl rounded-lg overflow-hidden max-h-60 z-50">
         <div v-for="item in selectedItems" :key="item.id" class="px-4 py-2 hover:bg-yellow-100 border-b border-gray-200">
           {{ item.attackName }} - ${{ item.price }}
         </div>
@@ -188,9 +186,9 @@ const buyAttack = (attackID) => {
     </div>
 
     <div class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-20 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pr-5 mr-4">
-      <div v-for="(item, index) in items" :key="item.id" :style="getAttackStyles(item)" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
+        <div v-for="(item, index) in items" :key="item.id" :style="getAttackStyles(item)" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
         <!-- Superposición para ataques bloqueados -->
-        <div v-if="item.isAbovePlayerLevel" class="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+        <div v-if="item.isAbovePlayerLevel" class="relative top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <img src="/src/assets/attacks/candado.png" alt="Lock" class="w-16 h-16 object-cover object-fit-contain" />
         </div>
 
@@ -272,6 +270,7 @@ const buyAttack = (attackID) => {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 </style>
 
 
