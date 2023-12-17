@@ -67,7 +67,7 @@ onMounted(loadPlayerAttacks);
 
 // Método para obtener los estilos basados en el nivel del jugador
 function getAttackStyles(attack) {
-  if (attack.equipped || attack.on_sale) {
+  if (attack.on_sale) {
     return {
       'background-color': '#383736',
       'border-color': '#000000'
@@ -132,7 +132,7 @@ function sellAttack(attackID, price) {
           onMounted(loadPlayerAttacks);
           return;
         }
-        throw new Error(`Error: ${response.status}`)
+        throw new Error(`Error: ${response.statusCode}`)
       })
       .catch(error => {
         console.error("Error selling attack:", error);
@@ -212,7 +212,7 @@ function sellAttack(attackID, price) {
         </div>
 
         <div v-if="item.equipped" class="flex items-center w-full h-full justify-between mr-80">
-          <label class="text-red-600 text-xl font-bold">EQUIPPED</label>
+          <label class="text-white text-xl font-bold">EQUIPPED</label>
         </div>
         <div v-if="item.on_sale" class="flex items-center justify-between w-full">
           <label class="text-red-600 text-xl font-bold truncate">ON SALE</label>
@@ -283,24 +283,6 @@ function sellAttack(attackID, price) {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
 }
 
 </style>
