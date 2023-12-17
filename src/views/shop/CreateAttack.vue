@@ -53,10 +53,7 @@ function checkForErrors(attackName, positionX, positionY) {
 
   if (positionY < -9 || positionY > 9 || positionY === '') {
     errorMessage.value = 'Error: Position Y must be an integer between -9 and 9.';
-    return;
   }
-
-  errorMessage.value = 'Error: The name already exists.';
 }
 
 const createAttack = () => {
@@ -87,6 +84,9 @@ const createAttack = () => {
       .catch(error => {
         console.error('Error creating attack:', error.message);
         successMessage.value = '';
+        if (errorMessage.value === '') {
+          errorMessage.value = 'Error: The name already exists.';
+        }
       });
 };
 </script>
