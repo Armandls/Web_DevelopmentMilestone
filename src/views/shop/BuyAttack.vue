@@ -10,7 +10,11 @@ const selectedItems = ref([]);
 const errorMessage = ref('');
 const successMessage = ref('');
 
-function getRandomAttackImage() {
+function getAttackIndex(attackID) {
+  return Array.from(attackID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function getRandomAttackImage(index) {
   const attacks = [
     'src/assets/attacks/1.png',
     'src/assets/attacks/2.png',
@@ -23,7 +27,7 @@ function getRandomAttackImage() {
     'src/assets/attacks/9.png',
     'src/assets/attacks/10.png'
   ];
-  return attacks[Math.floor(Math.random() * attacks.length)];
+  return attacks[index % attacks.length]
 }
 
 // Función para obtener ataques desde la API
@@ -46,7 +50,7 @@ const fetchAttacks = () => {
           power: attack.power,
           price: attack.price,
           level_needed: attack.level_needed,
-          imageSrc: getRandomAttackImage(), // Asignar una imagen aleatoria
+          imageSrc: getRandomAttackImage(getAttackIndex(attack.attack_ID)),
           isSelected: false,
           isAbovePlayerLevel: attack.level_needed > playerData.value.level
         }));

@@ -11,7 +11,11 @@ const errorMessage = ref('');
 const successMessage = ref('');
 const items = ref([]);
 
-function getRandomAttackImage() {
+function getAttackIndex(attackID) {
+  return Array.from(attackID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function getRandomAttackImage(index) {
   const attacks = [
     'src/assets/attacks/1.png',
     'src/assets/attacks/2.png',
@@ -24,7 +28,7 @@ function getRandomAttackImage() {
     'src/assets/attacks/9.png',
     'src/assets/attacks/10.png'
   ];
-  return attacks[Math.floor(Math.random() * attacks.length)];
+  return attacks[index % attacks.length]
 }
 
 //Función para listar los ataques que tiene el jugador
@@ -52,7 +56,7 @@ function loadPlayerAttacks() {
             power: attack.power,
             equipped: attack.equipped,
             on_sale: attack.on_sale,
-            img: getRandomAttackImage(),
+            img: getRandomAttackImage(getAttackIndex(attack.attack_ID))
           }));
         } else {
           console.error("Expected an array, but got:", data);
