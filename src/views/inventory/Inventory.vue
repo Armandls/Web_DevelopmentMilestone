@@ -11,7 +11,11 @@ const attacksEquipped = computed(() => {
   return attacks.value.filter(attack => attack.equipped).length;
 });
 
-function getRandomAttackImage() {
+function getAttackIndex(attackID) {
+  return Array.from(attackID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function getRandomAttackImage(index) {
   const image = [
     'src/assets/attacks/1.png',
     'src/assets/attacks/2.png',
@@ -24,7 +28,7 @@ function getRandomAttackImage() {
     'src/assets/attacks/9.png',
     'src/assets/attacks/10.png'
   ];
-  return image[Math.floor(Math.random() * image.length)];
+  return image[index % image.length];
 }
 
 //Get the attacks from the API
@@ -64,7 +68,7 @@ function loadPlayerAttacks() {
             power: attack.power,
             equipped: attack.equipped,
             on_sale: attack.on_sale,
-            img: getRandomAttackImage(),
+            img: getRandomAttackImage(getAttackIndex(attack.attack_ID))
           }));
         } else {
           console.error("Expected an array, but got:", data);
