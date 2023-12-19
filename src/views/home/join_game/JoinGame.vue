@@ -156,7 +156,8 @@ watch(route, applyFiltersFromRoute);
         <RouterLink v-if="!item.finished" :to="'/startgame/' + item.gameId" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
           <font-awesome-icon icon="play" class="mr-2" /> JOIN GAME
         </RouterLink>
-        <RouterLink v-else :to="'/gameinfo/' + item.gameId" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
+        <!-- <RouterLink v-else :to="'/gameinfo/' + item.gameId" -->
+        <RouterLink v-else :to="'/gameinfo'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
           <font-awesome-icon icon="chart-bar" class="mr-2" /> GAME STATS
         </RouterLink>
       </div>
