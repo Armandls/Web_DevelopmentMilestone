@@ -50,7 +50,7 @@ const fetchPlayers = () => {
       })
       .then(players => {
         items.value = players.map(player => ({
-          imageSrc: avatars.includes(player.img) ? player.img : getRandomAvatar(player.player_ID),
+          imageSrc: (player.img.match(/^https:\/\/[^\s,]+/) ? player.img : getRandomAvatar(player.player_ID)),
           username: player.player_ID,
           level: player.level,
           xp: player.xp

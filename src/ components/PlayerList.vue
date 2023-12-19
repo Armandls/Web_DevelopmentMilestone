@@ -6,7 +6,7 @@
         <!-- Espai reservat per al número amb amplada fixa -->
         <span class="text-black text-xl md:text-xl lg:text-xl xl:text-3xl font-bold font-['Sigmar One'] uppercase mr-8 ml-3 w-[30px] text-right">{{ index + 1 }}</span>
         <!-- Foto amb borde negre -->
-        <img class="w-[58px] h-[58px] border-4 border-black mr-4 mt-1.5 mb-1.5" :src="item.imageSrc" />
+        <img class="w-[58px] h-[58px] border-4 border-black mr-4 mt-1.5 mb-1.5" :src="item.imageSrc"  alt=""/>
 
         <!-- Recuadres per a nom, nivell i experiència -->
         <div class="flex">

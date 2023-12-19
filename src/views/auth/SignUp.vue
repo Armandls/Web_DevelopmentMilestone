@@ -1,7 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import {inject, ref} from 'vue';
-import axios from 'axios';
 import router from "../../router/index.js";
 
 const playerID = ref('');
@@ -33,15 +32,15 @@ const getRandomAvatar = () => {
 
 const setPlayerData = inject('setPlayerData');
 
-function signInPlayer(playerId, password) {
+function signInPlayer(player, pwd) {
   fetch('https://balandrau.salle.url.edu/i3/players/join', { // Enllaç de l'API
     method: 'POST', // Mètode de l'API per aquesta petició
     headers: { // Headers de l'API per aquesta petició
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ // Dades enviades a l'API per aquesta petició
-      player_ID: playerID.value,
-      password: password.value
+      player_ID: player,
+      password: pwd
     })
   })
       .then(response => {
@@ -103,11 +102,9 @@ const signUp = () => {
   })
       .then(response => { //Amb el que ens respongui la API:
         if (response.status === 201) { //En aquest cas ens retornava només 201 en cas d'exit i un json en cas d'error, per tant primer comparem directament amb 201
-          console.log('Player created successfully');
+          console.log('Player created successfully -> Now login it!');
 
           signInPlayer(playerID.value, password.value); //Fem sign in automàticament
-
-          router.push('/home'); //Anem a la pàgina de home
         } else {
           return response.json(); //Si no és 201, retornem el json que ens ha enviat la API
         }
