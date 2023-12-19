@@ -15,10 +15,11 @@ function mapGameInfo(gameData) {
     return;
   }
 
-  const gameInfo = {
+  // Update game.value directly within this function
+  game.value = {
     id: gameData.game_ID,
     size: gameData.size,
-    creationDate: gameData.creation_date,
+    creationDate: new Date(gameData.creation_date).toLocaleString(), // convert to readable date
     isFinished: gameData.finished,
     maxHP: gameData.HP_max,
     hasStarted: gameData.start,
@@ -32,23 +33,26 @@ function mapGameInfo(gameData) {
   };
 }
 
-
 const winner = ref(null);
 const loser = ref(null);
 
-function seeWinner() { //Guardar info del guanyador, i del perdedor
-  if(game.value.players[0].isWinner === true) {
-    winner.value = game.value.players[0];
-    loser.value = game.value.players[1];
-  } else {
-    winner.value = game.value.players[1];
-    loser.value = game.value.players[0];
+function seeWinner() {
+  if (!game.value || !game.value.players || game.value.players.length < 2) {
+    console.error("No game or players data available to determine the winner.");
+    return;
   }
+
+  const [firstPlayer, secondPlayer] = game.value.players;
+  winner.value = firstPlayer.isWinner ? firstPlayer : secondPlayer;
+  loser.value = firstPlayer.isWinner ? secondPlayer : firstPlayer;
+
+  console.log("Winner:", winner.value.playerId);
+  console.log("Loser:", loser.value.playerId);
 }
 
 function loadGameInfo() {
   if (gameId) {
-    fetch(`https://balandrau.salle.url.edu/i3/games/${gameId}`, {
+    fetch(`https://balandrau.salle.url.edu/i3/arenas/${gameId}`, {
       headers: {
         'Bearer': `${token.value}`,
         'Content-Type': 'application/json'
@@ -57,7 +61,6 @@ function loadGameInfo() {
         .then(response => {
           console.log(response);
           if (response.status === 200) {
-            console.log(response)
             return response.json();
           } else {
             console.error("Response error:", response);
@@ -68,6 +71,8 @@ function loadGameInfo() {
           console.log(data);
           //Mapejem les dades del joc
           mapGameInfo(data);
+          console.log("game INFO "+game);
+          console.log(game.value.id);
           seeWinner();
         })
         .catch(error => {
@@ -88,7 +93,7 @@ onMounted(loadGameInfo);
         <span class="hidden sm:inline">RETURN</span>
       </router-link>
     </div>
-    <div class="container mx-auto mt-10">
+    <div class="container mx-auto mt-1">
       <!-- Titol de la batalla (guanyador vs perdedor) -->
       <div class="text-center text-2xl font-bold mb-4">
         <!-- Comprova que els objectes winner i loser no són nuls abans d'accedir a les seves propietats -->
@@ -96,7 +101,7 @@ onMounted(loadGameInfo);
       </div>
 
       <!-- Contenidor per mostrar la informació del game (size, creation_date, HP_max) -->
-      <div class="bg-gray-200 p-4 rounded shadow mb-4">
+      <div class="bg-blue-400 p-4 rounded shadow mb-4 mr-96 ml-96">
         <!-- Comprova que game no és nul abans d'accedir a les seves propietats -->
         <div>Game ID: {{ game && game.value && game.value.id }}</div>
         <div>Size: {{ game && game.value && game.value.size }}</div>
@@ -106,7 +111,7 @@ onMounted(loadGameInfo);
 
       <div class="flex justify-around">
         <!-- Contenidor del guanyador -->
-        <div class="bg-gray-300 p-4 rounded shadow flex-1 mr-2">
+        <div class="bg-yellow-100 p-10 rounded shadow flex-1 mr-8 ml-24 mt-10">
           <div class="font-bold">INFO DEL GUANYADOR</div>
           <div>Nom: {{ winner && winner.value && winner.value.playerId }}</div>
           <!-- Assegura't de proporcionar una imatge per defecte si imageSrc no està definit -->
@@ -116,7 +121,7 @@ onMounted(loadGameInfo);
         </div>
 
         <!-- Contenidor del perdedor -->
-        <div class="bg-gray-300 p-4 rounded shadow flex-1 ml-2">
+        <div class="bg-yellow-100 p-10 rounded shadow flex-1 mr-24 ml-8 mt-10">
           <div class="font-bold">INFO DEL PERDEDOR</div>
           <div>Nom: {{ loser && loser.value && loser.value.playerId }}</div>
           <!-- Assegura't de proporcionar una imatge per defecte si imageSrc no està definit -->
