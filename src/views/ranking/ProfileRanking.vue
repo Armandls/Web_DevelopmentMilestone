@@ -13,7 +13,7 @@ const xp = ref('');
 const route = useRoute();
 
 username.value = route.query.username;
-imageSrc.value = route.query.imageSrc;
+imageSrc.value = (route.query.img.match(/^https:\/\/[^\s,]+/) ? route.query.img : route.query.imageSrc);
 lvl.value = route.query.lvl;
 xp.value = route.query.xp;
 
