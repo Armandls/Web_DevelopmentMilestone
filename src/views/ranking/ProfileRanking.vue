@@ -1,6 +1,7 @@
 <script setup>
-import {RouterLink} from 'vue-router';
+import {RouterLink, useRoute} from 'vue-router';
 import {inject, onMounted, ref} from "vue";
+import router from "../../router/index.js";
 
 const token = inject('authToken'); //Agafem el token del jugador desde App.vue
 
@@ -9,15 +10,17 @@ const imageSrc = ref('');
 const lvl = ref('');
 const xp = ref('');
 
-onMounted(() => {
-  const currentPlayer = JSON.parse(localStorage.getItem('currentPlayer'));
-  if (currentPlayer) {
-    username.value = currentPlayer.username;
-    imageSrc.value = currentPlayer.imageSrc;
-    lvl.value = currentPlayer.lvl;
-    xp.value = currentPlayer.xp;
-  }
-});
+const route = useRoute();
+
+username.value = route.query.username;
+imageSrc.value = route.query.imageSrc;
+lvl.value = route.query.lvl;
+xp.value = route.query.xp;
+
+console.log(username.value);
+console.log(imageSrc.value);
+console.log(lvl.value);
+console.log(xp.value);
 
 const items = ref([]);
 
@@ -99,6 +102,15 @@ function loadPlayerStatistics() {
 
 onMounted(loadGames);
 onMounted(loadPlayerStatistics);
+
+function goToStats(gameId) {
+  router.push({
+    name: 'gameinfo',
+    query: {
+      gameID: gameId
+    }
+  });
+}
 </script>
 
 <template>
@@ -147,9 +159,9 @@ onMounted(loadPlayerStatistics);
           </div>
         </div>
 
-        <router-link :to="'/gamestats/' + item.gameId" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
+        <button @click="goToStats(item.gameID)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
           <font-awesome-icon icon="chart-bar" class="mr-2" /> GAME STATS
-        </router-link>
+        </button>
       </div>
     </div>
 

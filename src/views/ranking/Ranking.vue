@@ -3,6 +3,7 @@ import {computed, inject, onMounted, ref} from 'vue';
 import NavigationBar   from "../../ components/NavigationBar.vue";
 import PlayerSearch from "../../ components/PlayerSearch.vue";
 import PlayerList from "../../ components/PlayerList.vue";
+import router from "../../router/index.js";
 
 //Agafem el token de l'usuari que s'ha loggejat, per a poder fer la peticio GET a la API
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
@@ -88,6 +89,22 @@ const filteredItems = computed(() => {
 });
 
 onMounted(fetchPlayers);
+
+const handlePlayerClick = (item) => {
+  console.log(item.username);
+  console.log(item.imageSrc);
+  console.log(item.level);
+  console.log(item.xp);
+  router.push({
+    name: 'profileranking',
+    query: {
+      username: item.username,
+      imageSrc: item.imageSrc,
+      lvl: item.level,
+      xp: item.xp
+    }
+  });
+};
 </script>
 
 <template>
@@ -104,12 +121,11 @@ onMounted(fetchPlayers);
     </article>
 
     <!-- Container pels personatges -->
-    <PlayerList :items="filteredItems" :isSearching="isSearching" />
+    <PlayerList :items="filteredItems" :isSearching="isSearching"  @playerClick="handlePlayerClick"/>
     <!-- Navigation Bar -->
     <NavigationBar/>
   </header>
 </template>
-
 <style scoped>
 </style>
 

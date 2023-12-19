@@ -105,10 +105,11 @@ onMounted(applyFiltersFromRoute);
 watch(route, applyFiltersFromRoute);
 
 function goToStats(gameId) {
+  console.log(gameId);
   router.push({
     name: 'gameinfo',
     query: {
-      gameID: gameId.value
+      gameID: gameId
     }
   });
 }

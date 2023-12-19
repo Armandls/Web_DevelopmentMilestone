@@ -55,7 +55,6 @@ const containerClass = (index) => {
 const emits = defineEmits(['playerClick']);
 
 const handlePlayerClick = (item) => {
-  // Emetre un event amb la informació del jugador
   emits('playerClick', item);
 };
 </script>
