@@ -52,13 +52,10 @@ const containerClass = (index) => {
 };
 
 
+const emits = defineEmits(['playerClick']);
+
 const handlePlayerClick = (item) => {
-  localStorage.setItem('currentPlayer', JSON.stringify({
-    username: item.username,
-    imageSrc: item.imageSrc,
-    lvl: item.level,
-    xp: item.xp
-  }));
-  router.push('/profileranking');
+  // Emetre un event amb la informació del jugador
+  emits('playerClick', item);
 };
 </script>
