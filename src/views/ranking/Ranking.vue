@@ -20,10 +20,14 @@ const avatars = [
   'src/assets/avatars/avatar10.png',
 ];
 
-const getRandomAvatar = () => {
-  const randomIndex = Math.floor(Math.random() * avatars.length);
-  return avatars[randomIndex];
-};
+function getPlayerIndex(playerID) {
+  return Array.from(playerID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function getRandomAvatar (playerID) {
+  let index = getPlayerIndex(playerID);
+  return avatars[index % avatars.length];
+}
 
 const items = ref([]);
 const fetchPlayers = () => {
@@ -45,7 +49,7 @@ const fetchPlayers = () => {
       })
       .then(players => {
         items.value = players.map(player => ({
-          imageSrc: avatars.includes(player.img) ? player.img : getRandomAvatar(),
+          imageSrc: avatars.includes(player.img) ? player.img : getRandomAvatar(player.player_ID),
           username: player.player_ID,
           level: player.level,
           xp: player.xp

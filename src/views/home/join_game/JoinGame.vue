@@ -103,6 +103,15 @@ onMounted(applyFiltersFromRoute);
 //Obserem constantmernt la ruta per si hi ha canvis, route es una font de dades reactiva
 //Cada vegada que hi hagi canvis a la ruta, aplicarem els filtres
 watch(route, applyFiltersFromRoute);
+
+function goToStats(gameId) {
+  router.push({
+    name: 'gameinfo',
+    query: {
+      gameID: gameId.value
+    }
+  });
+}
 </script>
 
 <template>
@@ -153,12 +162,12 @@ watch(route, applyFiltersFromRoute);
         </div>
 
         <!-- Botó per unir-se al joc o veure estadístiques -->
-        <RouterLink v-if="!item.finished" :to="'/startgame/' + item.gameId" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
+        <button v-if="!item.finished" @click="goToStats(item.gameId)" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
           <font-awesome-icon icon="play" class="mr-2" /> JOIN GAME
-        </RouterLink>
-        <RouterLink v-else :to="'/gamestats/' + item.gameId" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
+        </button>
+        <button v-else @click="goToStats(item.gameId)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
           <font-awesome-icon icon="chart-bar" class="mr-2" /> GAME STATS
-        </RouterLink>
+        </button>
       </div>
     </div>
 
