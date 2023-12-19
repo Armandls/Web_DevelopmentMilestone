@@ -22,12 +22,12 @@ const avatars = [
 
 function getPlayerIndex(playerID) {
   return Array.from(playerID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
-};
+}
 
 function getRandomAvatar (playerID) {
   let index = getPlayerIndex(playerID);
   return avatars[index % avatars.length];
-};
+}
 
 const items = ref([]);
 const fetchPlayers = () => {

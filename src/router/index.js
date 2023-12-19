@@ -15,6 +15,7 @@ import CreateAttack from "../views/shop/CreateAttack.vue";
 import SellAttack from "../views/shop/SellAttack.vue";
 import Shop from "../views/shop/Shop.vue";
 import Welcome from "../views/auth/Welcome.vue";
+import GameInfo from "../views/home/join_game/GameInfo.vue";
 
 const routes = [
     {
@@ -96,6 +97,11 @@ const routes = [
         path: '/shop',
         name: 'shop',
         component: Shop
+    },
+    {
+        path: '/gameinfo',
+        name : 'gameinfo',
+        component: GameInfo
     }
 ];
 
