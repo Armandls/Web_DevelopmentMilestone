@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import { ref } from 'vue';
+import {inject, ref} from 'vue';
 import axios from 'axios';
 import router from "../../router/index.js";
 
@@ -31,6 +31,64 @@ const getRandomAvatar = () => {
   return avatars[randomIndex];
 };
 
+const setPlayerData = inject('setPlayerData');
+
+function signInPlayer(playerId, password) {
+  fetch('https://balandrau.salle.url.edu/i3/players/join', { // Enllaç de l'API
+    method: 'POST', // Mètode de l'API per aquesta petició
+    headers: { // Headers de l'API per aquesta petició
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ // Dades enviades a l'API per aquesta petició
+      player_ID: playerID.value,
+      password: password.value
+    })
+  })
+      .then(response => {
+        //console.log(this.$root);
+        console.log(response);
+        if (response.status === 200) { // Si la resposta és exitosa
+          return response.json(); // Retornem el JSON de la resposta
+        } else {
+          throw response; // Si no és 200, llancem l'error
+        }
+      })
+      .then(data => { // Amb el JSON de la resposta
+        let img = data.img; // Comprovem si la imatge està en la llista d'avatars
+        if (!avatars.includes(img)) {
+          img = getRandomAvatar(); //Assignem un avatar aleatori si no està en la llista
+        }
+        console.log('Player info: ', data);
+        const playerData = {
+          player_ID: data.player_ID,
+          img: img,
+          xp: data.xp,
+          level: data.level,
+          coins: data.coins,
+          token: data.token
+        };
+        localStorage.setItem('playerData', JSON.stringify(playerData)); //Guardem les dades de l'usuari al localStorage
+        setPlayerData(playerData); //Guardem les dades de l'usuari al app.vue
+        router.push('/home'); //Anem a la pàgina de home
+      })
+      .catch(error => {
+        if (error instanceof Response) {
+          // Si el error es una respuesta HTTP, se intenta parsear como JSON
+          error.json().then(errorData => {
+            errorMessage.value = errorData.message ? 'Error signing in! ' + errorData.message : 'Error signing in!';
+          }).catch(jsonError => {
+            // Error en caso de que el JSON sea inválido
+            console.error('Error parsing JSON:', jsonError);
+            errorMessage.value = 'Error signing in! Response not in JSON format.';
+          });
+        } else {
+          // El error es de otro tipo (no relacionado con la respuesta HTTP) -> Global Protect
+          console.error('Network error or other issue:', error);
+          errorMessage.value = 'Network error! Please check Global Protect connection.';
+        }
+      });
+}
+
 const signUp = () => {
   fetch('https://balandrau.salle.url.edu/i3/players', { //Link de la API
     method: 'POST', //Metode de la API per aquella petició
@@ -46,6 +104,9 @@ const signUp = () => {
       .then(response => { //Amb el que ens respongui la API:
         if (response.status === 201) { //En aquest cas ens retornava només 201 en cas d'exit i un json en cas d'error, per tant primer comparem directament amb 201
           console.log('Player created successfully');
+
+          signInPlayer(playerID.value, password.value); //Fem sign in automàticament
+
           router.push('/home'); //Anem a la pàgina de home
         } else {
           return response.json(); //Si no és 201, retornem el json que ens ha enviat la API
