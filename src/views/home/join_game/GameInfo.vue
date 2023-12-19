@@ -102,36 +102,35 @@ onMounted(loadGameInfo);
 
       <!-- Contenidor per mostrar la informació del game (size, creation_date, HP_max) -->
       <div class="bg-blue-400 p-4 rounded shadow mb-4 mr-96 ml-96">
-        <!-- Comprova que game no és nul abans d'accedir a les seves propietats -->
-        <div>Game ID: {{ game && game.value && game.value.id }}</div>
-        <div>Size: {{ game && game.value && game.value.size }}</div>
-        <div>Creation Date: {{ game && game.value && game.value.creationDate }}</div>
-        <div>Max HP: {{ game && game.value && game.value.maxHP }}</div>
+        <div>Game ID: {{ game && game.id }}</div>
+        <div>Size: {{ game && game.size }}</div>
+        <div>Creation Date: {{ game && game.creationDate }}</div>
+        <div>Max HP: {{ game && game.maxHP }}</div>
       </div>
 
       <div class="flex justify-around">
-        <!-- Contenidor del guanyador -->
+        <!-- Contenedor del ganador -->
         <div class="bg-yellow-100 p-10 rounded shadow flex-1 mr-8 ml-24 mt-10">
-          <div class="font-bold">INFO DEL GUANYADOR</div>
-          <div>Nom: {{ winner && winner.value && winner.value.playerId }}</div>
-          <!-- Assegura't de proporcionar una imatge per defecte si imageSrc no està definit -->
-          <img :src="winner && winner.value && winner.value.imageSrc || '/default-winner-image.png'" alt="Guanyador" class="w-24 h-24 my-2" />
-          <div>Monedes Guanyades: {{ winner && winner.value && winner.value.coinsWon }}</div>
-          <div>XP Guanyada: {{ winner && winner.value && winner.value.xpWon }}</div>
+          <div class="font-bold">INFO DEL GANADOR</div>
+          <div>Nombre: {{ winner && winner.value && winner.value.playerId }}</div>
+          <!-- Asegúrate de proporcionar una imagen por defecto si imageSrc no está definido -->
+          <img :src="winner && winner.value && winner.value.imageSrc || '/default-winner-image.png'" alt="Ganador" class="w-24 h-24 my-2" />
+          <div>Monedas Ganadas: {{ winner && winner.value && winner.value.coinsWon }}</div>
+          <div>XP Ganada: {{ winner && winner.value && winner.value.xpWon }}</div>
         </div>
 
-        <!-- Contenidor del perdedor -->
+        <!-- Contenedor del perdedor -->
         <div class="bg-yellow-100 p-10 rounded shadow flex-1 mr-24 ml-8 mt-10">
           <div class="font-bold">INFO DEL PERDEDOR</div>
-          <div>Nom: {{ loser && loser.value && loser.value.playerId }}</div>
-          <!-- Assegura't de proporcionar una imatge per defecte si imageSrc no està definit -->
+          <div>Nombre: {{ loser && loser.value && loser.value.playerId }}</div>
+          <!-- Asegúrate de proporcionar una imagen por defecto si imageSrc no está definido -->
           <img :src="loser && loser.value && loser.value.imageSrc || '/default-loser-image.png'" alt="Perdedor" class="w-24 h-24 my-2" />
-          <div>Monedes Guanyades: {{ loser && loser.value && loser.value.coinsWon }}</div>
-          <div>XP Guanyada: {{ loser && loser.value && loser.value.xpWon }}</div>
+          <div>Monedas Ganadas: {{ loser && loser.value && loser.value.coinsWon }}</div>
+          <div>XP Ganada: {{ loser && loser.value && loser.value.xpWon }}</div>
         </div>
       </div>
     </div>
-  </div>
+    </div>
 </template>
 
 <style scoped>
