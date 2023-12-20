@@ -54,10 +54,7 @@ const signIn = () => {
         }
       })
       .then(data => { // Amb el JSON de la resposta
-        let img = data.img; // Comprovem si la imatge està en la llista d'avatars
-        if (!avatars.includes(img)) {
-          img = getRandomAvatar(); //Assignem un avatar aleatori si no està en la llista
-        }
+        let img = (data.img.match(/^https:\/\/[^\s,]+/) ? data.img : getRandomAvatar(data.player_ID));
         console.log('Player info: ', data);
         const playerData = {
           player_ID: data.player_ID,
