@@ -76,7 +76,7 @@ const cellSize = computed(() => {
       </div>
 
       <!-- Tablero de Juego Cuadrado -->
-      <GameBoard imageUrl="/welcome_page/neon.png" :style="gridStyle" class="mt-10">
+      <GameBoard imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="mt-10">
         <div class="grid gap-2" :class="`grid-cols-${rowsAndColumns}`" :style="gridStyle">
           <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)"></Cell>
         </div>
