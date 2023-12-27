@@ -1,7 +1,8 @@
 <script setup>
-import {inject, ref} from 'vue';
+import {inject, onMounted, ref} from 'vue';
 import router from "../../router/index.js";
 import NavigationBar from "../../ components/NavigationBar.vue";
+import shop from "../shop/Shop.vue";
 
 const showModal = ref(false);
 const confirmDeletion = ref(false);
@@ -40,6 +41,35 @@ const deleteUserAccount = () => {
   deletePlayer(); //Eliminem l'usuari
   router.push('/');
 };
+
+const attacks = ref([]);
+
+const fetchAttacks = () => {
+  fetch('https://balandrau.salle.url.edu/i3/players/attacks', {
+    method: 'GET',
+    headers: {
+      'Bearer': `${authToken.value}`,
+    }
+  })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error(`Error: ${response.status}`);
+        }
+      })
+      .then(data => {
+        attacks.value = data.filter(attack => attack.equipped === true);
+      })
+      .catch(error => {
+        console.error('Error fetching attacks:', error.message);
+      });
+}
+
+// Call fetchAttacks on component mount
+onMounted(() => {
+  fetchAttacks();
+});
 </script>
 
 <template>
@@ -53,18 +83,22 @@ const deleteUserAccount = () => {
           <img src="/src/assets/shop/inicio.png" alt="Inicio" class="w-80 h-100 object-contain mx-auto">
         </div>
         <!-- Contenedor de los 3 ataques -->
-        <div class="absolute top-80 right-8 md:right-96 lg:right-96 flex flex-col space-y-2 md:space-y-4 lg:space-y-6">
-          <!-- Ataque 1 -->
-          <div class="bg-fuchsia-500 rounded-xl p-1 flex justify-center items-center" style="width: fit-content; height: fit-content;">
-            <img src="/src/assets/shop/espadas.png" alt="Espadas 1" class="w-16 h-16 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-16 lg:h-16 object-cover" />
-          </div>
-          <!-- Ataque 2 -->
-          <div class="bg-fuchsia-500 rounded-xl p-1 flex justify-center items-center" style="width: fit-content; height: fit-content;">
-            <img src="/src/assets/shop/espadas.png" alt="Espadas 2" class="w-16 h-16 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-16 lg:h-16 object-cover" />
-          </div>
-          <!-- Ataque 3 -->
-          <div class="bg-fuchsia-500 rounded-xl p-1 flex justify-center items-center" style="width: fit-content; height: fit-content;">
-            <img src="/src/assets/shop/espadas.png" alt="Espadas 3" class="w-16 h-16 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-16 lg:h-16 object-cover" />
+        <div class="absolute top-72 right-8 md:right-72 lg:right-72 hidden sm:flex flex-col space-y-2 md:space-y-4 lg:space-y-6">
+          <!-- Per cada atac equipat -->
+          <div v-for="(attack, index) in attacks" :key="attack.attack_ID" class="flex items-stretch">
+
+            <!-- Imatge de l'atac -->
+            <div class="bg-fuchsia-500 rounded-l-xl p-1 flex justify-center items-center" style="width: fit-content;">
+              <img v-if="attack.equipped" src="/src/assets/shop/espadas.png" :alt="`Espadas ${index + 1}`" class="w-16 h-16 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-16 lg:h-16 object-cover" />
+              <span v-else class="font-bold">No attack equipped</span>
+            </div>
+
+            <!-- Separate container for attack details -->
+            <div v-if="attack.equipped" class="bg-blue-400 rounded-r-xl p-2 font-bold" style="width: fit-content;">
+              <p class="text-xs"> Name: {{ attack.attack_ID }}</p>
+              <p class="text-xs">Power: {{ attack.power }}</p>
+              <p class="text-xs">Positions: {{ attack.positions }}</p>
+            </div>
           </div>
         </div>
       </div>

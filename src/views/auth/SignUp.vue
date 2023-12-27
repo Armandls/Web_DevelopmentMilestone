@@ -5,6 +5,7 @@ import router from "../../router/index.js";
 
 const playerID = ref('');
 const password = ref('');
+const imageLink = ref('');
 const errorMessage = ref('');
 const showPassword = ref(false);
 
@@ -94,7 +95,7 @@ const signUp = () => {
     body: JSON.stringify({ //Variables que s'envien a la API per aquella petició
       player_ID: playerID.value,
       password: password.value,
-      img: getRandomAvatar() //Fem servir la funció que hem creat per a obtenir un avatar aleatori
+      img: imageLink.value //Fem servir la funció que hem creat per a obtenir un avatar aleatori
     })
   })
       .then(response => { //Amb el que ens respongui la API:
@@ -144,13 +145,18 @@ const signUp = () => {
 
       <!-- Camps de registre -->
       <div class="absolute top-0 left-0 right-0 bottom-4 flex flex-col items-center justify-center p-4 md:p-6 gap-4">
-        <div class="text-white text-2xl font-semibold uppercase">Sign Up</div>
+        <div class="text-white text-3xl font-semibold uppercase">Sign Up</div>
 
         <div class="flex flex-col w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bottom-4">
           <!-- Username -->
           <div class="flex flex-col w-full mb-2">
             <label class="text-white text-sm font-semibold">Username *</label>
             <input v-model="playerID" type="text" placeholder="Enter username" class="w-full h-10 px-4 bg-white rounded-md border border-neutral-200">
+          </div>
+
+          <div class="flex flex-col w-full mb-2">
+            <label class="text-white text-sm font-semibold">Profile picture *</label>
+            <input v-model="imageLink" type="text" placeholder="Enter profile picture link" class="w-full h-10 px-4 bg-white rounded-md border border-neutral-200">
           </div>
 
           <!-- Password -->

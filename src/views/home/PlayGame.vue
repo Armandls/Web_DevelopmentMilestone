@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import {useRoute} from 'vue-router';
 import Cell from "../../ components/Cell.vue";
 import GameBoard from "../../ components/GameBoard.vue";
+import PingAndFPS from "../../ components/PingAndFPS.vue";
 
 const route = useRoute();
 const rowsAndColumns = ref(4); // Valor por defecto
@@ -75,8 +76,13 @@ const cellSize = computed(() => {
         </div>
       </div>
 
+      <!-- Component pel ping i FPS -->
+      <div class="ml-96 flex flex-col justify-center mt-2">
+        <PingAndFPS class="mt-4"/>
+      </div>
+
       <!-- Tablero de Juego Cuadrado -->
-      <GameBoard imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="mt-10">
+      <GameBoard imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="mt-8">
         <div class="grid gap-2" :class="`grid-cols-${rowsAndColumns}`" :style="gridStyle">
           <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)"></Cell>
         </div>

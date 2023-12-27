@@ -1,6 +1,9 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import NavigationBar from "../../ components/NavigationBar.vue";
+import { ref } from 'vue';
+
+const tooltip = ref('');
 </script>
 
 <template>
@@ -27,22 +30,31 @@ import NavigationBar from "../../ components/NavigationBar.vue";
 
     <!-- Botones Centrados Abajo con Fotos Tamaño pequeño-->
     <footer class="flex justify-center items-end absolute bottom-20 left-0 right-0">
-      <RouterLink to="/createattack" @mouseover="tooltip = 'Create Attack'" @mouseleave="tooltip = ''">
-        <button class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full mx-3">
+      <RouterLink to="/createattack" class="relative">
+        <button @mouseover="tooltip = 'createattack'" @mouseleave="tooltip = ''" class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full mx-3">
           <img src="/src/assets/shop/logo1_abajo.png" alt="Logo 1" class="w-12 h-12 object-fit-contain" />
         </button>
+        <div v-show="tooltip === 'createattack'" class="absolute bottom-0 mb-14 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm z-10">
+          Create Attack
+        </div>
       </RouterLink>
 
-      <RouterLink to="/buyattack">
-        <button class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full mx-3">
-          <img src="/src/assets/shop/mas.png" alt="Más" class="w-12 h-12 object-fit-contain" />
+      <RouterLink to="/buyattack" class="relative">
+        <button @mouseover="tooltip = 'buyattack'" @mouseleave="tooltip = ''" class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full mx-3">
+          <img src="/src/assets/shop/carrito-de-compras.png" alt="Más" class="w-12 h-12 object-fit-contain" />
         </button>
+        <div v-show="tooltip === 'buyattack'" class="absolute bottom-0 mb-14 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm z-10">
+          Buy Attack
+        </div>
       </RouterLink>
 
-      <RouterLink to="/sellattack">
-        <button class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full mx-3">
-          <img src="/src/assets/shop/carrito-de-compras.png" alt="Carrito de compras" class="w-12 h-12 object-cover object-fit-contain" />
+      <RouterLink to="/sellattack" class="relative">
+        <button @mouseover="tooltip = 'sellattack'" @mouseleave="tooltip = ''" class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full mx-3">
+          <img src="/src/assets/shop/hand.png" alt="Carrito de compras" class="w-12 h-12 object-cover object-fit-contain" />
         </button>
+        <div v-show="tooltip === 'sellattack'" class="absolute bottom-0 mb-14 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm z-10">
+          Sell Attack
+        </div>
       </RouterLink>
     </footer>
 
@@ -110,24 +122,3 @@ import NavigationBar from "../../ components/NavigationBar.vue";
     }
   }
 </style>
-
-
-<script>
-import { ref } from 'vue';
-
-export default {
-  setup() {
-    const items = ref([
-      { imageSrc: '/shop/Ataque1.png', username: 'Furia Astral', winRate: 60 },
-      { imageSrc: '/shop/Ataque1.png', username: 'Llamarada Oscura', winRate: 60 },
-      { imageSrc: '/shop/Ataque1.png', username: 'Corte Cósmico', winRate: 60 },
-      { imageSrc: '/shop/Ataque1.png', username: 'Tormenta Venenosa', winRate: 60 },
-      { imageSrc: '/shop/Ataque1.png', username: 'Emboscada Sombra', winRate: 60 },
-      { imageSrc: '/shop/Ataque1.png', username: 'Rayo Ígneo', winRate: 60 },
-      { imageSrc: '/shop/Ataque1.png', username: 'Espada Espectral', winRate: 60 }
-    ]);
-
-    return { items };
-  }
-};
-</script>
