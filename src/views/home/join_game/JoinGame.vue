@@ -113,6 +113,18 @@ function goToStats(gameId) {
     }
   });
 }
+
+function goToPlayGame(gameId, hp, size){
+  router.push({
+    name: 'playgame',
+    query: {
+      gameID: gameId,
+      hpMax: hp,
+      size: size
+    }
+  });
+}
+
 </script>
 
 <template>
@@ -163,7 +175,7 @@ function goToStats(gameId) {
         </div>
 
         <!-- Botó per unir-se al joc o veure estadístiques -->
-        <button v-if="!item.finished" @click="goToStats(item.gameId)" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
+        <button v-if="!item.finished" @click="goToPlayGame(item.gameId, item.hpMax, item.size)" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
           <font-awesome-icon icon="play" class="mr-2" /> JOIN GAME
         </button>
         <button v-else @click="goToStats(item.gameId)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
