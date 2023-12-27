@@ -102,35 +102,63 @@ onMounted(loadGameInfo);
 
       <!-- Contenidor per mostrar la informació del game (size, creation_date, HP_max) -->
       <div class="bg-blue-400 p-4 rounded shadow mb-4 mr-96 ml-96">
-        <div>Game ID: {{ game && game.id }}</div>
-        <div>Size: {{ game && game.size }}</div>
-        <div>Creation Date: {{ game && game.creationDate }}</div>
+        <div class="font-bold">GAME INFO</div>
+        <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-blue-300 rounded p-1.5 ">
+          Game ID: {{ game && game.id }}
+        </div>
+
+        <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-purple-300 rounded p-1.5 pt-2">
+          Size: {{ game && game.size }}
+        </div>
+
+        <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-pink-300 rounded p-1.5 pt-2">
+          Creation Date: {{ game && game.creationDate }}
+        </div>
+
         <div>Max HP: {{ game && game.maxHP }}</div>
       </div>
 
       <div class="flex justify-around">
         <!-- Contenedor del ganador -->
-        <div class="bg-yellow-100 p-10 rounded shadow flex-1 mr-8 ml-24 mt-10">
+        <div class="bg-yellow-100 p-10 rounded shadow flex-1 mr-8 ml-24 mt-10" v-if="winner">
           <div class="font-bold">INFO DEL GANADOR</div>
-          <div>Nombre: {{ winner && winner.value && winner.value.playerId }}</div>
-          <!-- Asegúrate de proporcionar una imagen por defecto si imageSrc no está definido -->
-          <img :src="winner && winner.value && winner.value.imageSrc || '/default-winner-image.png'" alt="Ganador" class="w-24 h-24 my-2" />
-          <div>Monedas Ganadas: {{ winner && winner.value && winner.value.coinsWon }}</div>
-          <div>XP Ganada: {{ winner && winner.value && winner.value.xpWon }}</div>
+
+          <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-blue-300 rounded p-1.5 ">
+            Name: {{ winner.playerId }}
+          </div>
+
+          <img :src="winner.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
+
+          <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-purple-300 rounded p-1.5 pt-2">
+            Coins: {{ winner.coinsWon }}
+          </div>
+
+          <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-pink-300 rounded p-1.5 pt-2">
+            XP: {{ winner.xpWon }}
+          </div>
         </div>
+
 
         <!-- Contenedor del perdedor -->
         <div class="bg-yellow-100 p-10 rounded shadow flex-1 mr-24 ml-8 mt-10">
           <div class="font-bold">INFO DEL PERDEDOR</div>
-          <div>Nombre: {{ loser && loser.value && loser.value.playerId }}</div>
-          <!-- Asegúrate de proporcionar una imagen por defecto si imageSrc no está definido -->
-          <img :src="loser && loser.value && loser.value.imageSrc || '/default-loser-image.png'" alt="Perdedor" class="w-24 h-24 my-2" />
-          <div>Monedas Ganadas: {{ loser && loser.value && loser.value.coinsWon }}</div>
-          <div>XP Ganada: {{ loser && loser.value && loser.value.xpWon }}</div>
+          <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-blue-300 rounded p-1.5 ">
+            Name: {{ loser.playerId }}
+          </div>
+
+          <img :src="loser.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
+
+          <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-purple-300 rounded p-1.5 pt-2">
+            Coins: {{ loser.coinsWon }}
+          </div>
+
+          <div v-if="!game.finished" class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-96 bg-pink-300 rounded p-1.5 pt-2">
+            XP: {{ loser.xpWon }}
+          </div>
         </div>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <style scoped>
