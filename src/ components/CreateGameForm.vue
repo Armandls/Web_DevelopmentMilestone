@@ -1,16 +1,32 @@
 <script setup>
-import { ref } from 'vue';
+import {ref, computed, inject, onMounted} from 'vue';
 import router from "../router/index.js";
 
+const token = inject('authToken');
+const playerData = inject('playerData');
 const rowsAndColumns = ref(2); //Valor por defecto
 const hp = ref(15); //Valor por defecto
 const rowsErrorMessage = ref(''); //Variable para el mensaje de error de Filas y Columnas
 const hpErrorMessage = ref(''); //Variable para el mensaje de error de HP
+const attacksErrorMessage = ref(''); //Variable para el mensaje de error de ataques
+const attacks = ref([]); //Variable para guardar del jugador
+
+const attacksEquipped = computed(() => attacks.value.filter(attack => attack.equipped).length);
 
 const createGame = () => {
+  // Verifica que el número de ataques equipados sea exactamente 3
+  if (attacksEquipped.value !== 3) {
+    attacksErrorMessage.value = 'You must have exactly 3 equipped attacks, you have ' + attacksEquipped.value + ' / 3 equipped attacks';
+    rowsErrorMessage.value = '';
+    hpErrorMessage.value = '';
+    return;
+  }
+  attacksErrorMessage.value = '';
+
   if (rowsAndColumns.value >= 2 && rowsAndColumns.value <= 10 && hp.value >= 15) {
     rowsErrorMessage.value = '';
     hpErrorMessage.value = '';
+    attacksErrorMessage.value = '';
     router.push({ path: '/playgame', query: { rows: rowsAndColumns.value, hp: hp.value } });
   } else {
     if (rowsAndColumns.value < 2 || rowsAndColumns.value > 10) {
@@ -26,6 +42,47 @@ const createGame = () => {
     }
   }
 };
+
+//Get the attacks from the API
+function loadPlayerAttacks() {
+  fetch('https://balandrau.salle.url.edu/i3/players/attacks', {
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response)
+          return response.json();
+        } else {
+          console.error("Response error:", response);
+          throw response;
+        }
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          // Primero filtramos los ataques que no estén en venta (attack.on_sale = false)
+          const filteredAttacks = data.filter(attack => !attack.on_sale);
+
+          // Luego mapeamos los ataques ordenados para estructurarlos por orden
+          attacks.value = filteredAttacks.map(attack => ({
+            attackName: attack.attack_ID,
+            positions: attack.positions,
+            power: attack.power,
+            equipped: attack.equipped,
+            on_sale: attack.on_sale
+          }));
+        } else {
+          console.error("Expected an array, but got:", data);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching game data:", error);
+      });
+}
+
+onMounted(loadPlayerAttacks);
 
 </script>
 
@@ -61,6 +118,7 @@ const createGame = () => {
                 <label for="hp" class="block text-sm font-bold text-white uppercase">Player HP</label>
                 <input type="number" id="hp" v-model.number="hp" min="15" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
                 <p v-if="hpErrorMessage" class="text-red-500">{{ hpErrorMessage }}</p>
+                <p v-if="attacksErrorMessage" class="text-red-500">{{ attacksErrorMessage }}</p>
               </div>
 
               <!-- Create Game -->
