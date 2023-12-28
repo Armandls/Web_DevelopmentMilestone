@@ -114,16 +114,34 @@ function goToStats(gameId) {
   });
 }
 
-function goToPlayGame(gameId, hp, size){
-  router.push({
-    name: 'playgame',
-    query: {
-      gameID: gameId,
-      hpMax: hp,
-      size: size
+const showErrorModal = ref(false);
+const errorMessage = ref('');
+function goToPlayGame(gameId, hp, size) {
+  fetch(`https://balandrau.salle.url.edu/i3/arenas/${gameId}/play`, {
+    method: 'POST',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
     }
-  });
+  })
+      .then(response => {
+        console.log('Response: ', response);
+        if (response.status === 200) {
+          console.log('Joined game successfully!');
+          router.push({ name: 'playgame', query: { gameID: gameId, hpMax: hp, size: size } });
+          return;
+        }
+        return response.json().then(json => {
+          throw new Error(`Error: ${response.status} - ${json.message}`);
+        });
+      })
+      .catch(error => {
+        console.error('Error joining game: ', error.message);
+        showErrorModal.value = true;
+        errorMessage.value = 'The game is currently being played!';
+      });
 }
+
 
 </script>
 
@@ -139,6 +157,18 @@ function goToPlayGame(gameId, hp, size){
           </RouterLink>
           <button @click="clearFilters" class="bg-red-400 hover:bg-red-600 text-white font-bold ml-4 py-2 px-4 rounded mt-2 md:mt-0">
             <font-awesome-icon icon="times" class="mr-2" /> CLEAR FILTERS
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showErrorModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <p>{{ errorMessage }}</p>
+        <!-- Envolver el botón en un div y aplicar flexbox para centrarlo -->
+        <div class="flex justify-center mt-6">
+          <button @click="showErrorModal = false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            Close
           </button>
         </div>
       </div>
