@@ -1,20 +1,25 @@
 <script setup>
-import {ref, computed, onMounted, onUnmounted, inject} from 'vue';
+import {computed, inject, onMounted, onUnmounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import Cell from "../../ components/Cell.vue";
 import GameBoard from "../../ components/GameBoard.vue";
 import PingAndFPS from "../../ components/PingAndFPS.vue";
+import router from "../../router/index.js";
 
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
 const route = useRoute();
 const rowsAndColumns = ref(4); // Valor por defecto
+const gameId = ref('');
 const screenWidth = ref(window.innerWidth);
 
-// Obtener los valores de la URL cuando el componente se monte
 onMounted(() => {
   const queryParams = route.query;
-  if (queryParams.rows) {
-    rowsAndColumns.value = parseInt(queryParams.rows, 10);
+  // Se verifica que 'rowsAndColumns' exista y sea un número válido
+  if (queryParams.rowsAndColumns && !isNaN(queryParams.rowsAndColumns)) {
+    rowsAndColumns.value = parseInt(queryParams.rowsAndColumns, 10);
+  }
+  if (queryParams.name) {
+    gameId.value = queryParams.name;
   }
 });
 
@@ -176,8 +181,7 @@ const attack3 = () => {
 const pressedKey = ref(null);
 
 const handleAttackKeydown = (event) => {
-  const key = event.key.toLowerCase();
-  pressedKey.value = key;  // Update the pressedKey for UI feedback
+  pressedKey.value = event.key.toLowerCase();  // Update the pressedKey for UI feedback
 
   switch(event.key.toLowerCase()) {
     case 'i': attack1(); break;
@@ -199,17 +203,51 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleAttackKeydown);
   window.removeEventListener('keyup', handleAttackKeyup);
 });
+
+const showSurrenderModal = ref(false);
+const surrenderGame = () => {
+  showSurrenderModal.value = true;
+};
+
+const confirmSurrender = () => {
+  showSurrenderModal.value = false;
+  console.log("Player has confirmed surrender.");
+
+  // Asegúrate de utilizar gameId.value para obtener el valor actual de gameId
+  fetch(`https://balandrau.salle.url.edu/i3/arenas/${gameId.value}/play`, {
+    method: 'DELETE',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        console.log('Response: ', response);
+        if (response.status === 204) {
+          console.log('Left game successfully!');
+          router.push({ name: 'home' });
+          return;
+        }
+        return response.json().then(json => {
+          throw new Error(`Error: ${response.status} - ${json.message}`);
+        });
+      })
+      .catch(error => {
+        console.error('Error leaving game: ', error.message);
+      });
+};
+
 </script>
 
 <template>
   <div class="flex flex-col items-center justify-between min-h-screen bg-black p-4" style="background-image: url('/src/assets/welcome_page/background.png'); background-size: cover; background-position: center;">
 
-    <!-- Botón de Regreso al Inicio -->
+    <!-- Botón para rendirse/salir de la partida -->
     <div class="fixed top-0 left-0 pt-4">
-      <router-link to="/home" class="flex items-center pr-3.5 pl-4 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-none uppercase sm:w-auto">
-        <font-awesome-icon icon="home" class="mr-2"/>
-        <span class="hidden sm:inline">Home</span>
-      </router-link>
+      <button @click="surrenderGame" class="flex items-center pr-3.5 pl-4 bg-red-500 hover:bg-red-700 text-white font-extrabold py-2 rounded-r-full rounded-l-none uppercase sm:w-auto">
+        <font-awesome-icon icon="flag" class="mr-2"/>
+        <span class="hidden sm:inline">Surrender</span>
+      </button>
     </div>
 
     <div class="flex flex-col items-center justify-center mb-4">
@@ -223,12 +261,27 @@ onUnmounted(() => {
       </div>
 
       <!-- Component pel ping i FPS -->
-      <div class="ml-96 flex flex-col justify-center mt-2">
+      <div class="ml-96 flex flex-col justify-center mb-3">
         <PingAndFPS class="mt-4"/>
       </div>
 
+      <div v-if="showSurrenderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800">Confirm Surrender</h3>
+          <p class="mb-4 text-md text-gray-600">Are you sure you want to surrender? You will lose the game.</p>
+          <div class="flex justify-around">
+            <button @click="confirmSurrender" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              Yes, Surrender
+            </button>
+            <button @click="showSurrenderModal = false" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+              No, Keep Playing
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Tablero de Juego Cuadrado -->
-      <GameBoard imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="mt-8">
+      <GameBoard imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="">
         <div class="grid gap-2" :class="`grid-cols-${rowsAndColumns}`" :style="gridStyle">
           <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)"></Cell>
         </div>
