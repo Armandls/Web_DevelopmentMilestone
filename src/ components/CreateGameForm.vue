@@ -10,10 +10,6 @@ const rowsErrorMessage = ref(''); //Variable para el mensaje de error de Filas y
 const hpErrorMessage = ref(''); //Variable para el mensaje de error de HP
 const nameErrorMessage = ref(''); //Variable para el mensaje de error del nombre
 
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
-
 function createGameInAPI() {
   fetch('https://balandrau.salle.url.edu/i3/arenas', {
     method: 'POST',
@@ -22,9 +18,7 @@ function createGameInAPI() {
       .then(response => {
         if (response.status === 201) {
           console.log('Game created successfully!');
-          sleep(800).then(() => {
-            router.push({ path: '/playgame', query: { name: name.value, rowsAndColumns: rowsAndColumns.value, hp: hp.value } });
-          });
+          router.push({ path: '/playgame', query: { name: name.value, rowsAndColumns: rowsAndColumns.value, hp: hp.value } });
           return;
         }
         return response.json().then(json => {
