@@ -1,29 +1,57 @@
 <script setup>
-import { ref } from 'vue';
+import {inject, ref} from 'vue';
 import router from "../router/index.js";
 
+const token = inject('authToken');
+const name = ref(''); //Valor por defecto
 const rowsAndColumns = ref(2); //Valor por defecto
 const hp = ref(15); //Valor por defecto
 const rowsErrorMessage = ref(''); //Variable para el mensaje de error de Filas y Columnas
 const hpErrorMessage = ref(''); //Variable para el mensaje de error de HP
+const nameErrorMessage = ref(''); //Variable para el mensaje de error del nombre
+
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
+function createGameInAPI() {
+  fetch('https://balandrau.salle.url.edu/i3/arenas', {
+    method: 'POST',
+    headers: { 'Bearer': `${token.value}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ game_ID: name.value, size: rowsAndColumns.value, HP_max: hp.value})})
+      .then(response => {
+        if (response.status === 201) {
+          console.log('Game created successfully!');
+          sleep(800).then(() => {
+            router.push({ path: '/playgame', query: { name: name.value, rowsAndColumns: rowsAndColumns.value, hp: hp.value } });
+          });
+          return;
+        }
+        return response.json().then(json => {
+          throw new Error(`Error: ${response.status} - ${json.message}`);
+        });
+      })
+      .catch(error => {
+        console.error('Error creating game: ', error.message);
+        nameErrorMessage.value = 'Error: The name already exists.';
+      });
+}
 
 const createGame = () => {
-  if (rowsAndColumns.value >= 2 && rowsAndColumns.value <= 10 && hp.value >= 15) {
-    rowsErrorMessage.value = '';
-    hpErrorMessage.value = '';
-    router.push({ path: '/playgame', query: { rows: rowsAndColumns.value, hp: hp.value } });
-  } else {
-    if (rowsAndColumns.value < 2 || rowsAndColumns.value > 10) {
-      rowsErrorMessage.value = 'The number of rows and columns must be between 2 and 10';
-      if (hp.value < 15) {
-        hpErrorMessage.value = 'The HP must be at least 15';
-      } else {
-        hpErrorMessage.value = '';
-      }
-    } else {
-      rowsErrorMessage.value = '';
-      hpErrorMessage.value = 'The HP must be at least 15';
-    }
+  nameErrorMessage.value = '';
+  rowsErrorMessage.value = '';
+  hpErrorMessage.value = '';
+
+  if (name.value.length < 1 || name.value.length > 21) {
+    nameErrorMessage.value = 'The name must be between 1 and 21 characters';
+  } if (rowsAndColumns.value < 2 || rowsAndColumns.value > 10) {
+    rowsErrorMessage.value = 'The number of rows and columns must be between 2 and 10';
+  } if (hp.value < 15) {
+    hpErrorMessage.value = 'The HP must be at least 15';
+  }
+
+  if (nameErrorMessage.value === '' && rowsErrorMessage.value === '' && hpErrorMessage.value === '') {
+    createGameInAPI();
   }
 };
 
@@ -49,6 +77,13 @@ const createGame = () => {
             <h2 class="mb-6 text-3xl font-bold text-center text-white uppercase">Create a Game</h2>
 
             <div class="space-y-4">
+              <!-- Nombre de la partida -->
+              <div>
+                <label for="rows" class="block text-sm font-bold text-white uppercase">Name</label>
+                <input type="text" id="name" v-model="name" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
+                <p v-if="nameErrorMessage" class="text-red-500">{{ nameErrorMessage }}</p>
+              </div>
+
               <!-- Numero Rows i Columns -->
               <div>
                 <label for="rows" class="block text-sm font-bold text-white uppercase">Number of Rows & Columns (2 - 10)</label>
