@@ -8,15 +8,30 @@ import router from "../../router/index.js";
 
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
 const route = useRoute();
-const rowsAndColumns = ref(4); // Valor por defecto
+const rowsAndColumns = ref(1); //Valor por defecto
 const gameId = ref('');
 const screenWidth = ref(window.innerWidth);
+let playerPositions = {
+  player1: [],
+  player2: [],
+};
+
+const calculateInitialPositions = (rowsAndColumns) => {
+  const middleRow = Math.ceil(rowsAndColumns / 2);
+  let player1Position, player2Position;
+
+  player1Position = (middleRow - 1) * rowsAndColumns + 1;
+  player2Position = middleRow * rowsAndColumns;
+
+  return { player1: [player1Position], player2: [player2Position] };
+};
 
 onMounted(() => {
   const queryParams = route.query;
   // Se verifica que 'rowsAndColumns' exista y sea un número válido
   if (queryParams.rowsAndColumns && !isNaN(queryParams.rowsAndColumns)) {
     rowsAndColumns.value = parseInt(queryParams.rowsAndColumns, 10);
+    playerPositions = calculateInitialPositions(rowsAndColumns.value)
   }
   if (queryParams.name) {
     gameId.value = queryParams.name;
@@ -27,8 +42,6 @@ const totalCells = computed(() => rowsAndColumns.value * rowsAndColumns.value);
 const gridStyle = computed(() => ({
   gridTemplateColumns: `repeat(${rowsAndColumns.value}, 0.4fr)`,
 }));
-
-const playerPositions = { player1: [1], player2: [8] };
 
 const getPlayer = (index) => {
   if (playerPositions.player1.includes(index)) return 1;
