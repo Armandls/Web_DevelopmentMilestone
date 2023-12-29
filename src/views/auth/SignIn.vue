@@ -106,12 +106,12 @@ const signIn = () => {
         <div class="flex flex-col w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bottom-4">
           <div class="flex flex-col w-full mb-2">
             <label class="text-white text-sm font-semibold">Username *</label>
-            <input v-model="playerID" type="text" placeholder="Enter username" class="w-full h-10 px-4 bg-white rounded-md border border-neutral-200">
+            <input v-model="playerID" type="text" placeholder="Enter username" class="w-full h-10 px-4 bg-white rounded-md border border-neutral-200" @keyup.enter="signIn">
           </div>
 
           <div class="flex flex-col w-full mb-4">
             <label class="text-white text-sm font-semibold">Password *</label>
-            <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="Enter password" class="w-full h-10 px-4 bg-white rounded-md border border-neutral-200">
+            <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="Enter password" class="w-full h-10 px-4 bg-white rounded-md border border-neutral-200" @keyup.enter="signIn">
             <div class="flex justify-end items-center text-white text-sm mt-1 cursor-pointer" @click="togglePasswordVisibility">
               <div>{{ showPassword ? 'Hide' : 'Show' }} password</div>
             </div>
