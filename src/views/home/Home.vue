@@ -20,15 +20,13 @@ const authToken = inject('authToken'); //Agafem el token del jugador desde App.v
 function deletePlayer() {
   fetch('https://balandrau.salle.url.edu/i3/players', {
     method: 'DELETE',
-    headers: {
-      'Bearer': `${authToken.value}`,
-      'Content-Type': 'application/json'
-    }
+    headers: { 'Bearer': authToken.value, 'Content-Type': 'application/json' }
   })
       .then(response => {
+        console.log('Auth token:', authToken.value)
         console.log(response);
         if (response.status === 204) {
-          return
+          return;
         }
         throw new Error(`Error: ${response.status}`);
       })
