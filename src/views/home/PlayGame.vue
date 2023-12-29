@@ -125,24 +125,103 @@ onUnmounted(() => {
 });
 
 //Funcions per moure el personatge
+function movePlayer(direction) {
+  fetch('https://balandrau.salle.url.edu/i3/arenas/move', {
+    method: 'POST',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ movement: direction })
+  })
+      .then(response => {
+        console.log('Response: ', response);
+        console.log('Auth token: ', authToken.value);
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          return response.json().then(json => {
+            throw new Error(`Error: ${response.status} - ${json.message}`);
+          });
+        }
+      })
+      .then(data => {
+        console.log('Movement successful:', data);
+      })
+      .catch(error => {
+        console.error('Error moving player:', error.message);
+      });
+}
+
+function changePlayerDirection(direction) {
+  fetch('https://balandrau.salle.url.edu/i3/arenas/direction', {
+    method: 'POST',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ direction: direction })
+  })
+      .then(response => {
+        console.log('Response: ', response);
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          return response.json().then(json => {
+            throw new Error(`Error: ${response.status} - ${json.message}`);
+          });
+        }
+      })
+      .then(data => {
+        console.log('Direction changed successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error changing direction:', error.message);
+      });
+}
+
 const goUp = () => { //Funció per moure el personatge cap amunt
   console.log("Going up!");
   //Moviment amunt
+  movePlayer('up');
+  console.log('Changing direction to up')
+  changePlayerDirection('up');
+  playerPositions.player1 = [playerPositions.player1[0] - rowsAndColumns.value];
+  playerPositions.player2 = [playerPositions.player2[0] - rowsAndColumns.value];
 };
 
 const goDown = () => { //Funció per moure el personatge cap avall
   console.log("Going down!");
   //Moviment avall
+  movePlayer('down');
+  changePlayerDirection('down');
+  playerPositions.player1 = [playerPositions.player1[0] + rowsAndColumns.value];
+  playerPositions.player2 = [playerPositions.player2[0] + rowsAndColumns.value];
 };
 
 const goLeft = () => { //Funció per moure el personatge cap a l'esquerra
   console.log("Going left!");
   //Moviment a l'esquerra
+  // Asegurarse de que el jugador no está en la primera columna
+  if (playerPositions.player1[0] % rowsAndColumns !== 1) {
+    movePlayer('left');
+    changePlayerDirection('left');
+    playerPositions.player1[0] -= 1;
+  } else {
+    console.log("Movimiento no permitido: ya estás en el borde izquierdo.");
+  }
 };
 
 const goRight = () => { //Funció per moure el personatge cap a la dreta
   console.log("Going right!");
   //Moviment a la dreta
+  if (playerPositions.player1[0] % rowsAndColumns !== 0) {
+    movePlayer('right');
+    changePlayerDirection('right');
+    playerPositions.player1[0] += 1;
+  } else {
+    console.log("Movimiento no permitido: ya estás en el borde derecho.");
+  }
 };
 
 //Funcions relacionades amb els atacs
@@ -152,11 +231,11 @@ const fetchAttacks = () => {
   fetch('https://balandrau.salle.url.edu/i3/players/attacks', {
     method: 'GET',
     headers: {
-      'Bearer': `${authToken.value}`,
+      'Bearer': authToken.value,
     }
   })
       .then(response => {
-        if (response.ok) {
+        if (response.status === 200) {
           return response.json();
         } else {
           throw new Error(`Error: ${response.status}`);
@@ -177,19 +256,47 @@ onMounted(() => {
 
 const keys = ['i', 'o', 'p'];
 
+function attackInGame(id) {
+fetch('https://balandrau.salle.url.edu/i3/arenas/attack/' + id, {
+    method: 'POST',
+    headers: {
+      'Bearer': authToken.value,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          return response.json().then(json => {
+            throw new Error(`Error: ${response.status} - ${json.message}`);
+          });
+        }
+      })
+      .then(data => {
+        console.log('Attack successful:', data);
+      })
+      .catch(error => {
+        console.error('Error attacking:', error.message);
+      });
+}
+
 const attack1 = () => {
   console.log("Attack 1 executed!");
   //Logica atack1
+  attackInGame(attacks.value[0].id);
 };
 
 const attack2 = () => {
   console.log("Attack 2 executed!");
   //Logica atack2
+  attackInGame(attacks.value[1].id);
 };
 
 const attack3 = () => {
   console.log("Attack 3 executed!");
   //Logica atack3
+  attackInGame(attacks.value[2].id);
 };
 const pressedKey = ref(null);
 
