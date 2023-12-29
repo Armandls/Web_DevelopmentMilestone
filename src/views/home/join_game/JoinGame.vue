@@ -128,7 +128,7 @@ function goToPlayGame(gameId, hp, size) {
         console.log('Response: ', response);
         if (response.status === 200) {
           console.log('Joined game successfully!');
-          router.push({ name: 'playgame', query: { gameID: gameId, hpMax: hp, size: size } });
+          router.push({ name: 'playgame', query: { name: gameId, hpMax: hp, rowsAndColumns: size } });
           return;
         }
         return response.json().then(json => {
