@@ -50,6 +50,7 @@ const signIn = () => {
         if (response.status === 200) { // Si la resposta és exitosa
           return response.json(); // Retornem el JSON de la resposta
         } else {
+          console.log(response);
           throw response; // Si no és 200, llancem l'error
         }
       })
@@ -72,7 +73,7 @@ const signIn = () => {
         if (error instanceof Response) {
           // Si el error es una respuesta HTTP, se intenta parsear como JSON
           error.json().then(errorData => {
-            errorMessage.value = errorData.message ? 'Error signing in! ' + errorData.message : 'Error signing in!';
+            errorMessage.value = errorData.message ? 'Error signing in! ' + errorData.message : 'Error signing in! Please check your credentials.';
           }).catch(jsonError => {
             // Error en caso de que el JSON sea inválido
             console.error('Error parsing JSON:', jsonError);

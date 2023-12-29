@@ -117,7 +117,7 @@ const signUp = () => {
         if (error instanceof Response) {
           // Si el error es una respuesta HTTP, se intenta parsear como JSON
           error.json().then(errorData => {
-            errorMessage.value = errorData.message ? 'Error signing up! ' + errorData.message : 'Error signing up!';
+            errorMessage.value = errorData.message ? 'Error signing up! ' + errorData.message : 'Error signing up! Please check your credentials.';
           }).catch(jsonError => {
             // Error en caso de que el JSON sea inválido
             console.error('Error parsing JSON:', jsonError);
