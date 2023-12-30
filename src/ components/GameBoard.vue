@@ -20,6 +20,6 @@ const backgroundStyle = computed(() => ({
 
 <style>
 .game_board {
-  @apply flex md:ml-96 justify-center sm:justify-center sm:items-start md:items-center rounded-lg overflow-auto p-4 mb-48 lg:mb-0 md:mb-0 md:pt-4;
+  @apply flex md:ml-12 justify-center sm:justify-center sm:items-start md:items-center rounded-lg overflow-auto p-4 mb-48 lg:mb-0 md:mb-0 md:pt-4;
 }
 </style>

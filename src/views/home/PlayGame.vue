@@ -159,6 +159,62 @@ function movePlayer(direction) {
       });
 }
 
+const goUp = () => { //Funció per moure el personatge cap amunt
+  console.log("Going up!");
+  //Moviment amunt
+  movePlayer("up");
+  console.log('Player positions: ', playerPositions);
+  if (playerPositions.player1[0] > rowsAndColumns.value) {
+    playerPositions.player1[0] -= rowsAndColumns.value;
+  }
+  if (playerPositions.player2[0] > rowsAndColumns.value) {
+    playerPositions.player2[0] -= rowsAndColumns.value;
+  }
+  forceUpdate();
+};
+
+const goDown = () => { //Funció per moure el personatge cap avall
+  //Moviment avall
+  movePlayer("down");
+  if (playerPositions.player1[0] <= totalCells.value - rowsAndColumns.value) {
+    playerPositions.player1[0] += rowsAndColumns.value;
+  }
+  if (playerPositions.player2[0] <= totalCells.value - rowsAndColumns.value) {
+    playerPositions.player2[0] += rowsAndColumns.value;
+  }
+  forceUpdate();
+};
+
+const goLeft = () => {
+  console.log("Going left!");
+  if ((playerPositions.player1[0] - 1) % rowsAndColumns.value !== 0) {
+    movePlayer("left");
+    playerPositions.player1[0] -= 1;
+    forceUpdate();
+  }
+  if ((playerPositions.player2[0] - 1) % rowsAndColumns.value !== 0) {
+    movePlayer("left");
+    playerPositions.player2[0] -= 1;
+    forceUpdate();
+  }
+};
+
+const goRight = () => {
+  console.log("Going right!");
+  if (playerPositions.player1[0] % rowsAndColumns.value !== 0) {
+    movePlayer("right");
+    playerPositions.player1[0] += 1;
+    forceUpdate();
+  }
+  if (playerPositions.player2[0] % rowsAndColumns.value !== 0) {
+    movePlayer("right");
+    playerPositions.player2[0] += 1;
+    forceUpdate();
+  }
+};
+
+
+//Funcions relacionades amb la direcció
 function changePlayerDirection(direction) {
   console.log('Changing direction to ' +direction)
   fetch('https://balandrau.salle.url.edu/i3/arenas/direction', {
@@ -184,65 +240,83 @@ function changePlayerDirection(direction) {
       });
 }
 
-const goUp = () => { //Funció per moure el personatge cap amunt
-  console.log("Going up!");
-  //Moviment amunt
-  movePlayer("up");
-  console.log('Player positions: ', playerPositions);
+const isPressedQ = ref(false);
+const isPressedE = ref(false);
+const isPressedF = ref(false);
+const isPressedX = ref(false);
+
+const lookLeft = () => {
+  console.log("Looking left!");
+  changePlayerDirection("left");
+  //TODO: Girar imagen
+  forceUpdate();
+};
+
+const lookUp = () => {
+  console.log("Looking up!");
   changePlayerDirection("up");
-  if (playerPositions.player1[0] > rowsAndColumns.value) {
-    playerPositions.player1[0] -= rowsAndColumns.value;
-  }
-  if (playerPositions.player2[0] > rowsAndColumns.value) {
-    playerPositions.player2[0] -= rowsAndColumns.value;
-  }
+  //TODO: Girar imagen
   forceUpdate();
 };
 
-const goDown = () => { //Funció per moure el personatge cap avall
-  //Moviment avall
-  movePlayer("down");
+const lookRight = () => {
+  console.log("Looking right!");
+  changePlayerDirection("right");
+  //TODO: Girar imagen
+  forceUpdate();
+};
+
+const lookDown = () => {
+  console.log("Looking down!");
   changePlayerDirection("down");
-  if (playerPositions.player1[0] <= totalCells.value - rowsAndColumns.value) {
-    playerPositions.player1[0] += rowsAndColumns.value;
-  }
-  if (playerPositions.player2[0] <= totalCells.value - rowsAndColumns.value) {
-    playerPositions.player2[0] += rowsAndColumns.value;
-  }
+  //TODO: Girar imagen
   forceUpdate();
 };
 
-const goLeft = () => {
-  console.log("Going left!");
-  if ((playerPositions.player1[0] - 1) % rowsAndColumns.value !== 0) {
-    movePlayer("left");
-    changePlayerDirection("left");
-    playerPositions.player1[0] -= 1;
-    forceUpdate();
-  }
-  if ((playerPositions.player2[0] - 1) % rowsAndColumns.value !== 0) {
-    movePlayer("left");
-    changePlayerDirection("left");
-    playerPositions.player2[0] -= 1;
-    forceUpdate();
+
+const handleKeydownQEFX = (event) => {
+  switch(event.key.toLowerCase()) {
+    case 'q':
+      isPressedQ.value = true; lookLeft();
+      break;
+    case 'e':
+      isPressedE.value = true; lookUp();
+      break;
+    case 'f':
+      isPressedF.value = true; lookRight();
+      break;
+    case 'x':
+      isPressedX.value = true; lookDown();
+      break;
   }
 };
 
-const goRight = () => {
-  console.log("Going right!");
-  if (playerPositions.player1[0] % rowsAndColumns.value !== 0) {
-    movePlayer("right");
-    changePlayerDirection("right");
-    playerPositions.player1[0] += 1;
-    forceUpdate();
-  }
-  if (playerPositions.player2[0] % rowsAndColumns.value !== 0) {
-    movePlayer("right");
-    changePlayerDirection("right");
-    playerPositions.player2[0] += 1;
-    forceUpdate();
+const handleKeyupQEFX = (event) => {
+  switch(event.key.toLowerCase()) {
+    case 'q':
+      isPressedQ.value = false;
+      break;
+    case 'e':
+      isPressedE.value = false;
+      break;
+    case 'f':
+      isPressedF.value = false;
+      break;
+    case 'x':
+      isPressedX.value = false;
+      break;
   }
 };
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydownQEFX);
+  window.addEventListener('keyup', handleKeyupQEFX);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydownQEFX);
+  window.removeEventListener('keyup', handleKeyupQEFX);
+});
 
 //Funcions relacionades amb els atacs
 const attacks = ref([]);
@@ -353,7 +427,6 @@ const confirmSurrender = () => {
   showSurrenderModal.value = false;
   console.log("Player has confirmed surrender.");
 
-  // Asegúrate de utilizar gameId.value para obtener el valor actual de gameId
   fetch(`https://balandrau.salle.url.edu/i3/arenas/${gameId.value}/play`, {
     method: 'DELETE',
     headers: {
@@ -420,12 +493,21 @@ const confirmSurrender = () => {
         </div>
       </div>
 
-      <!-- Tablero de Juego Cuadrado -->
-      <GameBoard :key="forceUpdateTrigger" imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="">
-        <div class="grid gap-2" :class="`grid-cols-${rowsAndColumns}`" :style="gridStyle">
-          <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)"></Cell>
+      <div class="flex justify-center items-start mt-2"> <!-- Contenedor principal para alinear todo horizontalmente -->
+        <!-- Contenedor de los botones QEFX, alineados de lado a lado -->
+        <div class="md:flex md:flex-col ml-72 mt-9 hidden"> <!-- Margen derecho para separar del GameBoard -->
+          <button :class="{'bg-green-500': isPressedQ, 'bg-green-300': !isPressedQ}" class="w-24 h-24 font-extrabold text-3xl rounded-xl mb-4">Q</button>
+          <button :class="{'bg-green-500': isPressedE, 'bg-green-300': !isPressedE}" class="w-24 h-24 font-extrabold text-3xl rounded-xl mb-4">E</button>
+          <button :class="{'bg-green-500': isPressedF, 'bg-green-300': !isPressedF}" class="w-24 h-24 font-extrabold text-3xl rounded-xl mb-4">F</button>
+          <button :class="{'bg-green-500': isPressedX, 'bg-green-300': !isPressedX}" class="w-24 h-24 font-extrabold text-3xl rounded-xl">X</button>
         </div>
-      </GameBoard>
+        <!-- Tablero de Juego Cuadrado -->
+        <GameBoard :key="forceUpdateTrigger" imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle">
+          <div class="grid gap-2" :class="`grid-cols-${rowsAndColumns}`" :style="gridStyle">
+            <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)"></Cell>
+          </div>
+        </GameBoard>
+      </div>
     </div>
 
     <!-- Controles del jugador -->
@@ -477,7 +559,7 @@ const confirmSurrender = () => {
           </div>
         </div>
 
-        <!-- Botones de control -->
+        <!-- Botones de control movimiento-->
         <div class="flex flex-col items-center mt-12">
           <button :class="{'bg-blue-500': isPressedW, 'bg-blue-200': !isPressedW}" class="w-24 h-24 font-extrabold text-3xl rounded-xl">W</button>
           <div class="flex justify-between w-full px-2 m-4">
