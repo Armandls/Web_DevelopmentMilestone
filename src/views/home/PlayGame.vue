@@ -1,5 +1,5 @@
 <script setup>
-import {computed, inject, onMounted, onUnmounted, ref, reactive} from 'vue';
+import {computed, inject, onMounted, onUnmounted, ref, reactive, watchEffect} from 'vue';
 import {useRoute} from 'vue-router';
 import Cell from "../../ components/Cell.vue";
 import GameBoard from "../../ components/GameBoard.vue";
@@ -15,6 +15,11 @@ let playerPositions = reactive({
   player1: [],
   player2: [],
 });
+const forceUpdateTrigger = ref(0);
+
+function forceUpdate() {
+  forceUpdateTrigger.value++;
+}
 
 const calculateInitialPositions = (rowsAndColumns) => {
   const middleRow = Math.ceil(rowsAndColumns / 2);
@@ -26,7 +31,7 @@ const calculateInitialPositions = (rowsAndColumns) => {
   return { player1: [player1Position], player2: [player2Position] };
 };
 
-onMounted(() => {
+watchEffect(() => {
   const queryParams = route.query;
   // Se verifica que 'rowsAndColumns' exista y sea un número válido
   if (queryParams.rowsAndColumns && !isNaN(queryParams.rowsAndColumns)) {
@@ -44,8 +49,12 @@ const gridStyle = computed(() => ({
 }));
 
 const getPlayer = (index) => {
-  if (playerPositions.player1.includes(index)) return 1;
-  if (playerPositions.player2.includes(index)) return 2;
+  if (playerPositions.player1.includes(index)) {
+    return 1;
+  }
+  if (playerPositions.player2.includes(index)) {
+    return 2;
+  }
   return null;
 };
 
@@ -187,54 +196,51 @@ const goUp = () => { //Funció per moure el personatge cap amunt
   if (playerPositions.player2[0] > rowsAndColumns.value) {
     playerPositions.player2[0] -= rowsAndColumns.value;
   }
+  forceUpdate();
 };
 
 const goDown = () => { //Funció per moure el personatge cap avall
-  console.log("Going down!");
   //Moviment avall
   movePlayer("down");
   changePlayerDirection("down");
-  console.log('Player positions: ', playerPositions);
   if (playerPositions.player1[0] <= totalCells.value - rowsAndColumns.value) {
     playerPositions.player1[0] += rowsAndColumns.value;
   }
   if (playerPositions.player2[0] <= totalCells.value - rowsAndColumns.value) {
     playerPositions.player2[0] += rowsAndColumns.value;
   }
+  forceUpdate();
 };
 
-const goLeft = () => { //Funció per moure el personatge cap a l'esquerra
+const goLeft = () => {
   console.log("Going left!");
-  //Moviment a l'esquerra
-  // Asegurarse de que el jugador no está en la primera columna
-  if (playerPositions.player1[0] % rowsAndColumns !== 1) {
+  if ((playerPositions.player1[0] - 1) % rowsAndColumns.value !== 0) {
     movePlayer("left");
     changePlayerDirection("left");
-    console.log('Player positions: ', playerPositions);
     playerPositions.player1[0] -= 1;
-  } else {
-    console.log("Movimiento no permitido: ya estás en el borde izquierdo.");
+    forceUpdate();
+  }
+  if ((playerPositions.player2[0] - 1) % rowsAndColumns.value !== 0) {
+    movePlayer("left");
+    changePlayerDirection("left");
+    playerPositions.player2[0] -= 1;
+    forceUpdate();
   }
 };
 
-const goRight = () => { //Funció per moure el personatge cap a la dreta
+const goRight = () => {
   console.log("Going right!");
-  //Moviment a la dreta
-  if (playerPositions.player1[0] % rowsAndColumns !== 0) {
+  if (playerPositions.player1[0] % rowsAndColumns.value !== 0) {
     movePlayer("right");
     changePlayerDirection("right");
-    console.log('Player positions: ', playerPositions);
-    if (playerPositions.player1[0] < totalCells.value) {
-      playerPositions.player1[0] += 1;
-    }
+    playerPositions.player1[0] += 1;
+    forceUpdate();
   }
-  if (playerPositions.player2[0] % rowsAndColumns !== 0) {
+  if (playerPositions.player2[0] % rowsAndColumns.value !== 0) {
     movePlayer("right");
     changePlayerDirection("right");
-    console.log('Player positions: ', playerPositions);
-    if (playerPositions.player2[0] < totalCells.value) {
-      playerPositions.player2[0] += 1;
-    }
+    playerPositions.player2[0] += 1;
+    forceUpdate();
   }
 };
 
@@ -415,7 +421,7 @@ const confirmSurrender = () => {
       </div>
 
       <!-- Tablero de Juego Cuadrado -->
-      <GameBoard imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="">
+      <GameBoard :key="forceUpdateTrigger" imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle" class="">
         <div class="grid gap-2" :class="`grid-cols-${rowsAndColumns}`" :style="gridStyle">
           <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)"></Cell>
         </div>
