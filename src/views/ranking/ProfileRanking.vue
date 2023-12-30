@@ -154,7 +154,7 @@ function goToStats(gameId) {
           <div class="flex items-center">
             <!-- Nom del player -->
             <div class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-2 bg-blue-300 rounded p-1.5">
-              {{ item.playerGame1.playerID }} VS {{ item.playerGame2.playerID }}
+              {{ item.playerGame1?.playerID || 'N/A' }} VS {{ item.playerGame2?.playerID || 'N/A' }}
             </div>
           </div>
         </div>
@@ -176,9 +176,6 @@ function goToStats(gameId) {
         <span class="hidden sm:inline">RETURN</span>
       </router-link>
     </div>
-
-
-
   </div>
 </template>
 

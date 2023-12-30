@@ -1,6 +1,7 @@
 <script setup>
 import {computed, inject, onMounted, ref} from 'vue';
 import NavigationBar from "../../ components/NavigationBar.vue";
+import router from "../../router/index.js";
 
 const token = inject('authToken'); //Agafem el token del jugador desde App.vue
 const playerData = inject('playerData'); //Agafem les dades del jugador desde App.vue
@@ -11,16 +12,17 @@ const playerLevel = computed(() => playerData.value ? playerData.value.level : '
 const playerXP = computed(() => playerData.value ? playerData.value.xp : 'N/A');
 const playerAvatar = computed(() => playerData.value ? playerData.value.img : '/src/assets/avatars/avatar1.png');
 
-const games = ref([]);
+const items = ref([]);
 
 function loadGames() {
-  fetch(`https://balandrau.salle.url.edu/i3/players/${playerData.value.player_ID}/games/finished`, {
+  fetch(`https://balandrau.salle.url.edu/i3/players/${playerName.value}/games/finished`, {
     headers: {
       'Bearer': `${token.value}`,
       'Content-Type': 'application/json'
     }
   })
       .then(response => {
+        console.log(response);
         if (response.status === 200) {
           console.log(response)
           return response.json();
@@ -31,18 +33,25 @@ function loadGames() {
       })
       .then(data => {
         if (Array.isArray(data)) {
-          games.value = data.map(game => ({
+          items.value = data.map(game => ({
             gameID: game.game_ID,
             size: game.size,
             creationDate: game.creation_date,
             HPMax: game.HP_max,
-            playersGames: game.players_games.map(playerGame => ({
-              gameID: playerGame.game_ID,
-              playerID: playerGame.player_ID,
-              winner: playerGame.winner,
-              xpWin: playerGame.xp_win,
-              coinsWin: playerGame.coins_win
-            }))
+            playerGame1: game.players_games.length > 0 ? {
+              gameID: game.players_games[0].game_ID,
+              playerID: game.players_games[0].player_ID,
+              winner: game.players_games[0].winner,
+              xpWin: game.players_games[0].xp_win,
+              coinsWin: game.players_games[0].coins_win
+            } : null,
+            playerGame2: game.players_games.length > 1 ? {
+              gameID: game.players_games[1].game_ID,
+              playerID: game.players_games[1].player_ID,
+              winner: game.players_games[1].winner,
+              xpWin: game.players_games[1].xp_win,
+              coinsWin: game.players_games[1].coins_win
+            } : null
           }));
         } else {
           console.error("Expected an array, but got:", data);
@@ -84,6 +93,16 @@ function loadPlayerStatistics() {
 
 onMounted(loadPlayerStatistics);
 onMounted(loadGames);
+
+
+function goToStats(gameId) {
+  router.push({
+    name: 'gameinfo',
+    query: {
+      gameID: gameId
+    }
+  });
+}
 </script>
 
 <template>
@@ -120,24 +139,23 @@ onMounted(loadGames);
     </div>
 
     <!-- Llista de partides jugades -->
-    <div v-if="games.length > 0" class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-10 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-5">
-      <div v-for="(game, index) in games" :key="game.gameID" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
+    <div v-if="items.length > 0" class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-20 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-5 mb-24">
+      <div v-for="item in items" :key="item.gameId" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
+        <div class="flex items-center">
+          <!-- Imatge del joc -->
+          <img class="rounded w-[48px] h-[48px] mr-4 ml-4 border-2 border-black" src="/src/assets/game/gameStats.png" alt="Game Finished">
 
-        <!-- Index -->
-        <div class="text-2xl sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold mr-4 ml-4">
-          {{ index + 1 }}
-        </div>
-
-        <!-- Noms i Resultat (ajustar segons les teves dades) -->
-        <div class="flex-grow text-lg sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
-          <div v-for="playerGame in game.playersGames" :key="playerGame.gameID">
-            <span :class="{'font-bold': playerGame.winner === playerGame.playerID}">{{ playerGame.playerID }}</span>
-          </div>
-          <div>
-            Resultat: {{ game.playersGames[0].xpWin }} - {{ game.playersGames[1].xpWin }}
+          <div class="flex items-center">
+            <!-- Nom del player -->
+            <div class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-2 bg-blue-300 rounded p-1.5">
+              {{ item.playerGame1?.playerID || 'N/A' }} VS {{ item.playerGame2?.playerID || 'N/A' }}
+            </div>
           </div>
         </div>
 
+        <button @click="goToStats(item.gameID)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
+          <font-awesome-icon icon="chart-bar" class="mr-2" /> GAME STATS
+        </button>
       </div>
     </div>
 
