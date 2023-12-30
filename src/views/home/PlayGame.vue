@@ -1,5 +1,5 @@
 <script setup>
-import {computed, inject, onMounted, onUnmounted, ref} from 'vue';
+import {computed, inject, onMounted, onUnmounted, ref, reactive} from 'vue';
 import {useRoute} from 'vue-router';
 import Cell from "../../ components/Cell.vue";
 import GameBoard from "../../ components/GameBoard.vue";
@@ -11,10 +11,10 @@ const route = useRoute();
 const rowsAndColumns = ref(1); //Valor por defecto
 const gameId = ref('');
 const screenWidth = ref(window.innerWidth);
-let playerPositions = {
+let playerPositions = reactive({
   player1: [],
   player2: [],
-};
+});
 
 const calculateInitialPositions = (rowsAndColumns) => {
   const middleRow = Math.ceil(rowsAndColumns / 2);
@@ -179,10 +179,14 @@ const goUp = () => { //Funció per moure el personatge cap amunt
   console.log("Going up!");
   //Moviment amunt
   movePlayer("up");
-  console.log('Changing direction to up')
+  console.log('Player positions: ', playerPositions);
   changePlayerDirection("up");
-  playerPositions.player1 = [playerPositions.player1[0] - rowsAndColumns.value];
-  playerPositions.player2 = [playerPositions.player2[0] - rowsAndColumns.value];
+  if (playerPositions.player1[0] > rowsAndColumns.value) {
+    playerPositions.player1[0] -= rowsAndColumns.value;
+  }
+  if (playerPositions.player2[0] > rowsAndColumns.value) {
+    playerPositions.player2[0] -= rowsAndColumns.value;
+  }
 };
 
 const goDown = () => { //Funció per moure el personatge cap avall
@@ -190,8 +194,13 @@ const goDown = () => { //Funció per moure el personatge cap avall
   //Moviment avall
   movePlayer("down");
   changePlayerDirection("down");
-  playerPositions.player1 = [playerPositions.player1[0] + rowsAndColumns.value];
-  playerPositions.player2 = [playerPositions.player2[0] + rowsAndColumns.value];
+  console.log('Player positions: ', playerPositions);
+  if (playerPositions.player1[0] <= totalCells.value - rowsAndColumns.value) {
+    playerPositions.player1[0] += rowsAndColumns.value;
+  }
+  if (playerPositions.player2[0] <= totalCells.value - rowsAndColumns.value) {
+    playerPositions.player2[0] += rowsAndColumns.value;
+  }
 };
 
 const goLeft = () => { //Funció per moure el personatge cap a l'esquerra
@@ -201,6 +210,7 @@ const goLeft = () => { //Funció per moure el personatge cap a l'esquerra
   if (playerPositions.player1[0] % rowsAndColumns !== 1) {
     movePlayer("left");
     changePlayerDirection("left");
+    console.log('Player positions: ', playerPositions);
     playerPositions.player1[0] -= 1;
   } else {
     console.log("Movimiento no permitido: ya estás en el borde izquierdo.");
@@ -213,9 +223,18 @@ const goRight = () => { //Funció per moure el personatge cap a la dreta
   if (playerPositions.player1[0] % rowsAndColumns !== 0) {
     movePlayer("right");
     changePlayerDirection("right");
-    playerPositions.player1[0] += 1;
-  } else {
-    console.log("Movimiento no permitido: ya estás en el borde derecho.");
+    console.log('Player positions: ', playerPositions);
+    if (playerPositions.player1[0] < totalCells.value) {
+      playerPositions.player1[0] += 1;
+    }
+  }
+  if (playerPositions.player2[0] % rowsAndColumns !== 0) {
+    movePlayer("right");
+    changePlayerDirection("right");
+    console.log('Player positions: ', playerPositions);
+    if (playerPositions.player2[0] < totalCells.value) {
+      playerPositions.player2[0] += 1;
+    }
   }
 };
 
@@ -252,7 +271,7 @@ onMounted(() => {
 const keys = ['i', 'o', 'p'];
 
 function attackInGame(id) {
-fetch('https://balandrau.salle.url.edu/i3/arenas/attack/' + id, {
+  fetch('https://balandrau.salle.url.edu/i3/arenas/attack/' + id, {
     method: 'POST',
     headers: {
       'Bearer': authToken.value,
