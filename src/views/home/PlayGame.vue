@@ -23,9 +23,12 @@ function forceUpdate() {
 
 function updatePlayerPositions(x1, y1, x2, y2, rowsAndColumns) {
   console.log('Updating player positions... ', x1, y1, x2, y2, rowsAndColumns);
-  const player1Position = (y1 - 1) * rowsAndColumns + x1;
-  const player2Position = (y2 - 1) * rowsAndColumns + x2;
 
+  // Calculando la posición lineal
+  let player1Position = (y1 * rowsAndColumns) + x1 + 1;
+  let player2Position = (y2 * rowsAndColumns) + x2 + 1;
+
+  // Actualizando las posiciones globales de los jugadores
   playerPositions.player1 = [player1Position];
   playerPositions.player2 = [player2Position];
 }
@@ -432,7 +435,7 @@ const confirmSurrender = () => {
 let intervalId;
 
 onMounted(() => {
-  intervalId = setInterval(getCurrentGame, 1000);
+  intervalId = setInterval(getCurrentGame, 100);
 });
 
 function getCurrentGame() {
