@@ -443,10 +443,10 @@ function getCurrentGame() {
         return response.json();
       })
       .then(data => {
+        console.log('Game data:', data[0]);
+
         if (data[0].finished === true) {
-          console.log('Game finished!');
-          clearInterval(intervalId);
-          router.push({ name: 'home' });
+
         }
 
         if (data[0].players_games.length === 2) {
@@ -456,8 +456,10 @@ function getCurrentGame() {
           updatePlayerPositions(player1Data.x_game, player1Data.y_game, player2Data.x_game, player2Data.y_game, rowsAndColumns.value);
         }
       })
-      .catch(error => {
-        console.error('Error fetching current game:', error.message);
+      .catch(() => { // Game finished
+        console.log('Game finished!');
+        clearInterval(intervalId);
+        router.push({ name: 'home' });
       });
 }
 
