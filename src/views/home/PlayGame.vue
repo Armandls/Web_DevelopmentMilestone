@@ -22,8 +22,6 @@ function forceUpdate() {
 }
 
 function updatePlayerPositions(x1, y1, x2, y2, rowsAndColumns) {
-  console.log('Updating player positions... ', x1, y1, x2, y2, rowsAndColumns);
-
   // Calculando la posición lineal
   let player1Position = (y1 * rowsAndColumns) + x1 + 1;
   let player2Position = (y2 * rowsAndColumns) + x2 + 1;
@@ -145,8 +143,6 @@ function movePlayer(direction) {
     body: JSON.stringify({ movement: direction })
   })
       .then(response => {
-        console.log('Response: ', response);
-        console.log('Auth token: ', authToken.value);
         if (response.status === 200) {
           console.log('Player moved successfully!');
         } else {
@@ -161,7 +157,6 @@ function movePlayer(direction) {
 }
 
 const goUp = () => { //Funció per moure el personatge cap amunt
-  console.log("Going up!");
   //Moviment amunt
   movePlayer("up");
   getCurrentGame();
@@ -176,14 +171,12 @@ const goDown = () => { //Funció per moure el personatge cap avall
 };
 
 const goLeft = () => {
-  console.log("Going left!");
   movePlayer("left");
   getCurrentGame();
   forceUpdate();
 };
 
 const goRight = () => {
-  console.log("Going right!");
   movePlayer("right");
   getCurrentGame();
   forceUpdate();
@@ -192,7 +185,6 @@ const goRight = () => {
 
 //Funcions relacionades amb la direcció
 function changePlayerDirection(direction) {
-  console.log('Changing direction to ' +direction)
   fetch('https://balandrau.salle.url.edu/i3/arenas/direction', {
     method: 'POST',
     headers: {
@@ -202,7 +194,6 @@ function changePlayerDirection(direction) {
     body: JSON.stringify({ direction: direction })
   })
       .then(response => {
-        console.log('Response: ', response);
         if (response.status === 200) {
           console.log('Direction changed successfully!');
         } else {
@@ -222,7 +213,6 @@ const isPressedF = ref(false);
 const isPressedX = ref(false);
 
 const lookLeft = () => {
-  console.log("Looking left!");
   changePlayerDirection("left");
   getCurrentGame();
   //TODO: Girar imagen
@@ -230,7 +220,6 @@ const lookLeft = () => {
 };
 
 const lookUp = () => {
-  console.log("Looking up!");
   changePlayerDirection("up");
   getCurrentGame();
   //TODO: Girar imagen
@@ -238,7 +227,6 @@ const lookUp = () => {
 };
 
 const lookRight = () => {
-  console.log("Looking right!");
   changePlayerDirection("right");
   getCurrentGame();
   //TODO: Girar imagen
@@ -246,7 +234,6 @@ const lookRight = () => {
 };
 
 const lookDown = () => {
-  console.log("Looking down!");
   changePlayerDirection("down");
   getCurrentGame();
   //TODO: Girar imagen
@@ -348,7 +335,7 @@ function attackInGame(id) {
         }
       })
       .then(data => {
-        console.log('Attack successful:', data);
+        //console.log('Attack successful:', data);
       })
       .catch(error => {
         console.error('Error attacking:', error.message);
@@ -415,7 +402,6 @@ const confirmSurrender = () => {
     }
   })
       .then(response => {
-        console.log('Response: ', response);
         if (response.status === 204) {
           console.log('Left game successfully!');
           clearInterval(intervalId);
@@ -438,6 +424,10 @@ onMounted(() => {
   intervalId = setInterval(getCurrentGame, 100);
 });
 
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
+
 function getCurrentGame() {
   fetch('https://balandrau.salle.url.edu/i3/players/arenas/current', {
     method: 'GET',
@@ -453,14 +443,9 @@ function getCurrentGame() {
         return response.json();
       })
       .then(data => {
-        console.log('Current game:', data[0]);
-
         if (data[0].players_games.length === 2) {
           const player1Data = data[0].players_games[0];
           const player2Data = data[0].players_games[1];
-          console.log('Player 1 data:', player1Data);
-          console.log('Player 2 data:', player2Data);
-
           // Actualiza las posiciones de los jugadores
           updatePlayerPositions(player1Data.x_game, player1Data.y_game, player2Data.x_game, player2Data.y_game, rowsAndColumns.value);
         }
