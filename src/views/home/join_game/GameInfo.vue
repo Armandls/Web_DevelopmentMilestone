@@ -95,74 +95,73 @@ onMounted(loadGameInfo);
     </div>
     <div class="container mx-auto mt-1">
       <!-- Titol de la batalla (guanyador vs perdedor) -->
-      <!--<div class="text-center text-2xl font-bold mb-4">
-        {{ winner.playerId }} VS {{ loser.playerId }}
-      </div>-->
-
-
       <!-- Contenidor per mostrar la informació del game (size, creation_date, HP_max) -->
-      <div class="justify-center mx-auto items-center text-center bg-blue-400 p-4 rounded shadow mb-4 mr-96 ml-96" v-if="game">
-        <div class="font-bold">GAME INFO</div>
-          <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded px-40 mt-3">
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One']  bg-blue-300 rounded p-1.5 ">
+      <div class="justify-center mx-auto items-center text-center bg-blue-400 p-4 rounded shadow mb-4 top-1.5" v-if="game">
+        <div class="bbg- rounded ml-96" style="width: 715px; height: 50px;">
+          <div class="items-center text-center text-4xl font-bold mb-4 mt-3">
+            {{ winner.playerId }} VS {{ loser.playerId }}
+          </div>
+        </div>
+        <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded px-40 mt-3">
+            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One']  bg-blue-300 rounded p-1.5 mr-96 ml-96">
               Game ID: {{ game.id }}
             </div>
 
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2">
+            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2 mr-96 ml-96">
               Size: {{ game.size }}
             </div>
 
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2">
+            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2 mr-96 ml-96">
               Creation Date: {{ game.creationDate }}
             </div>
 
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-green-200 rounded p-1.5 pt-2">
+            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-green-200 rounded p-1.5 pt-2 mr-96 ml-96">
               Max HP: {{ game.maxHP }}
             </div>
           </div>
-      </div>
 
-      <div class="flex justify-around">
-        <!-- Contenedor del ganador -->
-        <div class="justify-center mx-auto items-center text-center bg-yellow-100 p-10 rounded shadow flex-1 mr-8 ml-24 mt-10" v-if="winner">
-          <div class="font-bold">INFO DEL GANADOR</div>
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded p-3 px-16">
-              <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-blue-300 rounded p-1.5 ">
-                Name: {{ winner.playerId }}
+            <div class="flex justify-around">
+              <!-- Contenedor del ganador -->
+              <div class="justify-center mx-auto items-center text-center bg-yellow-100 p-5 rounded shadow flex-1 mr-8 ml-24 mt-10" v-if="winner">
+                <div class="font-bold text-2xl">GANADOR</div>
+                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded p-3 px-16">
+                    <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-blue-300 rounded p-1.5 ">
+                      Name: {{ winner.playerId }}
+                    </div>
+
+                    <img :src="winner.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
+
+                    <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2">
+                      Coins: {{ winner.coinsWon }}
+                    </div>
+
+                    <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2">
+                      XP: {{ winner.xpWon }}
+                    </div>
+                    </div>
               </div>
 
-              <img :src="winner.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
 
-              <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2">
-                Coins: {{ winner.coinsWon }}
+              <!-- Contenedor del perdedor -->
+              <div class="justify-center mx-auto items-center text-center bg-yellow-100 p-5 rounded shadow flex-1 mr-8 ml-24 mt-10" v-if="loser">
+                <div class="font-bold text-2xl">PERDEDOR</div>
+                <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded p-3 px-16">
+                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-blue-300 rounded p-1.5 ">
+                    Name: {{ loser.playerId }}
+                  </div>
+
+                  <img :src="loser.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
+
+                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2">
+                    Coins: {{ loser.coinsWon }}
+                  </div>
+
+                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2">
+                    XP: {{ loser.xpWon }}
+                  </div>
+                </div>
               </div>
-
-              <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2">
-                XP: {{ winner.xpWon }}
-              </div>
-              </div>
-        </div>
-
-
-        <!-- Contenedor del perdedor -->
-        <div class="justify-center mx-auto items-center text-center bg-yellow-100 p-10 rounded shadow flex-1 mr-8 ml-24 mt-10" v-if="loser">
-          <div class="font-bold">INFO DEL PERDEDOR</div>
-          <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded p-3 px-16">
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-blue-300 rounded p-1.5 ">
-              Name: {{ loser.playerId }}
             </div>
-
-            <img :src="loser.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
-
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2">
-              Coins: {{ loser.coinsWon }}
-            </div>
-
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2">
-              XP: {{ loser.xpWon }}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

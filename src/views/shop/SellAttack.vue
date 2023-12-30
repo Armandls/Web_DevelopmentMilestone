@@ -10,6 +10,7 @@ const selectedItems = ref([]);
 const errorMessage = ref('');
 const successMessage = ref('');
 const items = ref([]);
+const coins = ref(playerData.value.coins);
 
 function getAttackIndex(attackID) {
   return Array.from(attackID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
@@ -157,7 +158,10 @@ function sellAttack(attackID, price) {
     <ReturnToShop/>
 
     <!-- Imagen monedas -->
-    <img src="/src/assets/shop/Monedas.png" alt=" " class="mi-imagen">
+    <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 150px; height: auto;">
+    <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-6 mr-10">
+      {{ coins }}
+    </div>
 
     <!--Imagen chico tamaño pequeño-->
     <div class="img-container">

@@ -1,8 +1,9 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import NavigationBar from "../../ components/NavigationBar.vue";
-import { ref } from 'vue';
-
+import {inject, ref} from 'vue';
+const playerData = inject('playerData');
+const coins = ref(playerData.value.coins);
 const tooltip = ref('');
 </script>
 
@@ -17,9 +18,10 @@ const tooltip = ref('');
     </header>
 
     <!-- Imagen monedas -->
-    <figure>
-      <img src="/src/assets/shop/Monedas.png" alt="Monedas" class="mi-imagen">
-    </figure>
+    <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 150px; height: auto;">
+    <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-6 mr-10">
+      {{ coins }}
+    </div>
 
     <!--Imagen chica tamaño pequeño-->
     <section class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-24 xl:mt-40 xl:mr-4 xl:mb-12 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[500px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pl-5 relative z-0">

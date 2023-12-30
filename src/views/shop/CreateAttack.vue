@@ -11,9 +11,13 @@ export default defineComponent({
 </script>
 
 <script setup>
+import {inject, ref} from "vue";
+
 const authToken = inject('authToken');
 const errorMessage = ref('');
 const successMessage = ref('');
+const playerData = inject('playerData');
+const coins = ref(playerData.value.coins);
 
 const attacks = [
   'src/assets/attacks/1.png',
@@ -99,7 +103,10 @@ const createAttack = () => {
     </button>
 
     <!-- Imagen monedas -->
-    <img src="/src/assets/shop/Monedas.png" alt=" " class="mi-imagen">
+    <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 150px; height: auto;">
+    <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-6 mr-10">
+      {{ coins }}
+    </div>
 
     <!--Imagen chico tamaño pequeño-->
     <div class="img-container">

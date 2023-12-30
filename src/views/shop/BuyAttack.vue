@@ -30,6 +30,8 @@ function getRandomAttackImage(index) {
   return attacks[index % attacks.length]
 }
 
+const coins = ref(playerData.value.coins);
+
 // Función para obtener ataques desde la API
 const fetchAttacks = () => {
   fetch('https://balandrau.salle.url.edu/i3/shop/attacks', {
@@ -147,9 +149,15 @@ const buyAttack = (attackID) => {
     </button>
 
     <!-- Botón de Show Shopping Cart -->
-    <div class="fixed top-0 right-0 pt-6 mr-48">
+    <div class="fixed top-0 right-0 pt-6">
+      <div class="relative flex items-start justify-end">
+        <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 100px; height: auto;">
+        <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-2 mr-6">
+          {{ coins }}
+        </div>
+      </div>
       <!-- Botón del Carrito de Compras -->
-      <button @click="toggleDropdown" class="flex items-center pr-3.5 pl-4 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-full uppercase sm:w-auto">
+      <button @click="toggleDropdown" class="flex items-center pr-3.5 pl-4 mr-32 mt-2 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-full uppercase sm:w-auto">
         <img src="/src/assets/shop/carrito-de-compras.png" alt="Shopping Cart" class="w-6 h-6 object-cover object-fit-contain mr-2" />
         <span class="hidden sm:inline">Shopping Cart</span>
       </button>
@@ -182,7 +190,9 @@ const buyAttack = (attackID) => {
     </div>
 
     <!-- Imagen monedas -->
-    <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen">
+
+
+
 
     <!--Imagen chico tamaño pequeño-->
     <div class="img-container">
