@@ -7,6 +7,7 @@ import PingAndFPS from "../../ components/PingAndFPS.vue";
 import router from "../../router/index.js";
 
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
+const playerData = inject('playerData'); //Agafem les dades del jugador desde App.vue
 const route = useRoute();
 const rowsAndColumns = ref(1); //Valor por defecto
 const gameId = ref('');
@@ -428,6 +429,64 @@ onUnmounted(() => {
   clearInterval(intervalId);
 });
 
+const showGameFinishedWin = ref(false);
+const showGameFinishedLost = ref(false);
+const coinsWin = ref(0);
+const xpWin = ref(0);
+
+function endGameSuccessful() {
+  showGameFinishedWin.value = true;
+}
+
+function endGameLost() {
+  showGameFinishedLost.value = true;
+}
+
+function checkGameFinishedInfo() {
+  fetch(`https://balandrau.salle.url.edu/i3/arenas/${gameId.value}`, {
+    method: 'GET',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          return response.json().then(json => {
+            throw new Error(`Error: ${response.status} - ${json.message}`);
+          });
+        }
+      })
+      .then(data => {
+        //Map the info
+        const player1Data = data.players_games[0];
+        const player2Data = data.players_games[1];
+
+        if (player1Data.playerID === playerData.playerID) {
+          if (player1Data.winner !== true) {
+            endGameSuccessful();
+            coinsWin.value = player1Data.coins_win;
+            xpWin.value = player1Data.xp_win;
+          } else {
+            endGameLost();
+          }
+        } else {
+          if (player2Data.winner !== true) {
+            endGameSuccessful();
+            coinsWin.value = player2Data.coins_win;
+            xpWin.value = player2Data.xp_win;
+          } else {
+            endGameLost();
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error getting game finished info:', error.message);
+      });
+}
+
 function getCurrentGame() {
   fetch('https://balandrau.salle.url.edu/i3/players/arenas/current', {
     method: 'GET',
@@ -455,14 +514,11 @@ function getCurrentGame() {
       .catch(() => {
         console.log('Game finished!');
         clearInterval(intervalId);
-        endGame();
+
+        checkGameFinishedInfo();
+
+        endGameSuccessful();
       });
-}
-
-const showGameFinished = ref(false);
-
-function endGame() {
-  showGameFinished.value = true;
 }
 
 </script>
@@ -575,7 +631,7 @@ function endGame() {
         </div>
 
         <!-- Contenedor para el mensaje de juego terminado -->
-        <div v-if="showGameFinished" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+        <div v-if="showGameFinishedWin" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <!-- Confeti y globos -->
           <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
             <!-- Confeti -->
@@ -585,21 +641,43 @@ function endGame() {
             <div v-for="i in 10" :key="`balloon-${i}`" :class="`balloon bg-${['pink', 'purple', 'indigo'][i % 3]}-500`" :style="{bottom: -(i * 5) + '%', left: (10 * i) + '%', width: '40px', height: '100px', animationDuration: (2 + i/5) + 's', animationDelay: -(i/5) + 's'}"></div>
           </div>
 
-          <!-- Contenedor para el mensaje de juego terminado -->
-          <div v-if="showGameFinished" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <!-- Contenedor para el mensaje de juego terminado (Victoria) -->
+          <div v-if="showGameFinishedWin" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
             <!-- Contenido del mensaje -->
-            <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinished}">
+            <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedWin}">
               <!-- Título -->
               <h2 class="text-4xl font-bold text-green-500 mb-2">Congratulations!</h2>
               <!-- Subtítulo -->
               <p class="text-2xl font-semibold text-gray-800 mb-4">You Won!</p>
-              <!-- Botón de aceptación -->
+              <!-- Detalles de las recompensas -->
+              <div class="text-lg text-gray-700 mb-4">
+                <p><strong>Coins Earned:</strong> {{ coinsWin }}</p>
+                <p><strong>XP Gained:</strong> {{ xpWin }}</p>
+              </div>
+              <!-- Botón de retorno al inicio -->
               <button @click="router.push({ name: 'home' })" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Return Home
               </button>
             </div>
           </div>
+        </div>
 
+        <!-- Contenedor para el mensaje de juego terminado (Derrota) -->
+        <div v-if="showGameFinishedLost" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <!-- Animación de fondo (por ejemplo, lluvia, humo, etc.) -->
+          <div class="absolute inset-0 bg-animation bg-no-repeat bg-cover"></div>
+
+          <!-- Contenido del mensaje -->
+          <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedLost}">
+            <!-- Título -->
+            <h2 class="text-4xl font-bold text-red-600 mb-2">Game Over</h2>
+            <!-- Subtítulo -->
+            <p class="text-2xl font-semibold text-gray-800 mb-4">You Lost!</p>
+            <!-- Botón de retorno al inicio -->
+            <button @click="router.push({ name: 'home' })" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              Return Home
+            </button>
+          </div>
         </div>
 
         <!-- Botones de control movimiento-->
@@ -630,14 +708,14 @@ function endGame() {
   100% { transform: translateY(-1000%) scale(1); }
 }
 
-.confetti {
-  position: absolute;
-  animation: confetti 1s linear infinite;
+@keyframes fallAnimation {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
 }
 
-.balloon {
-  position: absolute;
-  animation: balloon 2s ease-in-out infinite;
+.bg-animation {
+  animation: fallAnimation 2s linear infinite;
 }
+
 </style>
 
