@@ -138,15 +138,12 @@ function movePlayer(direction) {
         console.log('Response: ', response);
         console.log('Auth token: ', authToken.value);
         if (response.status === 200) {
-          return response.json();
+          console.log('Player moved successfully!');
         } else {
           return response.json().then(json => {
             throw new Error(`Error: ${response.status} - ${json.message}`);
           });
         }
-      })
-      .then(data => {
-        console.log('Movement successful:', data);
       })
       .catch(error => {
         console.error('Error moving player:', error.message);
@@ -154,6 +151,7 @@ function movePlayer(direction) {
 }
 
 function changePlayerDirection(direction) {
+  console.log('Changing direction to ' +direction)
   fetch('https://balandrau.salle.url.edu/i3/arenas/direction', {
     method: 'POST',
     headers: {
@@ -165,15 +163,12 @@ function changePlayerDirection(direction) {
       .then(response => {
         console.log('Response: ', response);
         if (response.status === 200) {
-          return response.json();
+          console.log('Direction changed successfully!');
         } else {
           return response.json().then(json => {
             throw new Error(`Error: ${response.status} - ${json.message}`);
           });
         }
-      })
-      .then(data => {
-        console.log('Direction changed successfully:', data);
       })
       .catch(error => {
         console.error('Error changing direction:', error.message);
@@ -183,9 +178,9 @@ function changePlayerDirection(direction) {
 const goUp = () => { //Funció per moure el personatge cap amunt
   console.log("Going up!");
   //Moviment amunt
-  movePlayer('up');
+  movePlayer("up");
   console.log('Changing direction to up')
-  changePlayerDirection('up');
+  changePlayerDirection("up");
   playerPositions.player1 = [playerPositions.player1[0] - rowsAndColumns.value];
   playerPositions.player2 = [playerPositions.player2[0] - rowsAndColumns.value];
 };
@@ -193,8 +188,8 @@ const goUp = () => { //Funció per moure el personatge cap amunt
 const goDown = () => { //Funció per moure el personatge cap avall
   console.log("Going down!");
   //Moviment avall
-  movePlayer('down');
-  changePlayerDirection('down');
+  movePlayer("down");
+  changePlayerDirection("down");
   playerPositions.player1 = [playerPositions.player1[0] + rowsAndColumns.value];
   playerPositions.player2 = [playerPositions.player2[0] + rowsAndColumns.value];
 };
@@ -204,8 +199,8 @@ const goLeft = () => { //Funció per moure el personatge cap a l'esquerra
   //Moviment a l'esquerra
   // Asegurarse de que el jugador no está en la primera columna
   if (playerPositions.player1[0] % rowsAndColumns !== 1) {
-    movePlayer('left');
-    changePlayerDirection('left');
+    movePlayer("left");
+    changePlayerDirection("left");
     playerPositions.player1[0] -= 1;
   } else {
     console.log("Movimiento no permitido: ya estás en el borde izquierdo.");
@@ -216,8 +211,8 @@ const goRight = () => { //Funció per moure el personatge cap a la dreta
   console.log("Going right!");
   //Moviment a la dreta
   if (playerPositions.player1[0] % rowsAndColumns !== 0) {
-    movePlayer('right');
-    changePlayerDirection('right');
+    movePlayer("right");
+    changePlayerDirection("right");
     playerPositions.player1[0] += 1;
   } else {
     console.log("Movimiento no permitido: ya estás en el borde derecho.");
