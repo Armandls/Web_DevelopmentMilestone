@@ -21,22 +21,20 @@ function forceUpdate() {
   forceUpdateTrigger.value++;
 }
 
-const calculateInitialPositions = (rowsAndColumns) => {
-  const middleRow = Math.ceil(rowsAndColumns / 2);
-  let player1Position, player2Position;
+function updatePlayerPositions(x1, y1, x2, y2, rowsAndColumns) {
+  console.log('Updating player positions... ', x1, y1, x2, y2, rowsAndColumns);
+  const player1Position = (y1 - 1) * rowsAndColumns + x1;
+  const player2Position = (y2 - 1) * rowsAndColumns + x2;
 
-  player1Position = (middleRow - 1) * rowsAndColumns + 1;
-  player2Position = middleRow * rowsAndColumns;
-
-  return { player1: [player1Position], player2: [player2Position] };
-};
+  playerPositions.player1 = [player1Position];
+  playerPositions.player2 = [player2Position];
+}
 
 watchEffect(() => {
   const queryParams = route.query;
   // Se verifica que 'rowsAndColumns' exista y sea un número válido
   if (queryParams.rowsAndColumns && !isNaN(queryParams.rowsAndColumns)) {
     rowsAndColumns.value = parseInt(queryParams.rowsAndColumns, 10);
-    playerPositions = calculateInitialPositions(rowsAndColumns.value)
   }
   if (queryParams.name) {
     gameId.value = queryParams.name;
@@ -163,54 +161,29 @@ const goUp = () => { //Funció per moure el personatge cap amunt
   console.log("Going up!");
   //Moviment amunt
   movePlayer("up");
-  console.log('Player positions: ', playerPositions);
-  if (playerPositions.player1[0] > rowsAndColumns.value) {
-    playerPositions.player1[0] -= rowsAndColumns.value;
-  }
-  if (playerPositions.player2[0] > rowsAndColumns.value) {
-    playerPositions.player2[0] -= rowsAndColumns.value;
-  }
+  getCurrentGame();
   forceUpdate();
 };
 
 const goDown = () => { //Funció per moure el personatge cap avall
   //Moviment avall
   movePlayer("down");
-  if (playerPositions.player1[0] <= totalCells.value - rowsAndColumns.value) {
-    playerPositions.player1[0] += rowsAndColumns.value;
-  }
-  if (playerPositions.player2[0] <= totalCells.value - rowsAndColumns.value) {
-    playerPositions.player2[0] += rowsAndColumns.value;
-  }
+  getCurrentGame();
   forceUpdate();
 };
 
 const goLeft = () => {
   console.log("Going left!");
-  if ((playerPositions.player1[0] - 1) % rowsAndColumns.value !== 0) {
-    movePlayer("left");
-    playerPositions.player1[0] -= 1;
-    forceUpdate();
-  }
-  if ((playerPositions.player2[0] - 1) % rowsAndColumns.value !== 0) {
-    movePlayer("left");
-    playerPositions.player2[0] -= 1;
-    forceUpdate();
-  }
+  movePlayer("left");
+  getCurrentGame();
+  forceUpdate();
 };
 
 const goRight = () => {
   console.log("Going right!");
-  if (playerPositions.player1[0] % rowsAndColumns.value !== 0) {
-    movePlayer("right");
-    playerPositions.player1[0] += 1;
-    forceUpdate();
-  }
-  if (playerPositions.player2[0] % rowsAndColumns.value !== 0) {
-    movePlayer("right");
-    playerPositions.player2[0] += 1;
-    forceUpdate();
-  }
+  movePlayer("right");
+  getCurrentGame();
+  forceUpdate();
 };
 
 
@@ -248,6 +221,7 @@ const isPressedX = ref(false);
 const lookLeft = () => {
   console.log("Looking left!");
   changePlayerDirection("left");
+  getCurrentGame();
   //TODO: Girar imagen
   forceUpdate();
 };
@@ -255,6 +229,7 @@ const lookLeft = () => {
 const lookUp = () => {
   console.log("Looking up!");
   changePlayerDirection("up");
+  getCurrentGame();
   //TODO: Girar imagen
   forceUpdate();
 };
@@ -262,6 +237,7 @@ const lookUp = () => {
 const lookRight = () => {
   console.log("Looking right!");
   changePlayerDirection("right");
+  getCurrentGame();
   //TODO: Girar imagen
   forceUpdate();
 };
@@ -269,6 +245,7 @@ const lookRight = () => {
 const lookDown = () => {
   console.log("Looking down!");
   changePlayerDirection("down");
+  getCurrentGame();
   //TODO: Girar imagen
   forceUpdate();
 };
@@ -438,6 +415,7 @@ const confirmSurrender = () => {
         console.log('Response: ', response);
         if (response.status === 204) {
           console.log('Left game successfully!');
+          clearInterval(intervalId);
           router.push({ name: 'home' });
           return;
         }
@@ -449,6 +427,45 @@ const confirmSurrender = () => {
         console.error('Error leaving game: ', error.message);
       });
 };
+
+// Establecer un intervalo
+let intervalId;
+
+onMounted(() => {
+  intervalId = setInterval(getCurrentGame, 1000);
+});
+
+function getCurrentGame() {
+  fetch('https://balandrau.salle.url.edu/i3/players/arenas/current', {
+    method: 'GET',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status !== 200) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Current game:', data[0]);
+
+        if (data[0].players_games.length === 2) {
+          const player1Data = data[0].players_games[0];
+          const player2Data = data[0].players_games[1];
+          console.log('Player 1 data:', player1Data);
+          console.log('Player 2 data:', player2Data);
+
+          // Actualiza las posiciones de los jugadores
+          updatePlayerPositions(player1Data.x_game, player1Data.y_game, player2Data.x_game, player2Data.y_game, rowsAndColumns.value);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching current game:', error.message);
+      });
+}
 
 </script>
 
