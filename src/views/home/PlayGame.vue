@@ -452,11 +452,17 @@ function getCurrentGame() {
           updatePlayerPositions(player1Data.x_game, player1Data.y_game, player2Data.x_game, player2Data.y_game, rowsAndColumns.value);
         }
       })
-      .catch(() => { // Game finished
+      .catch(() => {
         console.log('Game finished!');
         clearInterval(intervalId);
-        router.push({ name: 'home' });
+        endGame();
       });
+}
+
+const showGameFinished = ref(false);
+
+function endGame() {
+  showGameFinished.value = true;
 }
 
 </script>
@@ -568,6 +574,34 @@ function getCurrentGame() {
           </div>
         </div>
 
+        <!-- Contenedor para el mensaje de juego terminado -->
+        <div v-if="showGameFinished" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <!-- Confeti y globos -->
+          <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
+            <!-- Confeti -->
+            <div v-for="i in 20" :key="i" :class="`confetti bg-${['red', 'yellow', 'green', 'blue', 'indigo', 'purple'][i % 6]}-400`" :style="{top: (5 * i) + '%', left: (5 * i) + '%', width: (i % 2 === 0 ? '10px' : '6px'), height: (i % 2 === 0 ? '10px' : '6px'), animationDuration: (0.8 + i/10) + 's', animationDelay: -(i/10) + 's'}"></div>
+
+            <!-- Globos -->
+            <div v-for="i in 10" :key="`balloon-${i}`" :class="`balloon bg-${['pink', 'purple', 'indigo'][i % 3]}-500`" :style="{bottom: -(i * 5) + '%', left: (10 * i) + '%', width: '40px', height: '100px', animationDuration: (2 + i/5) + 's', animationDelay: -(i/5) + 's'}"></div>
+          </div>
+
+          <!-- Contenedor para el mensaje de juego terminado -->
+          <div v-if="showGameFinished" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+            <!-- Contenido del mensaje -->
+            <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinished}">
+              <!-- Título -->
+              <h2 class="text-4xl font-bold text-green-500 mb-2">Congratulations!</h2>
+              <!-- Subtítulo -->
+              <p class="text-2xl font-semibold text-gray-800 mb-4">You Won!</p>
+              <!-- Botón de aceptación -->
+              <button @click="router.push({ name: 'home' })" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Return Home
+              </button>
+            </div>
+          </div>
+
+        </div>
+
         <!-- Botones de control movimiento-->
         <div class="flex flex-col items-center mt-12">
           <button :class="{'bg-blue-500': isPressedW, 'bg-blue-200': !isPressedW}" class="w-24 h-24 font-extrabold text-3xl rounded-xl">W</button>
@@ -582,3 +616,28 @@ function getCurrentGame() {
 
   </div>
 </template>
+
+<style scoped>
+/* Estilos para confeti y globos */
+/* Estilos para confeti y globos */
+@keyframes confetti {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(300px) rotate(360deg); }
+}
+
+@keyframes balloon {
+  0% { transform: translateY(100%) scale(0.5); }
+  100% { transform: translateY(-1000%) scale(1); }
+}
+
+.confetti {
+  position: absolute;
+  animation: confetti 1s linear infinite;
+}
+
+.balloon {
+  position: absolute;
+  animation: balloon 2s ease-in-out infinite;
+}
+</style>
+
