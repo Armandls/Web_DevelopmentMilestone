@@ -443,6 +443,12 @@ function getCurrentGame() {
         return response.json();
       })
       .then(data => {
+        if (data[0].finished === true) {
+          console.log('Game finished!');
+          clearInterval(intervalId);
+          router.push({ name: 'home' });
+        }
+
         if (data[0].players_games.length === 2) {
           const player1Data = data[0].players_games[0];
           const player2Data = data[0].players_games[1];
