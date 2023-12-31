@@ -49,6 +49,7 @@ const fetchPlayers = () => {
         throw new Error(`Error: ${response.status}`);
       })
       .then(players => {
+        console.log(players);
         items.value = players.map(player => ({
           imageSrc: (player.img.match(/^https:\/\/[^\s,]+/) ? player.img : getRandomAvatar(player.player_ID)),
           username: player.player_ID,
