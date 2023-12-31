@@ -17,6 +17,10 @@ let playerPositions = reactive({
   player2: [],
 });
 
+let firstTime = true;
+let PLAYER_1_NAME = 'Waiting...';
+let PLAYER_2_NAME = 'Waiting...';
+
 let directionPlayer1 = ref("right");
 let directionPlayer2 = ref("left");
 
@@ -521,6 +525,15 @@ function getCurrentGame() {
           const player2Data = data[0].players_games[1];
           directionPlayer1.value = player1Data.direction;
           directionPlayer2.value = player2Data.direction;
+
+          if (firstTime === true) {
+            console.log('First time!');
+            console.log('Player 1 data:', player1Data.player_ID);
+            console.log('Player 2 data:', player2Data.player_ID);
+            PLAYER_1_NAME = player1Data.player_ID;
+            PLAYER_2_NAME = player2Data.player_ID;
+            firstTime = false;
+          }
           // Actualiza las posiciones de los jugadores
           updatePlayerPositions(player1Data.x_game, player1Data.y_game, player2Data.x_game, player2Data.y_game, rowsAndColumns.value);
         }
@@ -549,11 +562,11 @@ function getCurrentGame() {
     <div class="flex flex-col items-center justify-center mb-4">
       <!-- Encabezado de Jugadores dentro de un rectángulo gris -->
       <div class="bg-blue-200 p-2 md:p-4 shadow-xl rounded-lg mx-auto md:mx-0 md:ml-96 lg:ml-96 mb-auto mt-6">
-        <div class="flex items-center justify-center bg-gray-300 rounded-lg">
-          <div class="bg-yellow-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-l-md font-extrabold text-xl md:text-2xl lg:text-3xl">PLAYER 1</div>
-          <div class="bg-purple-500 text-white py-2 px-4 md:py-4 md:px-9  font-extrabold text-xl md:text-2xl lg:text-3xl">VS</div>
-          <div class="bg-green-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-r-md font-extrabold text-xl md:text-2xl lg:text-3xl">PLAYER 2</div>
-        </div>
+          <div class="flex items-center justify-center bg-gray-300 rounded-lg">
+            <div class="bg-yellow-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-l-md font-extrabold text-xl md:text-2xl lg:text-3xl">{{ PLAYER_1_NAME }}</div>
+            <div class="bg-purple-500 text-white py-2 px-4 md:py-4 md:px-9 font-extrabold text-xl md:text-2xl lg:text-3xl">VS</div>
+            <div class="bg-green-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-r-md font-extrabold text-xl md:text-2xl lg:text-3xl">{{ PLAYER_2_NAME }}</div>
+          </div>
       </div>
 
       <!-- Component pel ping i FPS -->
