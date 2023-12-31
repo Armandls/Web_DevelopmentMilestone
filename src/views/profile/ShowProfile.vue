@@ -53,6 +53,7 @@ function loadGames() {
               coinsWin: game.players_games[1].coins_win
             } : null
           }));
+          items.value.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
         } else {
           console.error("Expected an array, but got:", data);
         }
