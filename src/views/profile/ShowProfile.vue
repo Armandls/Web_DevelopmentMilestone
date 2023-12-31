@@ -83,8 +83,7 @@ function loadPlayerStatistics() {
       })
       .then(statistics => {
         const stats = statistics;
-        winrate.value = stats.games_played > 0 ? (stats.games_won / stats.games_played) * 100 : 'N/A';
-        winrate.value = stats.games_played > 0 ? winrate.value + '%' : winrate.value;
+        winrate.value = stats.games_played > 0 ? Math.round((stats.games_won / stats.games_played) * 100) : 'N/A';
       })
       .catch(error => {
         console.error("Error fetching player statistics:", error);
@@ -127,7 +126,7 @@ function goToStats(gameId) {
         <!-- WinRate -->
         <div class="ml-4 sm:ml-5 md:ml-6 lg:ml-6 xl:ml-6 p-3 sm:p-3.5 md:p-4 lg:p-4 xl:p-4 border border-green-400 rounded text-right bg-green-400">
           <span class="text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-800 font-bold">
-            WR: {{ typeof winrate === 'number' ? winrate.toFixed(1) + '%' : winrate }}
+            WR: {{ typeof winrate === 'number' ? winrate + '%' : winrate }}
           </span>
         </div>
       </div>

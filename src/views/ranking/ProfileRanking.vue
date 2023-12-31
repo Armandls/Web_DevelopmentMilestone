@@ -92,8 +92,7 @@ function loadPlayerStatistics() {
       })
       .then(statistics => {
         const stats = statistics;
-        winrate.value = stats.games_played > 0 ? (stats.games_won / stats.games_played) * 100 : 'N/A';
-        winrate.value = stats.games_played > 0 ? winrate.value + '%' : winrate.value;
+        winrate.value = stats.games_played > 0 ? Math.round((stats.games_won / stats.games_played) * 100) + '%' : 'N/A';
       })
       .catch(error => {
         console.error("Error fetching player statistics:", error);
