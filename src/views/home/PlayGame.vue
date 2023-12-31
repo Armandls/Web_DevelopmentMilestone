@@ -532,6 +532,7 @@ function getCurrentGame() {
             console.log('Player 2 data:', player2Data.player_ID);
             PLAYER_1_NAME = player1Data.player_ID;
             PLAYER_2_NAME = player2Data.player_ID;
+            forceUpdate();
             firstTime = false;
           }
           // Actualiza las posiciones de los jugadores
@@ -561,7 +562,7 @@ function getCurrentGame() {
 
     <div class="flex flex-col items-center justify-center mb-4">
       <!-- Encabezado de Jugadores dentro de un rectángulo gris -->
-      <div class="bg-blue-200 p-2 md:p-4 shadow-xl rounded-lg mx-auto md:mx-0 md:ml-96 lg:ml-96 mb-auto mt-6">
+      <div :key="forceUpdateTrigger" class="bg-blue-200 p-2 md:p-4 shadow-xl rounded-lg mx-auto md:mx-0 md:ml-96 lg:ml-96 mb-auto mt-6">
           <div class="flex items-center justify-center bg-gray-300 rounded-lg">
             <div class="bg-yellow-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-l-md font-extrabold text-xl md:text-2xl lg:text-3xl">{{ PLAYER_1_NAME }}</div>
             <div class="bg-purple-500 text-white py-2 px-4 md:py-4 md:px-9 font-extrabold text-xl md:text-2xl lg:text-3xl">VS</div>
