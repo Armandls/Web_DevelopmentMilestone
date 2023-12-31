@@ -162,14 +162,14 @@ function movePlayer(direction) {
 }
 
 const goUp = () => { //Funció per moure el personatge cap amunt
-  //Moviment amunt
+                     //Moviment amunt
   movePlayer("up");
   getCurrentGame();
   forceUpdate();
 };
 
 const goDown = () => { //Funció per moure el personatge cap avall
-  //Moviment avall
+                       //Moviment avall
   movePlayer("down");
   getCurrentGame();
   forceUpdate();
@@ -782,4 +782,3 @@ function getCurrentGame() {
 }
 
 </style>
-
