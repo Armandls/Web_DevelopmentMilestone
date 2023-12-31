@@ -580,8 +580,8 @@ function getCurrentGame() {
         <PingAndFPS class="mt-4"/>
       </div>
 
-      <div v-if="showSurrenderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
+      <div v-if="showSurrenderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg z-50">
           <h3 class="text-xl font-semibold mb-4 text-gray-800">Confirm Surrender</h3>
           <p class="mb-4 text-md text-gray-600">Are you sure you want to surrender? You will lose the game.</p>
           <div class="flex justify-around">
