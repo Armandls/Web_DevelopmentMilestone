@@ -636,7 +636,8 @@ function getCurrentGame() {
       <!-- Contenedor de los ataques para pantallas medianas y grandes -->
       <div class="hidden sm:flex sm:flex-col items-center md:absolute md:left-10 md:bottom-3 md:ml-16 md:w-auto">
         <!-- Contenedor de los ataques -->
-        <div class="bg-purple-600 rounded-lg shadow-lg">
+        <div class="bg-purple-600 rounded-lg shadow-lg flex flex-col"
+             :class="{ 'mb-36': attacks.length === 1, 'mb-24':attacks.length === 2, 'mb-3': attacks.length >= 3}">
           <div v-for="(attack, index) in attacks" :key="attack.id" class="flex items-center bg-purple-600 text-white pt-8 pb-2 px-6 rounded-lg shadow-lg">
             <!-- Detalls de l'atac -->
             <img src="/src/assets/shop/espadas.png" class="w-20 h-20 bg-fuchsia-500 p-1 rounded-xl" alt="Espada"/>
