@@ -68,6 +68,26 @@ const fetchAttacks = () => {
 onMounted(() => {
   fetchAttacks();
 });
+
+function getAttackIndex(attackID) {
+  return Array.from(attackID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function getRandomAttackImage(index) {
+  const image = [
+    'src/assets/attacks/1.png',
+    'src/assets/attacks/2.png',
+    'src/assets/attacks/3.png',
+    'src/assets/attacks/4.png',
+    'src/assets/attacks/5.png',
+    'src/assets/attacks/6.png',
+    'src/assets/attacks/7.png',
+    'src/assets/attacks/8.png',
+    'src/assets/attacks/9.png',
+    'src/assets/attacks/10.png'
+  ];
+  return image[index % image.length];
+}
 </script>
 
 <template>
@@ -86,8 +106,8 @@ onMounted(() => {
           <div v-for="(attack, index) in attacks" :key="attack.attack_ID" class="flex items-stretch">
 
             <!-- Imatge de l'atac -->
-            <div class="bg-fuchsia-500 rounded-l-xl p-1 flex justify-center items-center" style="width: fit-content;">
-              <img v-if="attack.equipped" src="/src/assets/shop/espadas.png" :alt="`Espadas ${index + 1}`" class="w-16 h-16 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-16 lg:h-16 object-cover" />
+            <div class="bg-blue-400 rounded-l-xl p-1 flex justify-center items-center" style="width: fit-content;">
+              <img v-if="attack.equipped" :src= getRandomAttackImage(getAttackIndex(attack.attack_ID)) :alt="`Espadas ${index + 1}`" class="w-16 h-16 sm:w-16 sm:h-16 md:w-16 md:h-16 lg:w-16 lg:h-16 object-cover rounded" />
               <span v-else class="font-bold">No attack equipped</span>
             </div>
 

@@ -552,6 +552,26 @@ function getCurrentGame() {
       });
 }
 
+function getAttackIndex(attackID) {
+  return Array.from(attackID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function getRandomAttackImage(index) {
+  const image = [
+    'src/assets/attacks/1.png',
+    'src/assets/attacks/2.png',
+    'src/assets/attacks/3.png',
+    'src/assets/attacks/4.png',
+    'src/assets/attacks/5.png',
+    'src/assets/attacks/6.png',
+    'src/assets/attacks/7.png',
+    'src/assets/attacks/8.png',
+    'src/assets/attacks/9.png',
+    'src/assets/attacks/10.png'
+  ];
+  return image[index % image.length];
+}
+
 </script>
 
 <template>
@@ -617,7 +637,7 @@ function getCurrentGame() {
       <!-- Contenedor de los ataques para pantallas pequeñas -->
       <div class="sm:hidden bg-purple-600 rounded-lg shadow-lg p-2 flex justify-around items-center">
         <div v-for="(attack, index) in attacks" :key="attack.attack_ID" class="flex flex-col items-center">
-          <img src="/src/assets/shop/espadas.png" class="w-16 h-16 bg-fuchsia-500 p-1 rounded-lg" alt=""/>
+          <img :src= getRandomAttackImage(getAttackIndex(attack.attack_ID)) class="w-16 h-16 bg-blue-400 p-1 rounded-lg" alt=""/>
           <div class="text-center text-white">
             <!-- Reduint la mida del text i dels espais -->
             <p class="font-bold text-sm">NAME: {{ attack.attack_ID }}</p>
@@ -636,10 +656,11 @@ function getCurrentGame() {
       <!-- Contenedor de los ataques para pantallas medianas y grandes -->
       <div class="hidden sm:flex sm:flex-col items-center md:absolute md:left-10 md:bottom-3 md:ml-16 md:w-auto">
         <!-- Contenedor de los ataques -->
-        <div class="bg-purple-600 rounded-lg shadow-lg">
+        <div class="bg-purple-600 rounded-lg shadow-lg flex flex-col"
+             :class="{ 'mb-36': attacks.length === 1, 'mb-24':attacks.length === 2, 'mb-3': attacks.length >= 3}">
           <div v-for="(attack, index) in attacks" :key="attack.id" class="flex items-center bg-purple-600 text-white pt-8 pb-2 px-6 rounded-lg shadow-lg">
             <!-- Detalls de l'atac -->
-            <img src="/src/assets/shop/espadas.png" class="w-20 h-20 bg-fuchsia-500 p-1 rounded-xl" alt="Espada"/>
+            <img :src= getRandomAttackImage(getAttackIndex(attack.attack_ID)) class="w-20 h-20 bg-blue-400 p-1 rounded-xl" alt="Espada"/>
             <div class="flex-grow flex flex-col justify-center mx-4">
               <div class="flex">
                 <span class="font-bold text-xl">NAME:</span>
