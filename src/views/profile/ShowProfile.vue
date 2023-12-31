@@ -150,6 +150,14 @@ function goToStats(gameId) {
             <div class="text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] mr-2 bg-blue-300 rounded p-1.5">
               {{ item.playerGame1?.playerID || 'N/A' }} VS {{ item.playerGame2?.playerID || 'N/A' }}
             </div>
+
+            <div v-if="item.playerGame1?.playerID === playerName" :class="['text-black', 'text-sm', 'md:text-md', 'lg:text-lg', 'font-bold', 'inline-block', 'mr-2', 'rounded', 'p-1.5', item.playerGame1?.winner ? 'bg-green-500' : 'bg-red-500']">
+              {{ item.playerGame1?.winner ? 'WIN' : 'LOSE' }}
+            </div>
+
+            <div v-else :class="['text-black', 'text-sm', 'md:text-md', 'lg:text-lg', 'font-bold', 'inline-block', 'mr-2', 'rounded', 'p-1.5', item.playerGame2?.winner ? 'bg-green-500' : 'bg-red-500']">
+              {{ item.playerGame2?.winner ? 'WIN' : 'LOSE' }}
+            </div>
           </div>
         </div>
 
