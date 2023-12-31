@@ -1,7 +1,10 @@
 <template>
   <div :class="cellClasses" :style="{ width: `${cellSize}px`, height: `${cellSize}px` }">
-    <span v-if="player === 1" class="text-center text-blue-500">P1</span>
-    <span v-if="player === 2" class="text-center text-red-500">P2</span>
+    <!-- Imagen para el jugador 1 -->
+    <img v-if="player === 1" src="/src/assets/game/Player1.png" alt="Player 1" class="w-full h-full object-cover"/>
+
+    <!-- Imagen para el jugador 2 -->
+    <img v-if="player === 2" src="/src/assets/game/Player1.png" alt="Player 2" class="w-full h-full object-cover"/>
   </div>
 </template>
 

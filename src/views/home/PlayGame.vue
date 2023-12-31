@@ -237,7 +237,11 @@ const lookRight = () => {
 const lookDown = () => {
   changePlayerDirection("down");
   getCurrentGame();
-  //TODO: Girar imagen
+
+  const playerImage = document.querySelector('#player-image');
+  playerImage.classList.remove('rotate-0', '-rotate-90', 'rotate-180', '-rotate-180', 'rotate-270');
+  playerImage.classList.add('rotate-90');
+
   forceUpdate();
 };
 
