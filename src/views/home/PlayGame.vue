@@ -598,10 +598,10 @@ function getCurrentGame() {
       <div class="flex justify-center items-start mt-2"> <!-- Contenedor principal para alinear todo horizontalmente -->
         <!-- Contenedor de los botones QEFX, alineados de lado a lado -->
         <div class="md:flex md:flex-col ml-72 mt-9 hidden"> <!-- Margen derecho para separar del GameBoard -->
-          <button :class="{'bg-green-500': isPressedQ, 'bg-green-300': !isPressedQ}" class="w-24 h-24 font-extrabold text-3xl rounded-xl mb-4">Q</button>
-          <button :class="{'bg-green-500': isPressedE, 'bg-green-300': !isPressedE}" class="w-24 h-24 font-extrabold text-3xl rounded-xl mb-4">E</button>
-          <button :class="{'bg-green-500': isPressedF, 'bg-green-300': !isPressedF}" class="w-24 h-24 font-extrabold text-3xl rounded-xl mb-4">F</button>
-          <button :class="{'bg-green-500': isPressedX, 'bg-green-300': !isPressedX}" class="w-24 h-24 font-extrabold text-3xl rounded-xl">X</button>
+          <button :class="{'bg-green-500': isPressedQ, 'bg-green-300': !isPressedQ}" class="w-20 h-20 font-extrabold text-3xl rounded-xl mb-4">Q</button>
+          <button :class="{'bg-green-500': isPressedE, 'bg-green-300': !isPressedE}" class="w-20 h-20 font-extrabold text-3xl rounded-xl mb-4">E</button>
+          <button :class="{'bg-green-500': isPressedF, 'bg-green-300': !isPressedF}" class="w-20 h-20 font-extrabold text-3xl rounded-xl mb-4">F</button>
+          <button :class="{'bg-green-500': isPressedX, 'bg-green-300': !isPressedX}" class="w-20 h-20 font-extrabold text-3xl rounded-xl">X</button>
         </div>
         <!-- Tablero de Juego Cuadrado -->
         <GameBoard :key="forceUpdateTrigger" imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle">
