@@ -4,8 +4,6 @@ import {RouterLink, useRoute} from 'vue-router';
 import NavigationBar from "../../../ components/NavigationBar.vue";
 import router from "../../../router/index.js";
 
-//TODO: Fer una altre pantalla de veure informació detallada de cada game i si no esta acabat poder entrar-hi
-
 const authToken = inject('authToken'); //Agafem el token del jugador desde App.vue
 
 function getMonthNumber(month) {
@@ -64,6 +62,13 @@ function loadGames(query = {}) {
         if (query.finishedGames === 'true') { //Si ja s'ha acabat
           filteredGames = filteredGames.filter(game => game.finished);
         }
+
+        filteredGames.sort((a, b) => {
+          // Convertir las fechas a formato YYYY-MM-DD para compararlas
+          const datetimeA = new Date(a.creation_date);
+          const datetimeB = new Date(b.creation_date);
+          return datetimeB - datetimeA;
+        });
 
         items.value = filteredGames.map(game => ({ //Mapejem els games ja filtrats per a poder treballar amb ells
           gameId: game.game_ID,
