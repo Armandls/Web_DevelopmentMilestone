@@ -16,6 +16,10 @@ let playerPositions = reactive({
   player1: [],
   player2: [],
 });
+
+let directionPlayer1 = ref("right");
+let directionPlayer2 = ref("left");
+
 const forceUpdateTrigger = ref(0);
 
 function forceUpdate() {
@@ -515,6 +519,8 @@ function getCurrentGame() {
         if (data[0].players_games.length === 2) {
           const player1Data = data[0].players_games[0];
           const player2Data = data[0].players_games[1];
+          directionPlayer1.value = player1Data.direction;
+          directionPlayer2.value = player2Data.direction;
           // Actualiza las posiciones de los jugadores
           updatePlayerPositions(player1Data.x_game, player1Data.y_game, player2Data.x_game, player2Data.y_game, rowsAndColumns.value);
         }
@@ -581,7 +587,7 @@ function getCurrentGame() {
         <!-- Tablero de Juego Cuadrado -->
         <GameBoard :key="forceUpdateTrigger" imageUrl="/src/assets/welcome_page/neon.png" :style="gridStyle">
           <div class="grid gap-2" :class="`grid-cols-${rowsAndColumns}`" :style="gridStyle">
-            <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)"></Cell>
+            <Cell v-for="index in totalCells" :key="index" :cellSize="cellSize" size="default" :isDark="(index + Math.floor((index - 1) / rowsAndColumns)) % 2 === 0" :player="getPlayer(index)" :directionPlayer1="directionPlayer1" :directionPlayer2="directionPlayer2" />
           </div>
         </GameBoard>
       </div>
