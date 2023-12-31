@@ -327,38 +327,39 @@ function attackInGame(id) {
     }
   })
       .then(response => {
-        if (response.status === 200) {
-          return response.json();
+        console.log(response);
+        if (response.status === 204) {
+          console.log('Attack successful!');
         } else {
           return response.json().then(json => {
             throw new Error(`Error: ${response.status} - ${json.message}`);
           });
         }
       })
-      .then(data => {
-        //console.log('Attack successful:', data);
-      })
       .catch(error => {
-        console.error('Error attacking:', error.message);
+        //console.error('Error attacking:', error.message);
       });
 }
 
 const attack1 = () => {
   console.log("Attack 1 executed!");
   //Logica atack1
-  attackInGame(attacks.value[0].id);
+  console.log('Attack: ' + attacks.value[0].attack_ID)
+  attackInGame(attacks.value[0].attack_ID);
 };
 
 const attack2 = () => {
   console.log("Attack 2 executed!");
   //Logica atack2
-  attackInGame(attacks.value[1].id);
+  console.log('Attack: ' + attacks.value[1].attack_ID)
+  attackInGame(attacks.value[1].attack_ID);
 };
 
 const attack3 = () => {
   console.log("Attack 3 executed!");
   //Logica atack3
-  attackInGame(attacks.value[2].id);
+  console.log('Attack: ' + attacks.value[2].attack_ID)
+  attackInGame(attacks.value[2].attack_ID);
 };
 const pressedKey = ref(null);
 
@@ -451,6 +452,7 @@ function checkGameFinishedInfo() {
     }
   })
       .then(response => {
+        console.log('Response: ', response);
         if (response.status === 200) {
           return response.json();
         } else {
@@ -460,12 +462,14 @@ function checkGameFinishedInfo() {
         }
       })
       .then(data => {
+        console.log('Game finished info:', data);
         //Map the info
         const player1Data = data.players_games[0];
         const player2Data = data.players_games[1];
-
-        if (player1Data.playerID === playerData.playerID) {
-          if (player1Data.winner !== true) {
+        console.log('Player 1 data:', player1Data);
+        console.log('PlayerData:', playerData.value.player_ID);
+        if (player1Data.player_ID === playerData.value.player_ID) {
+          if (player1Data.winner === true) {
             endGameSuccessful();
             coinsWin.value = player1Data.coins_win;
             xpWin.value = player1Data.xp_win;
@@ -473,7 +477,7 @@ function checkGameFinishedInfo() {
             endGameLost();
           }
         } else {
-          if (player2Data.winner !== true) {
+          if (player2Data.winner === true) {
             endGameSuccessful();
             coinsWin.value = player2Data.coins_win;
             xpWin.value = player2Data.xp_win;
@@ -516,8 +520,6 @@ function getCurrentGame() {
         clearInterval(intervalId);
 
         checkGameFinishedInfo();
-
-        endGameSuccessful();
       });
 }
 
@@ -665,8 +667,10 @@ function getCurrentGame() {
         <!-- Contenedor para el mensaje de juego terminado (Derrota) -->
         <div v-if="showGameFinishedLost" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <!-- Animación de fondo (por ejemplo, lluvia, humo, etc.) -->
-          <div class="absolute inset-0 bg-animation bg-no-repeat bg-cover"></div>
-
+          <div class="absolute inset-0 particle-animation"></div>
+          <div class="particle-animation">
+            <div v-for="i in 50" :key="i" class="rain-drop" :style="{ left: (2 * i) + '%' }"></div>
+          </div>
           <!-- Contenido del mensaje -->
           <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedLost}">
             <!-- Título -->
@@ -697,7 +701,6 @@ function getCurrentGame() {
 
 <style scoped>
 /* Estilos para confeti y globos */
-/* Estilos para confeti y globos */
 @keyframes confetti {
   0% { transform: translateY(0) rotate(0deg); }
   100% { transform: translateY(300px) rotate(360deg); }
@@ -713,8 +716,59 @@ function getCurrentGame() {
   100% { transform: translateY(100%); }
 }
 
-.bg-animation {
-  animation: fallAnimation 2s linear infinite;
+@keyframes fall {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.particle-animation {
+  overflow: hidden;
+  position: relative;
+}
+
+.particle-animation::before, .particle-animation::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  background-color: #ccc;
+  opacity: 0;
+  border-radius: 50%;
+  animation: fall 2s linear infinite;
+}
+
+.particle-animation::after {
+  left: 60%;
+  animation-delay: -1s;
+}
+
+@keyframes rain {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.rain-drop {
+  position: absolute;
+  bottom: 100%; /* Iniciar fuera de la pantalla */
+  left: 50%;
+  width: 2px;
+  height: 10px;
+  background-color: blue;
+  opacity: 0.6;
+  border-radius: 50%;
+  animation: rain 0.5s linear infinite;
+}
+
+.rain-drop::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+  animation-delay: -0.25s;
 }
 
 </style>
