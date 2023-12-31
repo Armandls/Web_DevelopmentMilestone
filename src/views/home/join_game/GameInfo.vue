@@ -1,6 +1,6 @@
 <script setup>
 import {inject, onMounted, ref} from "vue";
-import {useRoute} from "vue-router";
+import {RouterLink, useRoute, useRouter} from "vue-router";
 
 const token = inject('authToken'); //Agafem el token del jugador desde App.vue
 const game = ref(null);
@@ -8,6 +8,36 @@ const game = ref(null);
 const route = useRoute();
 const gameId = route.query.gameID;
 console.log(gameId);
+
+const router = useRouter();
+const goBack = () => {
+  router.back();
+};
+
+const avatars = [
+  'src/assets/avatars/avatar1.png',
+  'src/assets/avatars/avatar2.png',
+  'src/assets/avatars/avatar3.png',
+  'src/assets/avatars/avatar4.png',
+  'src/assets/avatars/avatar5.png',
+  'src/assets/avatars/avatar6.png',
+  'src/assets/avatars/avatar7.png',
+  'src/assets/avatars/avatar8.png',
+  'src/assets/avatars/avatar9.png',
+  'src/assets/avatars/avatar10.png',
+];
+
+function getPlayerIndex(playerID) {
+  return Array.from(playerID).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function getRandomAvatar(playerID) {
+  if (!playerID) {
+    return avatars[1];
+  }
+  let index = getPlayerIndex(playerID);
+  return avatars[index % avatars.length];
+}
 
 function mapGameInfo(gameData) {
   if (!gameData) {
@@ -33,21 +63,35 @@ function mapGameInfo(gameData) {
   };
 }
 
-const winner = ref(null);
-const loser = ref(null);
+const winner = ref("N/A");
+const loser = ref("N/A");
 
 function seeWinner() {
-  if (!game.value || !game.value.players || game.value.players.length < 2) {
-    console.error("No game or players data available to determine the winner.");
+  // Inicializa objetos vacíos para winner y loser
+  winner.value = { playerId: "N/A", imageSrc: null, xpWon: 0, coinsWon: 0 };
+  loser.value = { playerId: "N/A", imageSrc: null, xpWon: 0, coinsWon: 0 };
+
+  if (!game.value || !game.value.players || game.value.players.length === 0) {
+    // Si no hay datos de juego o jugadores, ambos se mantienen como "N/A"
+    console.error("No game data or players available");
     return;
   }
 
+  if (game.value.players.length === 1) {
+    // Caso de un solo jugador en el juego
+    const player = game.value.players[0];
+    if (player.isWinner) {
+      winner.value = player;
+    } else {
+      loser.value = player;
+    }
+    return;
+  }
+
+  // Caso de dos jugadores en el juego
   const [firstPlayer, secondPlayer] = game.value.players;
   winner.value = firstPlayer.isWinner ? firstPlayer : secondPlayer;
   loser.value = firstPlayer.isWinner ? secondPlayer : firstPlayer;
-
-  console.log("Winner:", winner.value.playerId);
-  console.log("Loser:", loser.value.playerId);
 }
 
 function loadGameInfo() {
@@ -86,82 +130,63 @@ onMounted(loadGameInfo);
 
 <template>
   <div class="flex flex-col h-screen w-full bg-cover bg-no-repeat bg-center justify-center pt-0 pb-24 md:pb-0 px-4" style="background-image: url('/src/assets/welcome_page/background.png')">
-    <!-- Botón de volver atrás -->
+    <!-- Boto de tornar enrere -->
     <div class="fixed top-0 left-0 pt-4">
-      <router-link to="/joingame" class="flex items-center pr-3.5 pl-4 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-none uppercase sm:w-auto">
+      <button @click="goBack" class="flex items-center pr-3.5 pl-4 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-none uppercase sm:w-auto">
         <img src="/src/assets/game_filter/return_icon.png" class="w-6 h-6 mr-2 font-extrabold" alt=""/>
         <span class="hidden sm:inline">RETURN</span>
-      </router-link>
+      </button>
     </div>
-    <div class="container mx-auto mt-1">
-      <!-- Titol de la batalla (guanyador vs perdedor) -->
-      <!-- Contenidor per mostrar la informació del game (size, creation_date, HP_max) -->
-      <div class="justify-center mx-auto items-center text-center bg-blue-400 p-4 rounded shadow mb-4 top-1.5" v-if="game">
-        <div class="bbg- rounded ml-96" style="width: 715px; height: 50px;">
-          <div class="items-center text-center text-4xl font-bold mb-4 mt-3">
-            {{ winner.playerId }} VS {{ loser.playerId }}
+
+    <!-- Contenedor principal -->
+    <div class="container mx-auto mt-1 max-w-5xl bg-gray-900 bg-opacity-90 rounded-xl p-8 shadow-2xl">
+      <!-- Contenedor de juego con fondo azul oscuro neón -->
+      <div v-if="game" class="">
+        <!-- Encabezado de Información del Juego -->
+        <div class="bg-gradient-to-br from-blue-600 to-purple-600 p-4 rounded-lg shadow-md mb-6">
+          <h4 class="text-4xl font-bold text-white text-center">Game Information</h4>
+          <div class="grid grid-cols-2 gap-4 text-center mt-4">
+            <div class="text-blue-200">
+              <span class="text-lg">Name</span><br>
+              <span class="text-white font-semibold">{{ game.id }}</span>
+            </div>
+            <div class="text-blue-200">
+              <span class="text-lg">Board Size</span><br>
+              <span class="text-white font-semibold">{{ game.size }}x{{ game.size }}</span>
+            </div>
+            <div class="text-blue-200">
+              <span class="text-lg">Date of Creation</span><br>
+              <span class="text-white font-semibold">{{ game.creationDate }}</span>
+            </div>
+            <div class="text-blue-200">
+              <span class="text-lg">Maximum HP</span><br>
+              <span class="text-white font-semibold">{{ game.maxHP }}</span>
+            </div>
           </div>
         </div>
-        <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded px-40 mt-3">
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One']  bg-blue-300 rounded p-1.5 mr-96 ml-96">
-              Game ID: {{ game.id }}
-            </div>
 
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2 mr-96 ml-96">
-              Size: {{ game.size }}
-            </div>
-
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2 mr-96 ml-96">
-              Creation Date: {{ game.creationDate }}
-            </div>
-
-            <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-green-200 rounded p-1.5 pt-2 mr-96 ml-96">
-              Max HP: {{ game.maxHP }}
+        <!-- Jugadores con Información de Monedas y XP -->
+        <div class="flex justify-around items-center">
+          <div class="flex flex-col items-center">
+            <img :src="getRandomAvatar(winner.playerId)" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
+            <span class="text-xl font-semibold text-yellow-300">{{ winner.playerId }}</span>
+            <div class="mt-2 text-green-400 text-center">
+              <span class="font-semibold">Coins: {{ winner.coinsWon }}</span><br>
+              <span class="font-semibold">XP: {{ winner.xpWon }}</span>
             </div>
           </div>
 
-            <div class="flex justify-around">
-              <!-- Contenedor del ganador -->
-              <div class="justify-center mx-auto items-center text-center bg-yellow-100 p-5 rounded shadow flex-1 mr-8 ml-24 mt-10" v-if="winner">
-                <div class="font-bold text-2xl">GANADOR</div>
-                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded p-3 px-16">
-                    <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-blue-300 rounded p-1.5 ">
-                      Name: {{ winner.playerId }}
-                    </div>
+          <span class="text-5xl text-white font-extrabold mx-10">VS</span>
 
-                    <img :src="winner.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
-
-                    <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2">
-                      Coins: {{ winner.coinsWon }}
-                    </div>
-
-                    <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2">
-                      XP: {{ winner.xpWon }}
-                    </div>
-                    </div>
-              </div>
-
-
-              <!-- Contenedor del perdedor -->
-              <div class="justify-center mx-auto items-center text-center bg-yellow-100 p-5 rounded shadow flex-1 mr-8 ml-24 mt-10" v-if="loser">
-                <div class="font-bold text-2xl">PERDEDOR</div>
-                <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] rounded p-3 px-16">
-                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-blue-300 rounded p-1.5 ">
-                    Name: {{ loser.playerId }}
-                  </div>
-
-                  <img :src="loser.imageSrc || '/default-winner-image.png'" class="w-24 h-24 my-2" />
-
-                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-purple-300 rounded p-1.5 pt-2">
-                    Coins: {{ loser.coinsWon }}
-                  </div>
-
-                  <div v-if="!game.finished" class="items-center text-black text-sm md:text-md lg:text-lg font-bold font-['Sigmar One'] bg-pink-300 rounded p-1.5 pt-2">
-                    XP: {{ loser.xpWon }}
-                  </div>
-                </div>
-              </div>
+          <div class="flex flex-col items-center hover-effect">
+            <img :src="getRandomAvatar(loser.playerId)" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
+            <span class="text-xl font-semibold text-red-500">{{ loser.playerId }}</span>
+            <div class="mt-2 text-green-400 text-center">
+              <span class="font-semibold">Coins: {{ loser.coinsWon }}</span><br>
+              <span class="font-semibold">XP: {{ loser.xpWon }}</span>
             </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -169,4 +194,16 @@ onMounted(loadGameInfo);
 
 <style scoped>
 
+.hover-effect:hover {
+  transform: scale(1.05);
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 </style>
