@@ -1,12 +1,16 @@
 <template>
   <div :class="cellClasses" :style="{ width: `${cellSize}px`, height: `${cellSize}px` }">
     <!-- Imagen para el jugador 1 -->
-    <img v-if="player === 1" src="/src/assets/game/Player1.png" alt="Player 1"
-         :class="['w-full', 'h-full', 'object-cover', rotationClassPlayer1]" />
+    <img v-if="player === 1"
+         :src="getPlayerImage(1, props.directionPlayer1)"
+         alt="Player 1"
+         class="w-full h-full object-cover" />
 
     <!-- Imagen para el jugador 2 -->
-    <img v-if="player === 2" src="/src/assets/game/Player1.png" alt="Player 2"
-         :class="['w-full', 'h-full', 'object-cover', rotationClassPlayer2]" />
+    <img v-if="player === 2"
+         :src="getPlayerImage(2, props.directionPlayer2)"
+         alt="Player 2"
+         class="w-full h-full object-cover" />
   </div>
 </template>
 
@@ -29,25 +33,19 @@ const cellClasses = computed(() => [
   'flex justify-center items-center'
 ]);
 
-const rotationClassPlayer1 = computed(() => {
-  return props.player === 1 ? getRotationClass(props.directionPlayer1) : '';
-});
-
-const rotationClassPlayer2 = computed(() => {
-  return props.player === 2 ? getRotationClass(props.directionPlayer2) : '';
-});
-
-function getRotationClass(direction) {
+function getPlayerImage(playerNumber, direction) {
+  const basePath = `/src/assets/game/Player${playerNumber}`;
   switch (direction) {
-    case 'right':
-      return 'rotate-90';
-    case 'down':
-      return 'rotate-180';
-    case 'left':
-      return '-rotate-90'; // Asegúrate de que Tailwind CSS soporte '-rotate-90'
     case 'up':
+      return `${basePath}Up.png`;
+    case 'down':
+      return `${basePath}Down.png`;
+    case 'left':
+      return `${basePath}Left.png`;
+    case 'right':
+      return `${basePath}Right.png`;
     default:
-      return '';
+      return `${basePath}Up.png`;
   }
 }
 </script>
