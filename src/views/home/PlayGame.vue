@@ -520,6 +520,11 @@ function getCurrentGame() {
       .then(data => {
         console.log('Game data:', data[0]);
 
+        if (data[0].players_games.length === 1) {
+          PLAYER_1_NAME = data[0].players_games[0].player_ID;
+          forceUpdate();
+        }
+
         if (data[0].players_games.length === 2) {
           const player1Data = data[0].players_games[0];
           const player2Data = data[0].players_games[1];
