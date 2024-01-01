@@ -1,10 +1,45 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+import {RouterLink} from 'vue-router';
 import NavigationBar from "../../ components/NavigationBar.vue";
 import {inject, ref} from 'vue';
+import {get} from "@jridgewell/set-array";
 const playerData = inject('playerData');
-const coins = ref(playerData.value.coins);
+
 const tooltip = ref('');
+
+const authToken = inject('authToken');
+
+const playerCoins = ref(0);
+
+function getPlayerCoins() {
+  const playerId = playerData.value.player_ID; // Obtener el ID del jugador desde playerData
+  fetch(`https://balandrau.salle.url.edu/i3/players/${playerId}`, {
+    method: 'GET',
+    headers: {
+      'Bearer': `${authToken.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        throw new Error(`Error: ${response.status}`);
+      })
+      .then(player => {
+        const coins = player.coins;
+        console.log(`Coins for player ${playerId}: ${coins}`);
+        playerCoins.value = coins;
+      })
+      .catch(error => {
+        console.error('Error fetching player coins:', error.message);
+      });
+}
+
+// Llamar a la función para obtener las monedas del jugador actual
+getPlayerCoins();
+
+
 </script>
 
 <template>
@@ -20,7 +55,7 @@ const tooltip = ref('');
     <!-- Imagen monedas -->
     <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 150px; height: auto;">
     <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-6 mr-10">
-      {{ coins }}
+      {{ playerCoins }}
     </div>
 
     <!--Imagen chica tamaño pequeño-->
