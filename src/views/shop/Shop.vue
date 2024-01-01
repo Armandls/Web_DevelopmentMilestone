@@ -1,7 +1,7 @@
 <script setup>
 import {RouterLink} from 'vue-router';
 import NavigationBar from "../../ components/NavigationBar.vue";
-import {inject, ref} from 'vue';
+import {inject, onMounted, ref} from 'vue';
 import {get} from "@jridgewell/set-array";
 const playerData = inject('playerData');
 
@@ -37,7 +37,7 @@ function getPlayerCoins() {
 }
 
 // Llamar a la función para obtener las monedas del jugador actual
-getPlayerCoins();
+onMounted(getPlayerCoins);
 
 
 </script>
