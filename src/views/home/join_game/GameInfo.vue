@@ -166,11 +166,20 @@ onMounted(loadGameInfo);
         </div>
 
         <!-- Jugadores con Información de Monedas y XP -->
-        <div class="flex justify-around items-center">
-          <div class="flex flex-col items-center">
-            <img :src="getRandomAvatar(winner.playerId)" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
-            <span class="text-xl font-semibold text-yellow-300">{{ winner.playerId }}</span>
-            <div class="mt-2 text-green-400 text-center">
+        <div class="flex justify-around items-center mb-6">
+          <div class="flex flex-col items-center group hover-effect">
+            <div class="relative">
+              <!-- Efecto de gradiente animado -->
+              <div class="absolute -inset-2 rounded-full blur-md opacity-75 animate-gradient"></div>
+              <!-- Imagen del ganador -->
+              <img :src="getRandomAvatar(winner.playerId)" class="relative w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" alt=""/>
+            </div>
+
+            <!-- Nombre del ganador con icono de trofeo -->
+            <div class="mt-2 flex items-center justify-center bg-yellow-500 text-white font-bold text-lg rounded shadow-lg px-4 py-1">
+              <span>{{ winner.playerId }}</span>
+            </div>
+            <div class="mt-2 text-yellow-300 text-center">
               <span class="font-semibold">Coins: {{ winner.coinsWon }}</span><br>
               <span class="font-semibold">XP: {{ winner.xpWon }}</span>
             </div>
@@ -180,8 +189,8 @@ onMounted(loadGameInfo);
 
           <div class="flex flex-col items-center hover-effect">
             <img :src="getRandomAvatar(loser.playerId)" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
-            <span class="text-xl font-semibold text-red-500">{{ loser.playerId }}</span>
-            <div class="mt-2 text-green-400 text-center">
+            <span class="mt-2 px-4 py-1 bg-red-600 text-white font-bold text-lg rounded shadow-lg">{{ loser.playerId }}</span>
+            <div class="mt-2 text-red-600 text-center">
               <span class="font-semibold">Coins: {{ loser.coinsWon }}</span><br>
               <span class="font-semibold">XP: {{ loser.xpWon }}</span>
             </div>
@@ -194,12 +203,31 @@ onMounted(loadGameInfo);
 
 <style scoped>
 
-.hover-effect:hover {
-  transform: scale(1.05);
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-in-out;
+.animate-gradient {
+  background: linear-gradient(90deg,
+  #FF6B6B, #FFD500, #FF4757, #FFF500,
+  #7ED957, #4D96FF, #812FF8, #FC67FA,
+  #FDB813, #00C9FF, #92FE9D, #FF758C,
+  #FF7EB3, #7AF8FF, #D4FF00, #F8BD7F,
+  #FF6B6B, #FFD500, #FF4757, #FFF500,
+  #7ED957, #4D96FF, #812FF8, #FC67FA,
+  #FDB813, #00C9FF, #92FE9D, #FF758C,
+  #FF7EB3, #7AF8FF, #D4FF00, #F8BD7F);
+  background-size: 600% 100%;
+  animation: gradientAnimation 5s linear infinite;
+}
+
+.hover-effect:hover {
+  transform: scale(1.05);
 }
 
 @keyframes fadeIn {
