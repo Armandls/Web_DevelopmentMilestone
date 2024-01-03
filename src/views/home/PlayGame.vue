@@ -687,8 +687,17 @@ function getRandomAttackImage(index) {
           <!-- Confeti y globos -->
           <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
             <!-- Confeti -->
-            <div v-for="i in 25" :key="i" class="confetti" :style="{background: ['red', 'yellow', 'green', 'blue', 'indigo', 'purple'][i % 6], top: (5 * i) + '%', left: (5 * i) + '%', width: (i % 2 === 0 ? '10px' : '6px'), height: (i % 2 === 0 ? '10px' : '6px'), animationDuration: (0.8 + i/10) + 's', animationDelay: -(i/10) + 's'}"></div>
-
+            <div v-for="i in 25" :key="i" class="confetti" :style="{
+                background: ['red', 'yellow', 'green', 'blue', 'indigo', 'purple'][i % 6],
+                top: '-10%',
+                left: (Math.random()*100) + '%',
+                width: (6 + Math.random()*4) + 'px',
+                height: (6 + Math.random()*4) + 'px',
+                opacity: (0.5 + Math.random()*0.5),
+                animationDuration: (4 + Math.random()*4) + 's',
+                animationDelay: -(Math.random()*2) + 's'
+             }">
+            </div>
             <!-- Globos -->
             <div v-for="i in 15" :key="`balloon-${i}`" :class="`balloon bg-${['pink', 'purple', 'indigo'][i % 3]}-500`" :style="{bottom: -(i * 5) + '%', left: (10 * i) + '%', width: '40px', height: '100px', animationDuration: (2 + i/5) + 's', animationDelay: -(i/5) + 's'}"></div>
           </div>
@@ -711,13 +720,14 @@ function getRandomAttackImage(index) {
           </div>
         </div>
 
-        <!-- Contenedor para el mensaje de juego terminado (Derrota) -->
         <!-- Contenedor para el mensaje y las animaciones de juego terminado (Derrota) -->
         <div v-if="showGameFinishedLost" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <!-- Animación de fondo (por ejemplo, lluvia) -->
-          <div class="absolute inset-0 particle-animation">
-            <div v-for="i in 50" :key="i" class="rain-drop" :style="{ left: (2 * i) + '%' }"></div>
+          <!-- Animación de lluvia -->
+          <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
+            <!-- Lluvia -->
+            <div v-for="i in 50" :key="i" class="rain-drop" :style="{left: (Math.random()*100) + '%', animationDelay: (Math.random()*-2) + 's', animationDuration: (2 + Math.random()*3) + 's'}"></div>
           </div>
+
           <!-- Contenido del mensaje -->
           <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedLost}">
             <!-- Título -->
@@ -749,14 +759,14 @@ function getRandomAttackImage(index) {
 <style scoped>
 /* Estilos para confeti y globos */
 @keyframes confetti {
-  0% { transform: translateY(0) rotate(0deg); }
-  100% { transform: translateY(300px) rotate(360deg); }
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }  /* Ajustar para que vaya más abajo de la pantalla */
 }
 
 .confetti {
   position: absolute;
   border-radius: 50%;
-  animation: confetti 5s linear infinite;
+  animation: confetti linear infinite;
 }
 
 @keyframes balloon {
@@ -805,19 +815,20 @@ function getRandomAttackImage(index) {
 }
 
 @keyframes rain {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+  0% { transform: translateY(-100vh); }  /* Iniciar más arriba de la pantalla */
+  100% { transform: translateY(100vh); } /* Mover hasta el final de la pantalla */
 }
 
 .rain-drop {
   position: absolute;
-  bottom: 100%; /* Iniciar fuera de la pantalla */
-  width: 2px;
-  height: 10px;
+  top: -20px; /* Asegurar que empiecen fuera de la pantalla */
+  width: 3px;  /* Ancho de la gota */
+  height: 15px; /* Altura de la gota */
   background-color: blue;
-  opacity: 0.6;
-  border-radius: 50%;
-  animation: rain 0.5s linear infinite;
+  opacity: 0.7;
+  border-radius: 50%;  /* Hace que los extremos sean redondeados, dando una forma más ovalada */
+  animation: rain 4s linear infinite; /* Ralentizar la animación */
+  transform: scale(1, 1.5); /* Escalar para que sea más ovalada */
 }
 
 .rain-drop::after {
