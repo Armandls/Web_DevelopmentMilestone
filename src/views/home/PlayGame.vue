@@ -636,7 +636,7 @@ function getRandomAttackImage(index) {
     <div class="fixed inset-x-0 bottom-0 p-4">
       <!-- Contenedor de los ataques para pantallas pequeñas -->
       <div class="sm:hidden bg-purple-600 rounded-lg shadow-lg p-2 flex justify-around items-center">
-        <div v-for="(attack, index) in attacks" :key="attack.attack_ID" class="flex flex-col items-center">
+        <div v-for="(attack) in attacks" :key="attack.attack_ID" class="flex flex-col items-center">
           <img :src= getRandomAttackImage(getAttackIndex(attack.attack_ID)) class="w-16 h-16 bg-blue-400 p-1 rounded-lg" alt=""/>
           <div class="text-center text-white">
             <!-- Reduint la mida del text i dels espais -->
@@ -656,7 +656,7 @@ function getRandomAttackImage(index) {
       <!-- Contenedor de los ataques para pantallas medianas y grandes -->
       <div class="hidden sm:flex sm:flex-col items-center md:absolute md:left-10 md:bottom-3 md:ml-16 md:w-auto">
         <!-- Contenedor de los ataques -->
-        <div class="bg-purple-600 rounded-lg shadow-lg flex flex-col"
+        <div class="bg-purple-600 rounded-lg shadow-lg flex flex-col "
              :class="{ 'mb-36': attacks.length === 1, 'mb-24':attacks.length === 2, 'mb-3': attacks.length >= 3}">
           <div v-for="(attack, index) in attacks" :key="attack.id" class="flex items-center bg-purple-600 text-white pt-8 pb-2 px-6 rounded-lg shadow-lg">
             <!-- Detalls de l'atac -->
@@ -682,43 +682,40 @@ function getRandomAttackImage(index) {
           </div>
         </div>
 
-        <!-- Contenedor para el mensaje de juego terminado -->
+        <!-- Contenedor para el mensaje y las animaciones de juego terminado (Victoria) -->
         <div v-if="showGameFinishedWin" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <!-- Confeti y globos -->
           <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
             <!-- Confeti -->
-            <div v-for="i in 20" :key="i" :class="`confetti bg-${['red', 'yellow', 'green', 'blue', 'indigo', 'purple'][i % 6]}-400`" :style="{top: (5 * i) + '%', left: (5 * i) + '%', width: (i % 2 === 0 ? '10px' : '6px'), height: (i % 2 === 0 ? '10px' : '6px'), animationDuration: (0.8 + i/10) + 's', animationDelay: -(i/10) + 's'}"></div>
+            <div v-for="i in 25" :key="i" class="confetti" :style="{background: ['red', 'yellow', 'green', 'blue', 'indigo', 'purple'][i % 6], top: (5 * i) + '%', left: (5 * i) + '%', width: (i % 2 === 0 ? '10px' : '6px'), height: (i % 2 === 0 ? '10px' : '6px'), animationDuration: (0.8 + i/10) + 's', animationDelay: -(i/10) + 's'}"></div>
 
             <!-- Globos -->
-            <div v-for="i in 10" :key="`balloon-${i}`" :class="`balloon bg-${['pink', 'purple', 'indigo'][i % 3]}-500`" :style="{bottom: -(i * 5) + '%', left: (10 * i) + '%', width: '40px', height: '100px', animationDuration: (2 + i/5) + 's', animationDelay: -(i/5) + 's'}"></div>
+            <div v-for="i in 15" :key="`balloon-${i}`" :class="`balloon bg-${['pink', 'purple', 'indigo'][i % 3]}-500`" :style="{bottom: -(i * 5) + '%', left: (10 * i) + '%', width: '40px', height: '100px', animationDuration: (2 + i/5) + 's', animationDelay: -(i/5) + 's'}"></div>
           </div>
 
-          <!-- Contenedor para el mensaje de juego terminado (Victoria) -->
-          <div v-if="showGameFinishedWin" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-            <!-- Contenido del mensaje -->
-            <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedWin}">
-              <!-- Título -->
-              <h2 class="text-4xl font-bold text-green-500 mb-2">Congratulations!</h2>
-              <!-- Subtítulo -->
-              <p class="text-2xl font-semibold text-gray-800 mb-4">You Won!</p>
-              <!-- Detalles de las recompensas -->
-              <div class="text-lg text-gray-700 mb-4">
-                <p><strong>Coins Earned:</strong> {{ coinsWin }}</p>
-                <p><strong>XP Gained:</strong> {{ xpWin }}</p>
-              </div>
-              <!-- Botón de retorno al inicio -->
-              <button @click="router.push({ name: 'home' })" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                Return Home
-              </button>
+          <!-- Contenido del mensaje -->
+          <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedWin}">
+            <!-- Título -->
+            <h2 class="text-4xl font-bold text-green-500 mb-2">Congratulations!</h2>
+            <!-- Subtítulo -->
+            <p class="text-2xl font-semibold text-gray-800 mb-4">You Won!</p>
+            <!-- Detalles de las recompensas -->
+            <div class="text-lg text-gray-700 mb-4">
+              <p><strong>Coins Earned:</strong> {{ coinsWin }}</p>
+              <p><strong>XP Gained:</strong> {{ xpWin }}</p>
             </div>
+            <!-- Botón de retorno al inicio -->
+            <button @click="router.push({ name: 'home' })" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+              Return Home
+            </button>
           </div>
         </div>
 
         <!-- Contenedor para el mensaje de juego terminado (Derrota) -->
+        <!-- Contenedor para el mensaje y las animaciones de juego terminado (Derrota) -->
         <div v-if="showGameFinishedLost" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <!-- Animación de fondo (por ejemplo, lluvia, humo, etc.) -->
-          <div class="absolute inset-0 particle-animation"></div>
-          <div class="particle-animation">
+          <!-- Animación de fondo (por ejemplo, lluvia) -->
+          <div class="absolute inset-0 particle-animation">
             <div v-for="i in 50" :key="i" class="rain-drop" :style="{ left: (2 * i) + '%' }"></div>
           </div>
           <!-- Contenido del mensaje -->
@@ -756,9 +753,21 @@ function getRandomAttackImage(index) {
   100% { transform: translateY(300px) rotate(360deg); }
 }
 
+.confetti {
+  position: absolute;
+  border-radius: 50%;
+  animation: confetti 5s linear infinite;
+}
+
 @keyframes balloon {
   0% { transform: translateY(100%) scale(0.5); }
   100% { transform: translateY(-1000%) scale(1); }
+}
+
+.balloon {
+  position: absolute;
+  border-radius: 50%;
+  animation: balloon 5s linear infinite;
 }
 
 @keyframes fallAnimation {
@@ -803,7 +812,6 @@ function getRandomAttackImage(index) {
 .rain-drop {
   position: absolute;
   bottom: 100%; /* Iniciar fuera de la pantalla */
-  left: 50%;
   width: 2px;
   height: 10px;
   background-color: blue;
@@ -820,5 +828,4 @@ function getRandomAttackImage(index) {
   background-color: inherit;
   animation-delay: -0.25s;
 }
-
 </style>

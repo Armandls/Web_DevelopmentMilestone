@@ -74,26 +74,26 @@ const createGame = () => {
               <!-- Nombre de la partida -->
               <div>
                 <label for="rows" class="block text-sm font-bold text-white uppercase">Name</label>
-                <input type="text" id="name" v-model="name" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
+                <input @keyup.enter="createGame" type="text" id="name" v-model="name" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
                 <p v-if="nameErrorMessage" class="text-red-500">{{ nameErrorMessage }}</p>
               </div>
 
               <!-- Numero Rows i Columns -->
               <div>
                 <label for="rows" class="block text-sm font-bold text-white uppercase">Number of Rows & Columns (2 - 10)</label>
-                <input type="number" id="rows" v-model.number="rowsAndColumns" min="2" max="10" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
+                <input @keyup.enter="createGame" type="number" id="rows" v-model.number="rowsAndColumns" min="2" max="10" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
                 <p v-if="rowsErrorMessage" class="text-red-500">{{ rowsErrorMessage }}</p>
               </div>
 
               <!-- Player HP -->
               <div>
                 <label for="hp" class="block text-sm font-bold text-white uppercase">Player HP</label>
-                <input type="number" id="hp" v-model.number="hp" min="15" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
+                <input @keyup.enter="createGame" type="number" id="hp" v-model.number="hp" min="15" class="w-full p-2 mt-1 bg-cyan-300 text-black rounded">
                 <p v-if="hpErrorMessage" class="text-red-500">{{ hpErrorMessage }}</p>
               </div>
 
               <!-- Create Game -->
-              <button @click="createGame" class="block px-4 py-2 mt-4 text-lg font-bold text-center text-black bg-yellow-400 rounded hover:bg-yellow-500 uppercase">
+              <button @click="createGame" @keyup.enter="createGame" class="block px-4 py-2 mt-4 text-lg font-bold text-center text-black bg-yellow-400 rounded hover:bg-yellow-500 uppercase">
                 Create
               </button>
             </div>
