@@ -435,7 +435,7 @@ const confirmSurrender = () => {
 let intervalId;
 
 onMounted(() => {
-  intervalId = setInterval(getCurrentGame, 100);
+  intervalId = setInterval(getCurrentGame, 5000);
 });
 
 onUnmounted(() => {
@@ -527,6 +527,7 @@ function getCurrentGame() {
 
         if (data[0].players_games.length === 2) {
           const player1Data = data[0].players_games[0];
+
           const player2Data = data[0].players_games[1];
           directionPlayer1.value = player1Data.direction;
           directionPlayer2.value = player2Data.direction;
