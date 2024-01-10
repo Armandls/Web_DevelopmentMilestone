@@ -331,8 +331,8 @@ onMounted(getPlayerCoins);
   top: 0;
   right: 0;
   margin-top: 9px;
-  margin-right: 10px;
-  font-size: clamp(16px, 8vw, 20px); /* Utilizamos 'clamp' para limitar el tamaño del texto */
+  margin-right: 12px;
+  font-size: clamp(16px, 8vw, 22px); /* Utilizamos 'clamp' para limitar el tamaño del texto */
 }
 
 @media screen and (max-width: 767px) {
@@ -347,3 +347,7 @@ onMounted(getPlayerCoins);
   }
 }
 </style>
+
+
+
+
