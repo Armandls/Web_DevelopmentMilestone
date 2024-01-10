@@ -156,7 +156,10 @@ function loadWinnerImage() {
       })
       .then(player => {
         console.log("Player Data:", player);
-        winnerImage.value = player.img || getRandomAvatar(winner.value.playerId);
+        // Comprovació si l'URL de la imatge és vàlida
+        winnerImage.value = (player.img && /^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp|svg)$/.test(player.img))
+            ? player.img
+            : getRandomAvatar(winner.value.playerId);
         console.log("IMAGE: "+winnerImage.value);
       })
       .catch(error => {
@@ -181,13 +184,18 @@ function loadLoserImage() {
       })
       .then(player => {
         console.log("Player Data:", player);
-        loserImage.value = player.img || getRandomAvatar(loser.value.playerId);
+        // Comprovació si l'URL de la imatge és vàlida
+        loserImage.value = (player.img && /^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp|svg)$/.test(player.img))
+            ? player.img
+            : getRandomAvatar(loser.value.playerId);
+        console.log("IMAGE: "+loserImage.value);
       })
       .catch(error => {
         console.error('Error fetching players:', error.message);
         loserImage.value = getRandomAvatar(loser.value.playerId);
       });
 }
+
 
 onMounted(loadGameInfo);
 </script>
