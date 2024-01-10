@@ -58,8 +58,7 @@ function mapGameInfo(gameData) {
       playerId: player.player_ID,
       isWinner: player.winner,
       xpWon: player.xp_win,
-      coinsWon: player.coins_win,
-      img: (player.img.match(/^https:\/\/[^\s,]+/) ? player.img : getRandomAvatar(player.player_ID))
+      coinsWon: player.coins_win
     }))
   };
 }
@@ -126,31 +125,6 @@ function loadGameInfo() {
   }
 }
 
-function getImgPlayer(playerId) {
-  fetch(`https://balandrau.salle.url.edu/i3/players/${playerId}`, {
-    headers: {
-      'Bearer': `${token.value}`,
-      'Content-Type': 'application/json'
-    }
-  })
-      .then(response => {
-        console.log(response);
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          console.error("Response error:", response);
-          throw response;
-        }
-      })
-      .then(data => {
-        console.log(data);
-        return data.img;
-      })
-      .catch(error => {
-        console.error("Error fetching game data:", error);
-      });
-}
-
 onMounted(loadGameInfo);
 </script>
 
@@ -198,7 +172,7 @@ onMounted(loadGameInfo);
               <!-- Efecto de gradiente animado -->
               <div class="absolute -inset-2 rounded-full blur-md opacity-75 animate-gradient"></div>
               <!-- Imagen del ganador -->
-              <img :src="winner.img" class="relative w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" alt=""/>
+              <img :src="getRandomAvatar(winner.playerId)" class="relative w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" alt=""/>
             </div>
 
             <!-- Nombre del ganador con icono de trofeo -->
@@ -214,7 +188,7 @@ onMounted(loadGameInfo);
           <span class="text-5xl text-white font-extrabold mx-10">VS</span>
 
           <div class="flex flex-col items-center hover-effect">
-            <img :src="winner.img" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
+            <img :src="getRandomAvatar(loser.playerId)" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
             <span class="mt-2 px-4 py-1 bg-red-600 text-white font-bold text-lg rounded shadow-lg">{{ loser.playerId }}</span>
             <div class="mt-2 text-red-600 text-center">
               <span class="font-semibold">Coins: {{ loser.coinsWon }}</span><br>
