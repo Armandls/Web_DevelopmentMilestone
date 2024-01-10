@@ -11,7 +11,7 @@ export default defineComponent({
 </script>
 
 <script setup>
-import {inject, onMounted, ref, onBeforeMount} from "vue";
+import {inject, onMounted, ref} from "vue";
 
 const authToken = inject('authToken');
 const errorMessage = ref('');
@@ -136,7 +136,7 @@ onMounted(getPlayerCoins);
 
     <!-- Imagen monedas -->
     <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 150px; height: auto;">
-    <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-6 mr-10">
+    <div class="coins text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One']">
       {{ playerCoins }}
     </div>
 
