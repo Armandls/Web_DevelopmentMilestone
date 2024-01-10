@@ -11,12 +11,14 @@ export default defineComponent({
 </script>
 
 <script setup>
-import {inject, onMounted, ref} from "vue";
+import {inject, onMounted, ref, onBeforeMount} from "vue";
 
 const authToken = inject('authToken');
 const errorMessage = ref('');
 const successMessage = ref('');
 const playerData = inject('playerData');
+const positionX = ref('');
+const positionY = ref('');
 const coins = ref(playerData.value.coins);
 
 const attacks = [
@@ -62,11 +64,11 @@ function checkForErrors(attackName, positionX, positionY) {
 
 const createAttack = () => {
   const attackName = document.getElementById("name").value;
-  const positionX = document.getElementById("positionX").value;
-  const positionY = document.getElementById("positionY").value;
-  const positions = `(${positionX},${positionY})`; // Formato (x,y)
-
-  checkForErrors(attackName, positionX, positionY);
+  const pX = positionX.value;
+  const pY = positionY.value;
+  const positions = `(${pX},${pY})`; // Formato (x,y)
+  console.log("Positions: ", positions);
+  checkForErrors(attackName, pX, pY);
 
   fetch('https://balandrau.salle.url.edu/i3/shop/attacks', {
     method: 'POST',
@@ -167,13 +169,13 @@ onMounted(getPlayerCoins);
                   <!-- Position X -->
                   <div class="flex-1 mr-2">
                     <label for="positionX" class="block text-sm font-bold text-white uppercase">Position X (positive integer)</label>
-                    <input type="number" id="positionX" name="positionX" min="0" class="w-full p-2 mt-1 bg-white text-black rounded">
+                    <input type="number" id="positionX" name="positionX" min="0" class="w-full p-2 mt-1 bg-white text-black rounded" v-model="positionX">
                   </div>
 
                   <!-- Position Y -->
                   <div class="flex-1 ml-2">
                     <label for="positionY" class="block text-sm font-bold text-white uppercase">Position Y (integer)</label>
-                    <input type="number" id="positionY" name="positionY" class="w-full p-2 mt-1 bg-white text-black rounded">
+                    <input type="number" id="positionY" name="positionY" class="w-full p-2 mt-1 bg-white text-black rounded" v-model="positionY">
                   </div>
                 </div>
 
