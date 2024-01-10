@@ -45,12 +45,14 @@ const createGame = () => {
     rowsErrorMessage.value = 'The number of rows and columns must be between 2 and 10';
   } if (hp.value < 15) {
     hpErrorMessage.value = 'The HP must be at least 15';
-  } if (attacks.value.length < 1) {
-    hpErrorMessage.value = 'You need at least one attack to create a game';
   }
 
   if (nameErrorMessage.value === '' && rowsErrorMessage.value === '' && hpErrorMessage.value === '') {
-    createGameInAPI();
+    if (attacks.value.length < 1) {
+      hpErrorMessage.value = 'You need at least one attack to create a game';
+    } else {
+      createGameInAPI();
+    }
   }
 };
 
