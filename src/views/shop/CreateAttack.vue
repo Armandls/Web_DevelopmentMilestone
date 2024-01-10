@@ -67,7 +67,6 @@ const createAttack = () => {
   const pX = positionX.value;
   const pY = positionY.value;
   const positions = `(${pX},${pY})`; // Formato (x,y)
-  console.log("Positions: ", positions);
   checkForErrors(attackName, pX, pY);
 
   fetch('https://balandrau.salle.url.edu/i3/shop/attacks', {
