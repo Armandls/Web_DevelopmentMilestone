@@ -39,6 +39,9 @@ function getRandomAvatar(playerID) {
   return avatars[index % avatars.length];
 }
 
+const winnerImage = ref(null);
+const loserImage = ref(null);
+
 function mapGameInfo(gameData) {
   if (!gameData) {
     console.error("No game data provided");
@@ -61,6 +64,18 @@ function mapGameInfo(gameData) {
       coinsWon: player.coins_win
     }))
   };
+
+  seeWinner();
+
+  // Carregar imatges
+  if (winner.value.playerId !== "N/A") {
+    loadWinnerImage();
+    console.log("WINNER IMG: "+winnerImage.value);
+  }
+  if (loser.value.playerId !== "N/A") {
+    loadLoserImage();
+    console.log("LOSER IMG: "+loserImage.value);
+  }
 }
 
 const winner = ref("N/A");
@@ -125,6 +140,55 @@ function loadGameInfo() {
   }
 }
 
+function loadWinnerImage() {
+  fetch(`https://balandrau.salle.url.edu/i3/players/${winner.value.playerId}`, {
+    method: 'GET',
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        throw new Error(`Error: ${response.status}`);
+      })
+      .then(player => {
+        console.log("Player Data:", player);
+        winnerImage.value = player.img || getRandomAvatar(winner.value.playerId);
+        console.log("IMAGE: "+winnerImage.value);
+      })
+      .catch(error => {
+        console.error('Error fetching players:', error.message);
+        winnerImage.value = getRandomAvatar(winner.value.playerId);
+      });
+}
+
+function loadLoserImage() {
+  fetch(`https://balandrau.salle.url.edu/i3/players/${loser.value.playerId}`, {
+    method: 'GET',
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        throw new Error(`Error: ${response.status}`);
+      })
+      .then(player => {
+        console.log("Player Data:", player);
+        loserImage.value = player.img || getRandomAvatar(loser.value.playerId);
+      })
+      .catch(error => {
+        console.error('Error fetching players:', error.message);
+        loserImage.value = getRandomAvatar(loser.value.playerId);
+      });
+}
+
 onMounted(loadGameInfo);
 </script>
 
@@ -172,7 +236,7 @@ onMounted(loadGameInfo);
               <!-- Efecto de gradiente animado -->
               <div class="absolute -inset-2 rounded-full blur-md opacity-75 animate-gradient"></div>
               <!-- Imagen del ganador -->
-              <img :src="getRandomAvatar(winner.playerId)" class="relative w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" alt=""/>
+              <img :src="winnerImage" class="relative w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" alt=""/>
             </div>
 
             <!-- Nombre del ganador con icono de trofeo -->
@@ -188,7 +252,7 @@ onMounted(loadGameInfo);
           <span class="text-5xl text-white font-extrabold mx-10">VS</span>
 
           <div class="flex flex-col items-center hover-effect">
-            <img :src="getRandomAvatar(loser.playerId)" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
+            <img :src="loserImage" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
             <span class="mt-2 px-4 py-1 bg-red-600 text-white font-bold text-lg rounded shadow-lg">{{ loser.playerId }}</span>
             <div class="mt-2 text-red-600 text-center">
               <span class="font-semibold">Coins: {{ loser.coinsWon }}</span><br>
