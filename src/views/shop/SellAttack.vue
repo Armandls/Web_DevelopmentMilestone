@@ -184,12 +184,12 @@ onMounted(getPlayerCoins);
       SELL AN ATTACK
     </button>
 
-    !-- Botón de Regreso a Shop -->
+    <!-- Botón de Regreso a Shop -->
     <ReturnToShop/>
 
     <!-- Imagen monedas -->
     <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 150px; height: auto;">
-    <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-6 mr-10">
+    <div class="coins text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One']">
       {{ playerCoins }}
     </div>
 
@@ -257,7 +257,7 @@ onMounted(getPlayerCoins);
         </div>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <!-- IMAGEN MONEDAS -->
@@ -325,3 +325,25 @@ onMounted(getPlayerCoins);
 
 </style>
 
+<style>
+.coins {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 24px;
+  margin-right: 20px;
+  font-size: clamp(16px, 8vw, 30px); /* Utilizamos 'clamp' para limitar el tamaño del texto */
+}
+
+@media screen and (max-width: 767px) {
+  .coins {
+    margin-top: 35px;
+  }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1000px) {
+  .coins {
+    margin-top: 27px;
+  }
+}
+</style>

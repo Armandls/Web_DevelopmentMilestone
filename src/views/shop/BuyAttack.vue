@@ -182,7 +182,7 @@ onMounted(getPlayerCoins);
     <div class="fixed top-0 right-0 pt-6">
       <div class="relative flex items-start justify-end">
         <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 100px; height: auto;">
-        <div class="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One'] absolute top-0 right-0 mt-2 mr-6">
+        <div class="coins text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One']">
           {{ playerCoins }}
         </div>
       </div>
@@ -230,7 +230,7 @@ onMounted(getPlayerCoins);
     </div>
 
     <div class="flex flex-col items-center overflow-y-auto overflow-x-hidden mt-20 h-[300px] xl:h-[500px] lg:h-[400px] md:h-[350px] sm:h-[300px] w-full xl:w-[900px] lg:w-[500px] md:w-[500px] sm:w-[300px] bg-white bg-opacity-0 mx-auto pr-5 mr-4">
-        <div v-for="(item, index) in items" :key="item.id" :style="getAttackStyles(item)" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
+      <div v-for="(item, index) in items" :key="item.id" :style="getAttackStyles(item)" class="flex items-center justify-between w-full h-[88px] my-2 bg-yellow-100 rounded-[10px] border-4 border-black">
         <!-- Superposición para ataques bloqueados -->
         <div v-if="item.isAbovePlayerLevel" class="relative top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
           <img src="/src/assets/attacks/candado.png" alt="Lock" class="w-16 h-16 object-cover object-fit-contain" />
@@ -325,6 +325,25 @@ onMounted(getPlayerCoins);
 
 </style>
 
+<style>
+.coins {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 9px;
+  margin-right: 10px;
+  font-size: clamp(16px, 8vw, 20px); /* Utilizamos 'clamp' para limitar el tamaño del texto */
+}
 
+@media screen and (max-width: 767px) {
+  .coins {
+    margin-top: 20px;
+  }
+}
 
-
+@media screen and (min-width: 767px) and (max-width: 1000px) {
+  .coins {
+    margin-top: 15px;
+  }
+}
+</style>

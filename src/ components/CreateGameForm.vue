@@ -1,5 +1,5 @@
 <script setup>
-import {inject, ref} from 'vue';
+import {inject, ref, onMounted} from 'vue';
 import router from "../router/index.js";
 
 const token = inject('authToken');
@@ -9,6 +9,7 @@ const hp = ref(15); //Valor por defecto
 const rowsErrorMessage = ref(''); //Variable para el mensaje de error de Filas y Columnas
 const hpErrorMessage = ref(''); //Variable para el mensaje de error de HP
 const nameErrorMessage = ref(''); //Variable para el mensaje de error del nombre
+const attacks = ref([]);
 
 function createGameInAPI() {
   fetch('https://balandrau.salle.url.edu/i3/arenas', {
@@ -36,18 +37,59 @@ const createGame = () => {
   rowsErrorMessage.value = '';
   hpErrorMessage.value = '';
 
+  console.log("ATTACKS LENGTH: ", attacks.value.length);
+
   if (name.value.length < 1 || name.value.length > 21) {
     nameErrorMessage.value = 'The name must be between 1 and 21 characters';
   } if (rowsAndColumns.value < 2 || rowsAndColumns.value > 10) {
     rowsErrorMessage.value = 'The number of rows and columns must be between 2 and 10';
   } if (hp.value < 15) {
     hpErrorMessage.value = 'The HP must be at least 15';
+  } if (attacks.value.length < 1) {
+    hpErrorMessage.value = 'You need at least one attack to create a game';
   }
 
   if (nameErrorMessage.value === '' && rowsErrorMessage.value === '' && hpErrorMessage.value === '') {
     createGameInAPI();
   }
 };
+
+//Get the attacks from the API
+function loadPlayerAttacks() {
+  fetch('https://balandrau.salle.url.edu/i3/players/attacks', {
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response)
+          return response.json();
+        } else {
+          console.error("Response error:", response);
+          throw response;
+        }
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          // Primero filtramos los ataques que no estén en venta (attack.on_sale = false)
+          const filteredAttacks = data.filter(attack => !attack.on_sale && attack.equipped);
+
+          // Luego mapeamos los ataques ordenados para estructurarlos por orden
+          attacks.value = filteredAttacks.map(attack => ({
+            attackName: attack.attack_ID,
+          }));
+        } else {
+          console.error("Expected an array, but got:", data);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching game data:", error);
+      });
+}
+
+onMounted(loadPlayerAttacks);
 
 </script>
 
