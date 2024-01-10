@@ -122,6 +122,12 @@ function goToStats(gameId) {
 const showErrorModal = ref(false);
 const errorMessage = ref('');
 function goToPlayGame(gameId, hp, size) {
+  if (attacks.value.length < 1) {
+    showErrorModal.value = true;
+    errorMessage.value = 'You need at least one attack to join a game';
+    return;
+  }
+
   fetch(`https://balandrau.salle.url.edu/i3/arenas/${gameId}/play`, {
     method: 'POST',
     headers: {
@@ -147,6 +153,44 @@ function goToPlayGame(gameId, hp, size) {
       });
 }
 
+const attacks = ref([]);
+const token = inject('authToken');
+//Get the attacks from the API
+function loadPlayerAttacks() {
+  fetch('https://balandrau.salle.url.edu/i3/players/attacks', {
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response)
+          return response.json();
+        } else {
+          console.error("Response error:", response);
+          throw response;
+        }
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          // Primero filtramos los ataques que no estén en venta (attack.on_sale = false)
+          const filteredAttacks = data.filter(attack => !attack.on_sale && attack.equipped);
+
+          // Luego mapeamos los ataques ordenados para estructurarlos por orden
+          attacks.value = filteredAttacks.map(attack => ({
+            attackName: attack.attack_ID,
+          }));
+        } else {
+          console.error("Expected an array, but got:", data);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching game data:", error);
+      });
+}
+
+onMounted(loadPlayerAttacks);
 
 </script>
 
