@@ -157,7 +157,7 @@ function loadWinnerImage() {
       .then(player => {
         console.log("Player Data:", player);
         // Comprovació si l'URL de la imatge és vàlida
-        winnerImage.value = (player.img && /^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp|svg)$/.test(player.img))
+        winnerImage.value = (player.img && /^https:\/\/[^\s,]+/.test(player.img))
             ? player.img
             : getRandomAvatar(winner.value.playerId);
         console.log("IMAGE: "+winnerImage.value);
@@ -185,7 +185,7 @@ function loadLoserImage() {
       .then(player => {
         console.log("Player Data:", player);
         // Comprovació si l'URL de la imatge és vàlida
-        loserImage.value = (player.img && /^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp|svg)$/.test(player.img))
+        loserImage.value = (player.img && /^https:\/\/[^\s,]+/.test(player.img))
             ? player.img
             : getRandomAvatar(loser.value.playerId);
         console.log("IMAGE: "+loserImage.value);
@@ -198,7 +198,64 @@ function loadLoserImage() {
 
 
 onMounted(loadGameInfo);
+
+const handlePlayerClick = (playerId) => {
+  getPlayerInfo(playerId)
+      .then(item => {
+        console.log("ITEM: ", item);
+        router.push({
+          name: 'profileranking',
+          query: {
+            username: item.username,
+            imageSrc: item.imageSrc,
+            lvl: item.level,
+            xp: item.xp
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Error handling player click:', error);
+        // Gestiona l'error com creguis convenient
+      });
+};
+
+function getPlayerInfo(playerId) {
+  return fetch(`https://balandrau.salle.url.edu/i3/players/${playerId}`, {
+    method: 'GET',
+    headers: {
+      'Bearer': `${token.value}`,
+      'Content-Type': 'application/json'
+    }
+  })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+        throw new Error(`Error: ${response.status}`);
+      })
+      .then(player => {
+        // Comprovació si l'URL de la imatge és vàlida
+        return {
+          username: player.player_ID,
+          imageSrc: (player.img && /^https:\/\/[^\s,]+/.test(player.img))
+              ? player.img
+              : getRandomAvatar(player.player_ID),
+          level: player.level,
+          xp: player.xp
+        };
+      })
+      .catch(error => {
+        console.error('Error fetching player:', error.message);
+        return {
+          username: playerId,
+          imageSrc: getRandomAvatar(playerId),
+          level: 0,
+          xp: 0
+        };
+      });
+}
 </script>
+
 
 <template>
   <div class="flex flex-col h-screen w-full bg-cover bg-no-repeat bg-center justify-center pt-0 pb-24 md:pb-0 px-4" style="background-image: url('/src/assets/welcome_page/background.png')">
@@ -244,7 +301,7 @@ onMounted(loadGameInfo);
               <!-- Efecto de gradiente animado -->
               <div class="absolute -inset-2 rounded-full blur-md opacity-75 animate-gradient"></div>
               <!-- Imagen del ganador -->
-              <img :src="winnerImage" class="relative w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" alt=""/>
+              <img @click="() => handlePlayerClick(winner.playerId)" :src="winnerImage" class="relative w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" alt=""/>
             </div>
 
             <!-- Nombre del ganador con icono de trofeo -->
@@ -260,7 +317,7 @@ onMounted(loadGameInfo);
           <span class="text-5xl text-white font-extrabold mx-10">VS</span>
 
           <div class="flex flex-col items-center hover-effect">
-            <img :src="loserImage" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
+            <img @click="() => handlePlayerClick(loser.playerId)" :src="loserImage" class="w-24 h-24 mb-3 rounded-full shadow-xl transition-transform duration-300 hover:scale-110" />
             <span class="mt-2 px-4 py-1 bg-red-600 text-white font-bold text-lg rounded shadow-lg">{{ loser.playerId }}</span>
             <div class="mt-2 text-red-600 text-center">
               <span class="font-semibold">Coins: {{ loser.coinsWon }}</span><br>

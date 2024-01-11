@@ -111,6 +111,10 @@ function goToStats(gameId) {
     }
   });
 }
+
+const goBack = () => {
+  router.back();
+};
 </script>
 
 <template>
@@ -178,10 +182,10 @@ function goToStats(gameId) {
 
     <!-- Boto de tornar enrere -->
     <div class="fixed top-0 left-0 pt-4">
-      <router-link to="/ranking" class="flex items-center pr-3.5 pl-4 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-none uppercase sm:w-auto">
+      <button @click="goBack" class="flex items-center pr-3.5 pl-4 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-none uppercase sm:w-auto">
         <img src="/src/assets/game_filter/return_icon.png" class="w-6 h-6 mr-2 font-extrabold" alt=""/>
         <span class="hidden sm:inline">RETURN</span>
-      </router-link>
+      </button>
     </div>
   </div>
 </template>
