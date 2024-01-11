@@ -38,54 +38,62 @@ function loadGames(query = {}) {
         throw new Error(`Error: ${response.status}`);
       })
       .then(games => {
-        //Filtrem en base a la query que ens passen a través de la URL
         let filteredGames = games;
-        console.log(filteredGames);
-        console.log(query);
         if (query.startDate) {
-          console.log(query.startDate);
           filteredGames = filteredGames.filter(game => {
-            console.log(game.creation_date);
             if (game.creation_date) {
               const formattedGameDate = formatDate(game.creation_date);
-              console.log(formattedGameDate);
               return formattedGameDate === query.startDate;
             }
             return false;
           });
         }
 
-        if (query.available === 'true') { //Si es pot jugar
+        if (query.available === 'true') {
           filteredGames = filteredGames.filter(game => !game.finished);
         }
 
-        if (query.finishedGames === 'true') { //Si ja s'ha acabat
+        if (query.finishedGames === 'true') {
           filteredGames = filteredGames.filter(game => game.finished);
         }
 
         filteredGames.sort((a, b) => {
-          // Convertir las fechas a formato YYYY-MM-DD para compararlas
           const datetimeA = new Date(a.creation_date);
           const datetimeB = new Date(b.creation_date);
           return datetimeB - datetimeA;
         });
 
-        items.value = filteredGames.map(game => ({ //Mapejem els games ja filtrats per a poder treballar amb ells
-          gameId: game.game_ID,
-          size: game.size,
-          creationDate: game.creation_date, // Aquest camp pot requerir un format específic
-          finished: game.finished,
-          hpMax: game.HP_max,
-          started: game.start,
-          playerInside: game.players_games[0].player_ID,
-          player2Inside: game.players_games.length > 1 ? game.players_games[1].player_ID : "N/A",
-        }));
+        let gamesForDisplay = filteredGames.map(game => {
+          const playerInside = game.players_games && game.players_games.length > 0
+              ? game.players_games[0].player_ID
+              : "N/A";
+
+          const player2Inside = game.players_games && game.players_games.length > 1
+              ? game.players_games[1].player_ID
+              : "N/A";
+
+          return {
+            gameId: game.game_ID,
+            size: game.size,
+            creationDate: game.creation_date,
+            finished: game.finished,
+            hpMax: game.HP_max,
+            started: game.start,
+            playerInside,
+            player2Inside,
+          };
+        });
+
+        gamesForDisplay = gamesForDisplay.filter(game => {
+          return !(game.playerInside === "N/A" && game.player2Inside === "N/A");
+        });
+
+        items.value = gamesForDisplay;
       })
       .catch(error => {
         console.error('Error fetching games:', error.message);
       });
 }
-
 const route = useRoute(); //Retornem la ruta actual
 
 function applyFiltersFromRoute() {
