@@ -166,14 +166,14 @@ function movePlayer(direction) {
 }
 
 const goUp = () => { //Funció per moure el personatge cap amunt
-                     //Moviment amunt
+  //Moviment amunt
   movePlayer("up");
   getCurrentGame();
   forceUpdate();
 };
 
 const goDown = () => { //Funció per moure el personatge cap avall
-                       //Moviment avall
+  //Moviment avall
   movePlayer("down");
   getCurrentGame();
   forceUpdate();
@@ -589,11 +589,11 @@ function getRandomAttackImage(index) {
     <div class="flex flex-col items-center justify-center mb-4">
       <!-- Encabezado de Jugadores dentro de un rectángulo gris -->
       <div :key="forceUpdateTrigger" class="bg-blue-200 p-2 md:p-4 shadow-xl rounded-lg mx-auto md:mx-0 md:ml-96 lg:ml-96 mb-auto mt-6">
-          <div class="flex items-center justify-center bg-gray-300 rounded-lg">
-            <div class="bg-yellow-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-l-md font-extrabold text-xl md:text-2xl lg:text-3xl">{{ PLAYER_1_NAME }}</div>
-            <div class="bg-purple-500 text-white py-2 px-4 md:py-4 md:px-9 font-extrabold text-xl md:text-2xl lg:text-3xl">VS</div>
-            <div class="bg-green-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-r-md font-extrabold text-xl md:text-2xl lg:text-3xl">{{ PLAYER_2_NAME }}</div>
-          </div>
+        <div class="flex items-center justify-center bg-gray-300 rounded-lg">
+          <div class="bg-yellow-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-l-md font-extrabold text-xl md:text-2xl lg:text-3xl">{{ PLAYER_1_NAME }}</div>
+          <div class="bg-purple-500 text-white py-2 px-4 md:py-4 md:px-9 font-extrabold text-xl md:text-2xl lg:text-3xl">VS</div>
+          <div class="bg-green-400 text-black py-2 px-4 md:py-4 md:px-8 rounded-r-md font-extrabold text-xl md:text-2xl lg:text-3xl">{{ PLAYER_2_NAME }}</div>
+        </div>
       </div>
 
       <!-- Component pel ping i FPS -->
@@ -684,7 +684,7 @@ function getRandomAttackImage(index) {
         </div>
 
         <!-- Contenedor para el mensaje y las animaciones de juego terminado (Victoria) -->
-        <div v-if="showGameFinishedWin" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+        <div v-if="showGameFinishedWin" class="sm:flex fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50">
           <!-- Confeti y globos -->
           <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
             <!-- Confeti -->
