@@ -92,10 +92,6 @@ const filteredItems = computed(() => {
 onMounted(fetchPlayers);
 
 const handlePlayerClick = (item) => {
-  console.log(item.username);
-  console.log(item.imageSrc);
-  console.log(item.level);
-  console.log(item.xp);
   router.push({
     name: 'profileranking',
     query: {

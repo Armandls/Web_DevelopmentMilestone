@@ -1,6 +1,6 @@
 <script setup>
 import {inject, onMounted, ref} from "vue";
-import {RouterLink, useRoute, useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 
 const token = inject('authToken'); //Agafem el token del jugador desde App.vue
 const game = ref(null);

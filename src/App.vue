@@ -19,7 +19,7 @@ provide('authToken', authToken); //Proveim el token del jugador al component fil
 onMounted(() => {
   const storedData = localStorage.getItem('playerData');
   if (storedData) {
-    setPlayerData(JSON.parse(storedData)); // Utilitza la funció per a establir les dades
+    setPlayerData(JSON.parse(storedData)); // Utilitzem la funció per a establir les dades
   }
 });
 </script>
