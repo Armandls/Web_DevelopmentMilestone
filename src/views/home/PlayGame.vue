@@ -636,6 +636,33 @@ function getRandomAttackImage(index) {
     <!-- Controles del jugador -->
     <div class="fixed inset-x-0 bottom-0 p-4">
       <!-- Contenedor de los ataques para pantallas pequeñas -->
+      <div v-if="showGameFinishedLost" class="sm:hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+        <!-- Contenido del mensaje simplificado para pantallas pequeñas -->
+        <div class="bg-white p-4 rounded-xl shadow-2xl flex flex-col items-center justify-center">
+          <!-- Títol -->
+          <h2 class="text-xl font-bold text-red-600 mb-2">Game Over</h2>
+          <!-- Subtítol -->
+          <p class="text-lg font-semibold text-gray-800 mb-4">You Lost!</p>
+          <!-- Botó de retorn a l'inici -->
+          <button @click="router.push({ name: 'home' })" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            Return Home
+          </button>
+        </div>
+      </div>
+      <!-- Nou missatge de victòria per a pantalles petites, sense animacions -->
+      <div v-if="showGameFinishedWin" class="sm:hidden flex fixed inset-0 bg-black bg-opacity-60 items-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl flex flex-col items-center justify-center ml-20">
+          <h2 class="text-4xl font-bold text-green-500 mb-2">Congratulations!</h2>
+          <p class="text-2xl font-semibold text-gray-800 mb-4">You Won!</p>
+          <div class="text-lg text-gray-700 mb-4">
+            <p><strong>Coins Earned:</strong> {{ coinsWin }}</p>
+            <p><strong>XP Gained:</strong> {{ xpWin }}</p>
+          </div>
+          <button @click="router.push({ name: 'home' })" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Return Home
+          </button>
+        </div>
+      </div>
       <div class="sm:hidden bg-purple-600 rounded-lg shadow-lg p-2 flex justify-around items-center">
         <div v-for="(attack) in attacks" :key="attack.attack_ID" class="flex flex-col items-center">
           <img :src= getRandomAttackImage(getAttackIndex(attack.attack_ID)) class="w-16 h-16 bg-blue-400 p-1 rounded-lg" alt=""/>
@@ -684,7 +711,7 @@ function getRandomAttackImage(index) {
         </div>
 
         <!-- Contenedor para el mensaje y las animaciones de juego terminado (Victoria) -->
-        <div v-if="showGameFinishedWin" class="sm:flex fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50">
+        <div v-if="showGameFinishedWin" class="hidden sm:flex fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50">
           <!-- Confeti y globos -->
           <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
             <!-- Confeti -->
@@ -722,7 +749,7 @@ function getRandomAttackImage(index) {
         </div>
 
         <!-- Contenedor para el mensaje y las animaciones de juego terminado (Derrota) -->
-        <div v-if="showGameFinishedLost" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+        <div v-if="showGameFinishedLost" class="hidden sm:flex fixed inset-0 bg-black bg-opacity-60 items-center justify-center">
           <!-- Animación de lluvia -->
           <div class="absolute top-0 left-0 right-0 bottom-0 flex justify-around items-start overflow-hidden">
             <!-- Lluvia -->
@@ -730,11 +757,11 @@ function getRandomAttackImage(index) {
           </div>
 
           <!-- Contenido del mensaje -->
-          <div class="bg-white p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedLost}">
+          <div class="bg-white p-4 sm:p-8 rounded-xl shadow-2xl transition-all transform duration-500 scale-95 opacity-0 flex flex-col items-center justify-center" :class="{'scale-100 opacity-100': showGameFinishedLost}">
             <!-- Título -->
-            <h2 class="text-4xl font-bold text-red-600 mb-2">Game Over</h2>
+            <h2 class="text-2xl sm:text-4xl font-bold text-red-600 mb-2">Game Over</h2>
             <!-- Subtítulo -->
-            <p class="text-2xl font-semibold text-gray-800 mb-4">You Lost!</p>
+            <p class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">You Lost!</p>
             <!-- Botón de retorno al inicio -->
             <button @click="router.push({ name: 'home' })" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
               Return Home
