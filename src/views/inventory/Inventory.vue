@@ -41,7 +41,6 @@ function loadPlayerAttacks() {
   })
       .then(response => {
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);
@@ -92,7 +91,6 @@ const toggleEquip = (attack) => {
   })
       .then(response => {
         if (response.status === 204) {
-          console.log(response);
           attack.equipped = !attack.equipped;
           loadPlayerAttacks();
           return;

@@ -22,9 +22,7 @@ function loadGames() {
     }
   })
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);
@@ -72,7 +70,6 @@ function loadPlayerStatistics() {
     }
   })
       .then(response => {
-        console.log(response);
         console.log("TOKEN" + token.value);
         if (response.status === 200) {
           console.log(response)
@@ -162,7 +159,7 @@ function goToStats(gameId) {
         </div>
 
         <button @click="goToStats(item.gameID)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
-          <font-awesome-icon icon="chart-bar" class="mr-2" /> GAME STATS
+          GAME STATS
         </button>
       </div>
     </div>
