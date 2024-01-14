@@ -17,11 +17,6 @@ imageSrc.value = route.query.imageSrc;
 lvl.value = route.query.lvl;
 xp.value = route.query.xp;
 
-console.log(username.value);
-console.log(imageSrc.value);
-console.log(lvl.value);
-console.log(xp.value);
-
 const items = ref([]);
 
 function loadGames() {
@@ -32,9 +27,7 @@ function loadGames() {
     }
   })
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);
@@ -82,9 +75,7 @@ function loadPlayerStatistics() {
     }
   })
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);

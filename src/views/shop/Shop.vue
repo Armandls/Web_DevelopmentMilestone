@@ -28,7 +28,6 @@ function getPlayerCoins() {
       })
       .then(player => {
         const coins = player.coins;
-        console.log(`Coins for player ${playerId}: ${coins}`);
         playerCoins.value = coins;
       })
       .catch(error => {

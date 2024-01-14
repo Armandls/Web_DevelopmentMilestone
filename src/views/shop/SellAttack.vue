@@ -42,7 +42,6 @@ function loadPlayerAttacks() {
   })
       .then(response => {
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);
@@ -107,7 +106,6 @@ function sellAttackMessage(attack) {
 }
 
 async function confirmSell() {
-  console.log('Vendiendo con cantidad:', sellingQuantity.value);
   await sellAttack(selectedAttack.value.attackName, sellingQuantity.value);
   showConfirmModal.value = false;
 }
@@ -128,7 +126,6 @@ function sellAttack(attackID, price) {
     })
   })
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
           successMessage.value = 'Attack sold successfully!';
           errorMessage.value = '';
@@ -165,7 +162,6 @@ function getPlayerCoins() {
       })
       .then(player => {
         const coins = player.coins;
-        console.log(`Coins for player ${playerId}: ${coins}`);
         playerCoins.value = coins;
       })
       .catch(error => {

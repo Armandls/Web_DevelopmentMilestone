@@ -115,9 +115,7 @@ const buyAttack = (attackID) => {
     headers: { 'Bearer': `${authToken.value}`, 'Content-Type': 'application/json' }
   })
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
-          console.log('Attack bought successfully');
           successMessage.value = `Attack  ${attackID} bought successfully!`;
           errorMessage.value = '';
           location.reload();
@@ -154,7 +152,6 @@ function getPlayerCoins() {
       })
       .then(player => {
         const coins = player.coins;
-        console.log(`Coins for player ${playerId}: ${coins}`);
         playerCoins.value = coins;
       })
       .catch(error => {
