@@ -1,7 +1,23 @@
-# Vue 3 + Vite
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+# Battle Arena
 
-## Recommended IDE Setup
+## Instalación
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Para clonar el proyecto, utilizar el siguiente enlace:
+
+```bash
+git clone https://github.com/carlosromerorodriguez/PW1.git
+```
+Una vez clonado el proyecto, acceder a la carpeta del proyecto y realizar los siguientes pasos:
+
+Instalar las dependencias necesarias utilizando npm (node_modules):
+```bash
+npm install
+```
+## Uso
+Para iniciar la aplicación web, ejecutar el siguiente comando:
+
+```bash
+npm run dev
+```
+Esto iniciará el servidor de desarrollo y se podrá acceder a la aplicación en el navegador en http://localhost:5173.
