@@ -32,7 +32,6 @@ function loadGames(query = {}) {
     }
   })
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
           return response.json();
         }
@@ -119,7 +118,6 @@ onMounted(applyFiltersFromRoute);
 watch(route, applyFiltersFromRoute);
 
 function goToStats(gameId) {
-  console.log(gameId);
   router.push({
     name: 'gameinfo',
     query: {
@@ -145,9 +143,7 @@ function goToPlayGame(gameId, hp, size) {
     }
   })
       .then(response => {
-        console.log('Response: ', response);
         if (response.status === 200) {
-          console.log('Joined game successfully!');
           router.push({ name: 'playgame', query: { name: gameId, hpMax: hp, rowsAndColumns: size } });
           return;
         }
@@ -174,7 +170,6 @@ function loadPlayerAttacks() {
   })
       .then(response => {
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);
@@ -211,10 +206,10 @@ onMounted(loadPlayerAttacks);
         <div class="flex flex-col md:flex-row items-center">
           <div class="text-white text-4xl md:text-[50px] font-bold font-['Sigmar One'] uppercase">AVAILABLE GAMES</div>
           <RouterLink to="/joingamefilter" class="bg-fuchsia-500 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded mt-4 md:mt-0 md:ml-10">
-            <font-awesome-icon icon="filter" class="mr-2" /> FILTER
+            FILTER
           </RouterLink>
           <button @click="clearFilters" class="bg-red-400 hover:bg-red-600 text-white font-bold ml-4 py-2 px-4 rounded mt-2 md:mt-0">
-            <font-awesome-icon icon="times" class="mr-2" /> CLEAR FILTERS
+            CLEAR FILTERS
           </button>
         </div>
       </div>
@@ -264,10 +259,10 @@ onMounted(loadPlayerAttacks);
 
         <!-- Botó per unir-se al joc o veure estadístiques -->
         <button v-if="!item.finished" @click="goToPlayGame(item.gameId, item.hpMax, item.size)" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
-          <font-awesome-icon icon="play" class="mr-2" /> JOIN GAME
+          JOIN GAME
         </button>
         <button v-else @click="goToStats(item.gameId)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-3 sm:mt-3 sm:mb-3 sm:ml-3">
-          <font-awesome-icon icon="chart-bar" class="mr-2" /> GAME STATS
+          GAME STATS
         </button>
       </div>
     </div>
