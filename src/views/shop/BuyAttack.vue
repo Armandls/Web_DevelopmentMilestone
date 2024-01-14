@@ -178,13 +178,14 @@ onMounted(getPlayerCoins);
       BUY AN ATTACK
     </button>
 
+
     <!-- Botón de Show Shopping Cart -->
     <div class="fixed top-0 right-0 pt-6">
       <div class="relative flex items-start justify-end">
         <img src="/src/assets/shop/Monedas.png" alt="" class="mi-imagen" style="width: 100px; height: auto;">
-        <div class="coins text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One']">
-          {{ playerCoins }}
-        </div>
+      </div>
+      <div class="coins-container text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold font-['Sigmar One']">
+        {{ playerCoins }}
       </div>
       <!-- Botón del Carrito de Compras -->
       <button @click="toggleDropdown" class="flex items-center pr-3.5 pl-4 mr-32 mt-2 bg-cyan-400 text-black font-extrabold py-2 rounded-r-full rounded-l-full uppercase sm:w-auto">
@@ -218,8 +219,6 @@ onMounted(getPlayerCoins);
         </div>
       </div>
     </div>
-
-    <!-- Imagen monedas -->
 
 
 
@@ -326,23 +325,23 @@ onMounted(getPlayerCoins);
 </style>
 
 <style>
-.coins {
+.coins-container {
   position: absolute;
   top: 0;
   right: 0;
-  margin-top: 9px;
+  margin-top: 35px;
   margin-right: 12px;
-  font-size: clamp(16px, 8vw, 22px); /* Utilizamos 'clamp' para limitar el tamaño del texto */
+  font-size: clamp(16px, 8vw, 22px);
 }
 
 @media screen and (max-width: 767px) {
-  .coins {
+  .coins-container {
     margin-top: 20px;
   }
 }
 
 @media screen and (min-width: 767px) and (max-width: 1000px) {
-  .coins {
+  .coins-container {
     margin-top: 15px;
   }
 }
