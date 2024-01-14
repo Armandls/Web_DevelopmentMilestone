@@ -329,13 +329,13 @@ onMounted(getPlayerCoins);
 
 @media screen and (max-width: 767px) {
   .coins-container {
-    margin-top: 20px;
+    margin-top: 45px;
   }
 }
 
 @media screen and (min-width: 767px) and (max-width: 1000px) {
   .coins-container {
-    margin-top: 15px;
+    margin-top: 38px;
   }
 }
 </style>
