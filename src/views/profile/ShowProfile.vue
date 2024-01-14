@@ -70,9 +70,7 @@ function loadPlayerStatistics() {
     }
   })
       .then(response => {
-        console.log("TOKEN" + token.value);
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);
