@@ -153,7 +153,6 @@ function movePlayer(direction) {
   })
       .then(response => {
         if (response.status === 200) {
-          console.log('Player moved successfully!');
         } else {
           return response.json().then(json => {
             throw new Error(`Error: ${response.status} - ${json.message}`);
@@ -204,7 +203,6 @@ function changePlayerDirection(direction) {
   })
       .then(response => {
         if (response.status === 200) {
-          console.log('Direction changed successfully!');
         } else {
           return response.json().then(json => {
             throw new Error(`Error: ${response.status} - ${json.message}`);
@@ -339,9 +337,7 @@ function attackInGame(id) {
     }
   })
       .then(response => {
-        console.log(response);
         if (response.status === 204) {
-          console.log('Attack successful!');
         } else {
           return response.json().then(json => {
             throw new Error(`Error: ${response.status} - ${json.message}`);
@@ -354,23 +350,17 @@ function attackInGame(id) {
 }
 
 const attack1 = () => {
-  console.log("Attack 1 executed!");
   //Logica atack1
-  console.log('Attack: ' + attacks.value[0].attack_ID)
   attackInGame(attacks.value[0].attack_ID);
 };
 
 const attack2 = () => {
-  console.log("Attack 2 executed!");
   //Logica atack2
-  console.log('Attack: ' + attacks.value[1].attack_ID)
   attackInGame(attacks.value[1].attack_ID);
 };
 
 const attack3 = () => {
-  console.log("Attack 3 executed!");
   //Logica atack3
-  console.log('Attack: ' + attacks.value[2].attack_ID)
   attackInGame(attacks.value[2].attack_ID);
 };
 const pressedKey = ref(null);
@@ -406,7 +396,6 @@ const surrenderGame = () => {
 
 const confirmSurrender = () => {
   showSurrenderModal.value = false;
-  console.log("Player has confirmed surrender.");
 
   fetch(`https://balandrau.salle.url.edu/i3/arenas/${gameId.value}/play`, {
     method: 'DELETE',
@@ -417,7 +406,6 @@ const confirmSurrender = () => {
   })
       .then(response => {
         if (response.status === 204) {
-          console.log('Left game successfully!');
           clearInterval(intervalId);
           router.push({ name: 'home' });
           return;
@@ -464,7 +452,6 @@ function checkGameFinishedInfo() {
     }
   })
       .then(response => {
-        console.log('Response: ', response);
         if (response.status === 200) {
           return response.json();
         } else {
@@ -474,12 +461,10 @@ function checkGameFinishedInfo() {
         }
       })
       .then(data => {
-        console.log('Game finished info:', data);
         //Map the info
         const player1Data = data.players_games[0];
         const player2Data = data.players_games[1];
-        console.log('Player 1 data:', player1Data);
-        console.log('PlayerData:', playerData.value.player_ID);
+
         if (player1Data.player_ID === playerData.value.player_ID) {
           if (player1Data.winner === true) {
             endGameSuccessful();
@@ -518,8 +503,6 @@ function getCurrentGame() {
         return response.json();
       })
       .then(data => {
-        console.log('Game data:', data[0]);
-
         if (data[0].players_games.length === 1) {
           PLAYER_1_NAME = data[0].players_games[0].player_ID;
           forceUpdate();
@@ -533,9 +516,6 @@ function getCurrentGame() {
           directionPlayer2.value = player2Data.direction;
 
           if (firstTime === true) {
-            console.log('First time!');
-            console.log('Player 1 data:', player1Data.player_ID);
-            console.log('Player 2 data:', player2Data.player_ID);
             PLAYER_1_NAME = player1Data.player_ID;
             PLAYER_2_NAME = player2Data.player_ID;
             forceUpdate();
@@ -546,7 +526,6 @@ function getCurrentGame() {
         }
       })
       .catch(() => {
-        console.log('Game finished!');
         clearInterval(intervalId);
 
         checkGameFinishedInfo();

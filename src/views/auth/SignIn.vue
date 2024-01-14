@@ -45,18 +45,14 @@ const signIn = () => {
     })
   })
       .then(response => {
-        //console.log(this.$root);
-        console.log(response);
         if (response.status === 200) { // Si la resposta és exitosa
           return response.json(); // Retornem el JSON de la resposta
         } else {
-          console.log(response);
           throw response; // Si no és 200, llancem l'error
         }
       })
       .then(data => { // Amb el JSON de la resposta
         let img = (data.img.match(/^https:\/\/[^\s,]+/) ? data.img : getRandomAvatar(data.player_ID));
-        console.log('Player info: ', data);
         const playerData = {
           player_ID: data.player_ID,
           img: img,
