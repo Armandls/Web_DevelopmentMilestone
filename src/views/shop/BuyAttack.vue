@@ -30,8 +30,6 @@ function getRandomAttackImage(index) {
   return attacks[index % attacks.length]
 }
 
-const coins = ref(playerData.value.coins);
-
 // Función para obtener ataques desde la API
 const fetchAttacks = () => {
   fetch('https://balandrau.salle.url.edu/i3/shop/attacks', {
@@ -93,12 +91,13 @@ const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
+const playerCoins = ref(0);
 function buyAttacks() {
   let total = 0;
   for (let i = 0; i < selectedItems.value.length; i++) {
     total += selectedItems.value[i].price;
   }
-  if (playerData.value.coins >= total) {
+  if (playerCoins.value >= total) {
     for (let i = 0; i < selectedItems.value.length; i++) {
       buyAttack(selectedItems.value[i].attack_ID);
     }
@@ -120,9 +119,8 @@ const buyAttack = (attackID) => {
         if (response.status === 200) {
           console.log('Attack bought successfully');
           successMessage.value = `Attack  ${attackID} bought successfully!`;
-          sleep(800).then(() => {
-            errorMessage.value = '';
-          });
+          errorMessage.value = '';
+          location.reload();
         } else {
           return response.json().then(json => {
             throw new Error(`Error: ${response.status} - ${json.message}`);
@@ -138,8 +136,6 @@ const buyAttack = (attackID) => {
         });
       });
 };
-
-const playerCoins = ref(0);
 
 function getPlayerCoins() {
   const playerId = playerData.value.player_ID; // Obtener el ID del jugador desde playerData

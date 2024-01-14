@@ -435,7 +435,7 @@ const confirmSurrender = () => {
 let intervalId;
 
 onMounted(() => {
-  intervalId = setInterval(getCurrentGame, 5000);
+  intervalId = setInterval(getCurrentGame, 500); // Para modificar el intervalo de peticiones en la API
 });
 
 onUnmounted(() => {

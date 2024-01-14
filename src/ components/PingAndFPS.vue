@@ -55,7 +55,7 @@ let pingInterval;
 let animationFrameId;
 
 onMounted(() => {
-  pingInterval = setInterval(fetchPing, 5000);
+  pingInterval = setInterval(fetchPing, 2000);
   animationFrameId = requestAnimationFrame(updateFPS);
 });
 

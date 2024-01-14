@@ -32,6 +32,7 @@ function loadGames(query = {}) {
     }
   })
       .then(response => {
+        console.log(response);
         if (response.status === 200) {
           return response.json();
         }
