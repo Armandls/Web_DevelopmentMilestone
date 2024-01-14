@@ -171,12 +171,6 @@ function getRandomAttackImage(index) {
             Join Game
           </RouterLink>
         </div>
-        <!-- Sign Out icon y delete para pantallas pequeñas -->
-        <div class="md:hidden absolute top-4 right-4">
-          <RouterLink to="/sign-out" class="text-white text-3xl">
-            <font-awesome-icon icon="exit" />
-          </RouterLink>
-        </div>
       </div>
 
       <div class="md:hidden absolute top-5 left-6">
