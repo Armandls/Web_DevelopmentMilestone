@@ -7,8 +7,6 @@ const game = ref(null);
 
 const route = useRoute();
 const gameId = route.query.gameID;
-console.log(gameId);
-
 const router = useRouter();
 const goBack = () => {
   router.back();
@@ -70,11 +68,9 @@ function mapGameInfo(gameData) {
   // Carregar imatges
   if (winner.value.playerId !== "N/A") {
     loadWinnerImage();
-    console.log("WINNER IMG: "+winnerImage.value);
   }
   if (loser.value.playerId !== "N/A") {
     loadLoserImage();
-    console.log("LOSER IMG: "+loserImage.value);
   }
 }
 
@@ -118,7 +114,6 @@ function loadGameInfo() {
       }
     })
         .then(response => {
-          console.log(response);
           if (response.status === 200) {
             return response.json();
           } else {
@@ -127,11 +122,8 @@ function loadGameInfo() {
           }
         })
         .then(data => {
-          console.log(data);
           //Mapejem les dades del joc
           mapGameInfo(data);
-          console.log("game INFO "+game);
-          console.log(game.value.id);
           seeWinner();
         })
         .catch(error => {
@@ -155,12 +147,10 @@ function loadWinnerImage() {
         throw new Error(`Error: ${response.status}`);
       })
       .then(player => {
-        console.log("Player Data:", player);
         // Comprovació si l'URL de la imatge és vàlida
         winnerImage.value = (player.img && /^https:\/\/[^\s,]+/.test(player.img))
             ? player.img
             : getRandomAvatar(winner.value.playerId);
-        console.log("IMAGE: "+winnerImage.value);
       })
       .catch(error => {
         console.error('Error fetching players:', error.message);
@@ -183,12 +173,10 @@ function loadLoserImage() {
         throw new Error(`Error: ${response.status}`);
       })
       .then(player => {
-        console.log("Player Data:", player);
         // Comprovació si l'URL de la imatge és vàlida
         loserImage.value = (player.img && /^https:\/\/[^\s,]+/.test(player.img))
             ? player.img
             : getRandomAvatar(loser.value.playerId);
-        console.log("IMAGE: "+loserImage.value);
       })
       .catch(error => {
         console.error('Error fetching players:', error.message);
@@ -202,7 +190,6 @@ onMounted(loadGameInfo);
 const handlePlayerClick = (playerId) => {
   getPlayerInfo(playerId)
       .then(item => {
-        console.log("ITEM: ", item);
         router.push({
           name: 'profileranking',
           query: {

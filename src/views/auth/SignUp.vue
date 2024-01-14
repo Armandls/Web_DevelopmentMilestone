@@ -45,8 +45,6 @@ function signInPlayer(player, pwd) {
     })
   })
       .then(response => {
-        //console.log(this.$root);
-        console.log(response);
         if (response.status === 200) { // Si la resposta és exitosa
           return response.json(); // Retornem el JSON de la resposta
         } else {
@@ -55,7 +53,6 @@ function signInPlayer(player, pwd) {
       })
       .then(data => { // Amb el JSON de la resposta
         let img = (data.img.match(/^https:\/\/[^\s,]+/) ? data.img : getRandomAvatar(data.player_ID));
-        console.log('Player info: ', data);
         const playerData = {
           player_ID: data.player_ID,
           img: img,
@@ -100,8 +97,6 @@ const signUp = () => {
   })
       .then(response => { //Amb el que ens respongui la API:
         if (response.status === 201) { //En aquest cas ens retornava només 201 en cas d'exit i un json en cas d'error, per tant primer comparem directament amb 201
-          console.log('Player created successfully -> Now login it!');
-
           signInPlayer(playerID.value, password.value); //Fem sign in automàticament
         } else {
           return response.json(); //Si no és 201, retornem el json que ens ha enviat la API

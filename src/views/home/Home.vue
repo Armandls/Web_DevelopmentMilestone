@@ -23,8 +23,6 @@ function deletePlayer() {
     headers: { 'Bearer': authToken.value, 'Content-Type': 'application/json' }
   })
       .then(response => {
-        console.log('Auth token:', authToken.value)
-        console.log(response);
         if (response.status === 204) {
           return;
         }

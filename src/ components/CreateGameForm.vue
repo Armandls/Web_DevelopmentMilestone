@@ -18,7 +18,6 @@ function createGameInAPI() {
     body: JSON.stringify({ game_ID: name.value, size: rowsAndColumns.value, HP_max: hp.value})})
       .then(response => {
         if (response.status === 201) {
-          console.log('Game created successfully!');
           router.push({ path: '/playgame', query: { name: name.value, rowsAndColumns: rowsAndColumns.value, hp: hp.value } });
           return;
         }
@@ -36,8 +35,6 @@ const createGame = () => {
   nameErrorMessage.value = '';
   rowsErrorMessage.value = '';
   hpErrorMessage.value = '';
-
-  console.log("ATTACKS LENGTH: ", attacks.value.length);
 
   if (name.value.length < 1 || name.value.length > 21) {
     nameErrorMessage.value = 'The name must be between 1 and 21 characters';
@@ -66,7 +63,6 @@ function loadPlayerAttacks() {
   })
       .then(response => {
         if (response.status === 200) {
-          console.log(response)
           return response.json();
         } else {
           console.error("Response error:", response);
