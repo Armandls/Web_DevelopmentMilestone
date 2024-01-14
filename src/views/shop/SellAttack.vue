@@ -131,7 +131,6 @@ function sellAttack(attackID, price) {
           errorMessage.value = '';
           selectedAttack.value.on_sale = true;
           loadPlayerAttacks();
-          onMounted(loadPlayerAttacks);
           return;
         }
         throw new Error(`Error: ${response.statusCode}`)
