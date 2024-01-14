@@ -119,7 +119,7 @@ const buyAttack = (attackID) => {
         console.log(response);
         if (response.status === 200) {
           console.log('Attack bought successfully');
-          successMessage.value = 'Attack  ${{ attackID }} bought successfully!';
+          successMessage.value = `Attack  ${attackID} bought successfully!`;
           sleep(800).then(() => {
             errorMessage.value = '';
           });
